@@ -1,85 +1,150 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Masuk ke Portal KARTEJI</title>
-<link rel="stylesheet" href="style.css" />
-<link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#0e4c92" />
+<title>Portal KARTEJI • Login & Daftar</title>
+<link rel="icon" href="assets/logo.svg" />
+<style>
+:root{
+  --biru:#0e4c92;--emas:#f6c445;
+  --bg-dark:#0b132b;--text-dark:#f5f7fa;
+  --bg-light:#ffffff;--text-light:#1e293b;
+}
+*{box-sizing:border-box}body{margin:0;font-family:'Poppins',system-ui;overflow:hidden}
+canvas{position:absolute;inset:0;z-index:0;background:transparent}
+main{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;
+  height:100vh;background:radial-gradient(circle at top,var(--biru),#081124 70%);transition:.5s}
+main.light{background:radial-gradient(circle at top,#f6f9ff,#eaeaea 70%)}
+.card{width:min(90%,420px);padding:2rem;border-radius:20px;
+  background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border:1px solid rgba(246,196,69,0.3);
+  box-shadow:0 10px 40px rgba(0,0,0,.4);color:#fff;transition:.4s}
+.light .card{background:rgba(255,255,255,0.7);color:#1e1e1e;border:1px solid rgba(14,76,146,.2)}
+h1{text-align:center;color:var(--emas);margin:0 0 1rem}
+input{width:100%;padding:.7rem;margin:.4rem 0;border-radius:10px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(0,0,0,.25);color:#fff;font-size:.95rem}
+.light input{background:rgba(255,255,255,.9);color:#000;border:1px solid rgba(0,0,0,.2)}
+.btn{width:100%;padding:.7rem;margin-top:.5rem;border:none;border-radius:10px;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--emas);color:#0b132b}
+.btn-ghost{background:transparent;color:inherit;border:1px solid rgba(255,255,255,.3)}
+.note{text-align:center;font-size:.85rem;margin-top:1rem;opacity:.8}
+.hidden{display:none}
+.toast{position:fixed;bottom:20px;right:20px;background:#111928;color:#fff;
+  border:1px solid var(--emas);padding:.6rem .9rem;border-radius:10px;z-index:9999}
+.light .toast{background:#fff;color:#000;border-color:var(--biru)}
+</style>
 </head>
-
 <body>
-<main class="auth-container">
-  <h1>Portal KARTEJI</h1>
-  <p>RT01 / RW08 • Cilosari Barat</p>
+<canvas id="bg"></canvas>
+<main id="main">
+  <div class="card">
+    <h1>KARTEJI Portal</h1>
+    <input id="email" type="email" placeholder="Alamat Email" autocomplete="username" />
+    <input id="pass" type="password" placeholder="Kata Sandi" autocomplete="current-password" />
 
-  <input type="email" id="email" placeholder="Email" />
-  <input type="password" id="pass" placeholder="Kata Sandi" />
-  <div class="btn-row">
-    <button id="login">Masuk</button>
-    <button id="register">Daftar</button>
+    <button id="loginBtn" class="btn btn-primary">Masuk</button>
+    <button id="regBtn" class="btn btn-ghost">Daftar Akun Baru</button>
+    <button id="resetBtn" class="btn btn-ghost">Lupa Password</button>
+
+    <p class="note">RT01/RW08 • Cilosari Barat, Kemijen<br/>© 2025 Karang Taruna</p>
   </div>
-  <button id="reset" class="link-btn">Lupa Password?</button>
-  <p id="msg"></p>
 </main>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+/* ===== Firebase SDK ===== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  sendPasswordResetEmail, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
-    authDomain: "karang-taruna-aadaf.firebaseapp.com",
-    projectId: "karang-taruna-aadaf",
-    storageBucket: "karang-taruna-aadaf.appspot.com",
-    messagingSenderId: "367208001887",
-    appId: "1:367208001887:web:bce5982d99edefb7e746ea"
-  };
+/* ===== Konfigurasi Firebase ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
+  authDomain: "karang-taruna-aadaf.firebaseapp.com",
+  projectId: "karang-taruna-aadaf",
+  storageBucket: "karang-taruna-aadaf.appspot.com",
+  messagingSenderId: "367208001887",
+  appId: "1:367208001887:web:bce5982d99edefb7e746ea"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+/* ===== Helper ===== */
+const $ = s=>document.querySelector(s);
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
 
-  const msg = (t) => document.getElementById("msg").innerText = t;
+/* ===== Theme (auto detect) ===== */
+const main = $('#main');
+function setTheme(){const light=window.matchMedia('(prefers-color-scheme: light)').matches;main.classList.toggle('light', light);}
+setTheme(); window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', setTheme);
 
-  document.getElementById("login").onclick = async () => {
-    const e = email.value, p = pass.value;
-    try {
-      await signInWithEmailAndPassword(auth, e, p);
-      msg("Login berhasil ✅");
-      location.href = "dashboard.html";
-    } catch(err) {
-      msg("Gagal: " + err.message);
-    }
-  };
+/* ===== Background Particles ===== */
+const canvas=$('#bg'), ctx=canvas.getContext('2d');
+let w,h,particles=[];
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}
+function createParticle(){return{x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+1,dx:(Math.random()-.5)*.4,dy:(Math.random()-.5)*.4,op:Math.random()*.6+.2};}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  const light=main.classList.contains('light');
+  for(const p of particles){
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>w)p.dx*=-1;if(p.y<0||p.y>h)p.dy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=light?`rgba(14,76,146,${p.op})`:`rgba(246,196,69,${p.op})`;
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+addEventListener('resize',resize);resize();particles=Array.from({length:80},createParticle);draw();
 
-  document.getElementById("register").onclick = async () => {
-    const e = email.value, p = pass.value;
-    try {
-      const res = await createUserWithEmailAndPassword(auth, e, p);
-      await setDoc(doc(db, "users", res.user.uid), { email: e, role: "anggota", createdAt: serverTimestamp() });
-      msg("Pendaftaran berhasil 🎉");
-      location.href = "dashboard.html";
-    } catch(err) {
-      msg("Gagal: " + err.message);
-    }
-  };
+/* ===== Ensure user doc ===== */
+async function ensureUser(uid,email){
+  const ref=doc(db,'users',uid);
+  const snap=await getDoc(ref);
+  if(!snap.exists()){
+    await setDoc(ref,{email,role:'anggota',createdAt:serverTimestamp()});
+  }
+}
 
-  document.getElementById("reset").onclick = async () => {
-    const e = email.value;
-    try {
-      await sendPasswordResetEmail(auth, e);
-      msg("Link reset dikirim ke email 📧");
-    } catch(err) {
-      msg("Gagal: " + err.message);
-    }
-  };
-</script>
+/* ===== Actions ===== */
+$('#loginBtn').onclick=async()=>{
+  const email=$('#email').value.trim(), pass=$('#pass').value;
+  if(!email||!pass) return toast('Isi email & sandi');
+  try{
+    const {user}=await signInWithEmailAndPassword(auth,email,pass);
+    await ensureUser(user.uid,user.email);
+    toast('Berhasil masuk ✅');
+    setTimeout(()=>location.href='dashboard.html',800);
+  }catch(e){toast(e.message);}
+};
 
-<script>
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
+$('#regBtn').onclick=async()=>{
+  const email=$('#email').value.trim(), pass=$('#pass').value;
+  if(!email||!pass) return toast('Isi email & sandi');
+  try{
+    const {user}=await createUserWithEmailAndPassword(auth,email,pass);
+    await ensureUser(user.uid,user.email);
+    toast('Pendaftaran berhasil 🎉');
+    setTimeout(()=>location.href='dashboard.html',800);
+  }catch(e){toast(e.message);}
+};
+
+$('#resetBtn').onclick=async()=>{
+  const email=$('#email').value.trim();
+  if(!email) return toast('Masukkan email');
+  try{
+    await sendPasswordResetEmail(auth,email);
+    toast('Link reset dikirim 📧');
+  }catch(e){toast(e.message);}
+};
+
+/* ===== Auto redirect jika login ===== */
+onAuthStateChanged(auth,u=>{if(u)location.href='dashboard.html';});
 </script>
 </body>
 </html>
