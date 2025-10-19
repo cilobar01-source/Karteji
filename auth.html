@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Autentikasi • KARTEJI</title>
+<link rel="icon" href="assets/logo.svg">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main class="container" style="min-height:100vh;display:flex;align-items:center;justify-content:center">
+  <div class="card" style="max-width:460px;width:100%">
+    <div class="pad" id="auth-box">
+
+      <div style="text-align:center;margin-bottom:1rem">
+        <img src="assets/logo.svg" alt="logo" width="60" height="60">
+        <h2 style="margin:.3rem 0">Portal KARTEJI</h2>
+        <p class="note">Masuk • Daftar • Reset Password</p>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <input id="loginEmail" type="email" placeholder="Email">
+        <input id="loginPass" type="password" placeholder="Kata sandi">
+        <button class="btn btn-primary" id="btnLogin" style="width:100%">Masuk</button>
+        <p class="note" style="text-align:center;margin-top:.6rem">
+          Belum punya akun? <a href="#" id="goRegister">Daftar</a><br>
+          Lupa password? <a href="#" id="goForgot">Reset</a>
+        </p>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm" style="display:none">
+        <input id="regEmail" type="email" placeholder="Email">
+        <input id="regPass" type="password" placeholder="Kata sandi (min 6 karakter)">
+        <button class="btn btn-primary" id="btnRegister" style="width:100%">Daftar</button>
+        <p class="note" style="text-align:center;margin-top:.6rem">
+          Sudah punya akun? <a href="#" id="goLogin1">Masuk</a>
+        </p>
+      </div>
+
+      <!-- FORGOT FORM -->
+      <div id="forgotForm" style="display:none">
+        <input id="forgotEmail" type="email" placeholder="Email terdaftar">
+        <button class="btn btn-primary" id="btnForgot" style="width:100%">Kirim Link Reset</button>
+        <p class="note" style="text-align:center;margin-top:.6rem">
+          <a href="#" id="goLogin2">Kembali ke Masuk</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { onAuth, login, register, resetPassword } from './js/auth.js';
+
+/* otomatis redirect jika sudah login */
+onAuth(u=>{ if(u) location.href='dashboard.html'; });
+
+/* navigasi antar form */
+const loginF=$('#loginForm'), regF=$('#registerForm'), forgotF=$('#forgotForm');
+function show(id){ [loginF,regF,forgotF].forEach(f=>f.style.display='none'); id.style.display='block'; }
+const $ = (s)=>document.querySelector(s);
+
+$('#goRegister').onclick=e=>{e.preventDefault();show(regF);}
+$('#goLogin1').onclick=e=>{e.preventDefault();show(loginF);}
+$('#goLogin2').onclick=e=>{e.preventDefault();show(loginF);}
+$('#goForgot').onclick=e=>{e.preventDefault();show(forgotF);}
+
+/* LOGIN */
+$('#btnLogin').onclick = async()=>{
+  const email=$('#loginEmail').value.trim(), pass=$('#loginPass').value;
+  if(!email||!pass) return alert('Isi email dan sandi.');
+  try{ await login(email,pass); location.href='dashboard.html'; }
+  catch(e){ alert(e.message); }
+};
+
+/* REGISTER */
+$('#btnRegister').onclick = async()=>{
+  const email=$('#regEmail').value.trim(), pass=$('#regPass').value;
+  if(!email||!pass) return alert('Isi email dan sandi.');
+  try{ await register(email,pass); location.href='dashboard.html'; }
+  catch(e){ alert(e.message); }
+};
+
+/* FORGOT */
+$('#btnForgot').onclick = async()=>{
+  const email=$('#forgotEmail').value.trim();
+  if(!email) return alert('Isi email terlebih dulu.');
+  try{ await resetPassword(email); alert('Link reset dikirim ke email.'); show(loginF); }
+  catch(e){ alert(e.message); }
+};
+</script>
+</body>
+</html>
