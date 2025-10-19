@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="assets/logo.svg"><link rel="stylesheet" href="css/style.css">
+<title>Masuk • KARTEJI</title>
+</head>
+<body>
+<main class="container" style="min-height:100vh;display:flex;align-items:center;justify-content:center">
+  <div class="card" style="max-width:460px;width:100%">
+    <div class="pad">
+      <div style="display:flex;gap:.6rem;align-items:center;justify-content:center;margin-bottom:.5rem">
+        <img src="assets/logo.svg" alt="logo" width="42" height="42"><h2 style="margin:0">Masuk</h2>
+      </div>
+      <input id="email" type="email" placeholder="Email">
+      <input id="pass" type="password" placeholder="Kata sandi">
+      <button class="btn btn-primary" id="btnLogin" style="width:100%">Masuk</button>
+      <a class="btn btn-ghost" href="register.html" style="width:100%;margin-top:.5rem;text-align:center">Daftar</a>
+      <a class="btn btn-ghost" href="forgot.html" style="width:100%;margin-top:.5rem;text-align:center">Lupa password?</a>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { onAuth, login } from './js/auth.js';
+
+onAuth(u=>{ if(u) location.href='dashboard.html'; });
+
+document.getElementById('btnLogin').onclick = async()=>{
+  const email=document.getElementById('email').value.trim();
+  const pass =document.getElementById('pass').value;
+  try{ await login(email,pass); location.href='dashboard.html'; }
+  catch(e){ alert(e.message); }
+};
+</script>
+</body>
+</html>
