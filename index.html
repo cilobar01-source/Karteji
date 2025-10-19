@@ -1,160 +1,180 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KARTEJI – Portal Karang Taruna Cilosari Barat</title>
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="stylesheet" href="/css/style.css">
-<meta name="theme-color" content="#f6c445">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/logo.svg">
+<link rel="stylesheet" href="css/style.css">
+<title>Portal Karang Taruna Cilosari Barat</title>
 </head>
 <body>
-<header class="hero">
-  <div class="header container">
-    <div class="mini">
-      <img src="/assets/logo.svg" alt="Logo" class="logo">
-      <div>
-        <h1>KARTEJI – Cilosari Barat RT01 / RW08</h1>
-        <span class="badge">Semarang Timur</span>
-      </div>
+<header class="card" style="border-radius:0">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+    <div class="brand">
+      <img src="assets/logo.svg" alt="logo">
+      <div class="brand-title">KARTEJI • Cilosari Barat RT01/RW08</div>
     </div>
+    <div class="hamburger" id="hamb"><span></span><span></span><span></span></div>
     <nav class="nav">
-      <div class="nav-d">
+      <div class="nav-links" id="navLinks">
         <a href="#pengumuman">Pengumuman</a>
         <a href="#berita">Berita</a>
         <a href="#umkm">Produk</a>
         <a href="#kas">Ringkasan Kas</a>
-        <a class="badge" href="/dashboard.html">Dashboard</a>
       </div>
-      <div class="hamb" onclick="document.getElementById('mnav').classList.toggle('show')">
-        <span></span><span></span><span></span>
+      <div class="nav-auth" id="navAuth">
+        <!-- diisi dinamis -->
       </div>
     </nav>
   </div>
 </header>
-<nav class="mnav" id="mnav">
-  <a href="#pengumuman">Pengumuman</a>
-  <a href="#berita">Berita</a>
-  <a href="#umkm">Produk</a>
-  <a href="#kas">Ringkasan Kas</a>
-  <a href="/dashboard.html">Dashboard</a>
-</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="card">
+      <div class="pad">
+        <h2 style="margin:.2rem 0 0 0;color:#fff">Selamat Datang di Portal Karang Taruna</h2>
+        <p class="note">Kemijen, Semarang Timur — informasi terkini pengumuman, berita, produk/UMKM dan ringkasan kas.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <main class="container">
-  <section class="kpi">
-    <div class="card"><div>
-      <div class="note">Total Kas</div>
-      <div class="kpi-num" id="kpiKas">Rp 0</div>
-    </div></div>
-    <div class="card"><div>
-      <div class="note">Pengumuman</div>
-      <div class="kpi-num" id="kpiPeng">0</div>
-    </div></div>
-  </section>
+  <!-- Pengumuman -->
+  <section id="pengumuman" class="card"><div class="pad">
+    <h3 class="section-title">📢 Pengumuman</h3>
+    <div id="pengList" class="grid grid-2"></div>
+    <p class="note" id="pengEmpty" style="display:none">Belum ada pengumuman.</p>
+  </div></section>
 
-  <h2 class="section-title" id="pengumuman">Pengumuman</h2>
-  <div class="grid grid-2" id="pengList"><p class="note">Memuat…</p></div>
+  <!-- Berita -->
+  <section id="berita" class="card" style="margin-top:1rem"><div class="pad">
+    <h3 class="section-title">📰 Berita</h3>
+    <div id="beritaList" class="grid grid-3"></div>
+    <p class="note" id="beritaEmpty" style="display:none">Belum ada berita.</p>
+  </div></section>
 
-  <h2 class="section-title" id="berita">Berita</h2>
-  <div class="grid grid-3" id="beritaList"><p class="note">Memuat…</p></div>
+  <!-- UMKM / Produk -->
+  <section id="umkm" class="card" style="margin-top:1rem"><div class="pad">
+    <h3 class="section-title">🏪 Produk</h3>
+    <div id="umkmList" class="grid grid-3"></div>
+    <p class="note" id="umkmEmpty" style="display:none">Belum ada produk.</p>
+  </div></section>
 
-  <h2 class="section-title" id="umkm">Produk</h2>
-  <div class="grid grid-3" id="umkmList"><p class="note">Memuat…</p></div>
-
-  <h2 class="section-title" id="kas">Ringkasan Kas</h2>
-  <div class="card">
-    <div class="badge">Total</div>
-    <div class="kpi-num" id="kasTotal">Rp 0</div>
-    <p class="note">Detail transaksi lengkap tersedia bagi anggota di Dashboard.</p>
-  </div>
+  <!-- Kas -->
+  <section id="kas" class="card" style="margin-top:1rem"><div class="pad">
+    <h3 class="section-title">💰 Ringkasan Kas</h3>
+    <div class="badge">Total Saat Ini</div>
+    <h2 id="kasTotal" style="margin:.3rem 0 0 0">Rp 0</h2>
+    <p class="note">Detail transaksi hanya untuk anggota — buka Dashboard.</p>
+  </div></section>
 </main>
 
-<script>
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('/service-worker.js'); }
-</script>
+<footer>
+  © 2025 Karang Taruna Cilosari Barat RT01/RW08 • Kemijen, Semarang Timur
+</footer>
 
-<!-- DATA: Firebase Read-only for homepage -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { db, auth } from './js/firebase.js';
+import { onAuth, logout } from './js/auth.js';
+import { $, truncate } from './js/utils.js';
+import {
+  collection, getDocs, orderBy, query
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
-    authDomain: "karang-taruna-aadaf.firebaseapp.com",
-    projectId: "karang-taruna-aadaf",
-    storageBucket: "karang-taruna-aadaf.firebasestorage.app",
-    messagingSenderId: "367208001887",
-    appId: "1:367208001887:web:bce5982d99edefb7e746ea"
-  };
+/* hamburger */
+const hamb = $('#hamb'), navLinks = $('#navLinks');
+if(hamb) hamb.addEventListener('click', ()=> navLinks.classList.toggle('open'));
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  const pengList = document.getElementById('pengList');
-  const beritaList = document.getElementById('beritaList');
-  const umkmList = document.getElementById('umkmList');
-  const kasTotal = document.getElementById('kasTotal');
-  const kpiKas = document.getElementById('kpiKas');
-  const kpiPeng = document.getElementById('kpiPeng');
-
-  const rupiah = n => 'Rp ' + (Number(n||0)).toLocaleString('id-ID');
-
-  async function loadPengumuman(){
-    const snap = await getDocs(query(collection(db,'pengumuman'), orderBy('createdAt','desc')));
-    pengList.innerHTML=''; let count = 0;
-    snap.forEach(doc=>{
-      const p = doc.data(); count++;
-      const div = document.createElement('div');
-      div.className='card';
-      div.innerHTML = `<h3>${p.judul||'(Tanpa judul)'}</h3>
-        <p style="white-space:pre-line">${(p.isi||'').slice(0,200)}${(p.isi||'').length>200?'…':''}</p>`;
-      pengList.appendChild(div);
-    });
-    kpiPeng.textContent = count;
+/* auth navbar */
+const navAuth = $('#navAuth');
+onAuth(async(user)=>{
+  if(user){
+    navAuth.innerHTML = `
+      <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+      <button class="btn btn-ghost" id="logoutBtn">Keluar</button>
+    `;
+    $('#logoutBtn')?.addEventListener('click', async()=>{ await logout(); location.reload(); });
+  } else {
+    navAuth.innerHTML = `
+      <a href="login.html" class="btn btn-primary">Masuk</a>
+      <a href="register.html" class="btn btn-ghost">Daftar</a>
+    `;
   }
+});
 
-  async function loadBerita(){
-    const snap = await getDocs(query(collection(db,'berita'), orderBy('createdAt','desc')));
-    beritaList.innerHTML='';
-    snap.forEach(doc=>{
-      const b = doc.data();
-      const img = Array.isArray(b.foto)?(b.foto[0]||''):(b.foto||'');
-      const div = document.createElement('div');
-      div.className='card';
-      div.innerHTML = `${img?`<img class="thumb" src="${img}" alt="">`:''}
-        <h3>${b.judul||'(Tanpa judul)'}</h3>
-        <p style="white-space:pre-line">${(b.isi||'').slice(0,160)}${(b.isi||'').length>160?'…':''}</p>`;
-      beritaList.appendChild(div);
-    });
-  }
+/* load pengumuman */
+(async ()=>{
+  const list = $('#pengList'); const empty = $('#pengEmpty');
+  const snap=await getDocs(query(collection(db,'pengumuman'),orderBy('createdAt','desc')));
+  list.innerHTML="";
+  if(snap.empty){ empty.style.display='block'; return; }
+  snap.forEach(d=>{
+    const p=d.data();
+    const el=document.createElement('div');
+    el.className='card'; el.innerHTML=`
+      <div class="pad">
+        <div class="badge">${p.tanggal||''}</div>
+        <h4 style="margin:.4rem 0">${p.judul||'(Tanpa judul)'}</h4>
+        <p style="white-space:pre-line">${truncate(p.isi||'', 180)}</p>
+        <a class="btn btn-ghost" href="dashboard.html#pengumuman">Selengkapnya</a>
+      </div>`;
+    list.appendChild(el);
+  });
+})();
 
-  async function loadUmkm(){
-    const snap = await getDocs(query(collection(db,'umkm'), orderBy('createdAt','desc')));
-    umkmList.innerHTML='';
-    snap.forEach(doc=>{
-      const u = doc.data();
-      const img = Array.isArray(u.foto)?(u.foto[0]||''):(u.foto||'');
-      const div = document.createElement('div');
-      div.className='card';
-      div.innerHTML = `${img?`<img class="thumb" src="${img}" alt="">`:''}
-        <h3>${u.produk||'Produk'}</h3>
-        <p>👤 ${u.penjual||'-'} • 💰 ${rupiah(u.harga)}</p>`;
-      umkmList.appendChild(div);
-    });
-  }
+/* load berita */
+(async ()=>{
+  const list = $('#beritaList'); const empty = $('#beritaEmpty');
+  const snap=await getDocs(query(collection(db,'berita'),orderBy('createdAt','desc')));
+  list.innerHTML="";
+  if(snap.empty){ empty.style.display='block'; return; }
+  snap.forEach(d=>{
+    const b=d.data(); const img = Array.isArray(b.foto)? b.foto[0] : b.foto;
+    const el=document.createElement('div');
+    el.className='card'; el.innerHTML=`
+      ${img?`<img class="thumb" src="${img}" alt="">`:''}
+      <div class="pad">
+        <h4 style="margin:.4rem 0">${b.judul||'(Tanpa judul)'}</h4>
+        <p>${truncate(b.isi||'',150)}</p>
+        <a class="btn btn-ghost" href="dashboard.html#berita">Selengkapnya</a>
+      </div>`;
+    list.appendChild(el);
+  });
+})();
 
-  async function loadKas(){
-    const snap = await getDocs(collection(db,'kas'));
-    let total = 0;
-    snap.forEach(d=>{
-      const k=d.data(); total += (k.tipe==='masuk'?1:-1) * (Number(k.jumlah)||0);
-    });
-    kasTotal.textContent = rupiah(total);
-    kpiKas.textContent = rupiah(total);
-  }
+/* load umkm */
+(async ()=>{
+  const list = $('#umkmList'); const empty = $('#umkmEmpty');
+  const snap=await getDocs(query(collection(db,'umkm'),orderBy('createdAt','desc')));
+  list.innerHTML="";
+  if(snap.empty){ empty.style.display='block'; return; }
+  snap.forEach(d=>{
+    const u=d.data(); const img = Array.isArray(u.foto)? u.foto[0] : u.foto;
+    const el=document.createElement('div');
+    el.className='card'; el.innerHTML=`
+      ${img?`<img class="thumb" src="${img}" alt="">`:''}
+      <div class="pad">
+        <h4 style="margin:.4rem 0">${u.produk||'(Produk)'}</h4>
+        <p>👤 ${u.penjual||'-'} • 💰 Rp${(u.harga||0).toLocaleString('id-ID')}</p>
+        ${u.wa?`<a class="btn btn-primary" target="_blank" href="https://wa.me/${u.wa}">Hubungi</a>`:''}
+      </div>`;
+    list.appendChild(el);
+  });
+})();
 
-  loadPengumuman(); loadBerita(); loadUmkm(); loadKas();
+/* ringkasan kas */
+(async ()=>{
+  const snap=await getDocs(collection(db,'kas'));
+  let total=0;
+  snap.forEach(d=>{
+    const k=d.data();
+    total += (k.tipe==='masuk'?1:-1)*(k.jumlah||0);
+  });
+  $('#kasTotal').textContent = "Rp " + total.toLocaleString('id-ID');
+})();
 </script>
 </body>
 </html>
