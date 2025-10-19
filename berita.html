@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title id="titleTag">Berita • KARTEJI</title>
+<meta name="description" id="metaDesc" content="Berita terbaru Karang Taruna Cilosari Barat">
+<meta property="og:title" id="ogTitle" content="Berita KARTEJI">
+<meta property="og:description" id="ogDesc" content="Portal Karang Taruna Cilosari Barat">
+<meta property="og:image" id="ogImage" content="assets/logo.svg">
+<link rel="icon" href="assets/logo.svg" />
+<style>
+:root{
+  --biru:#0e4c92;--emas:#f6c445;--bg:#0b132b;--text:#f5f7fa;--card:#111928;
+}
+body.light{--bg:#f5f7fa;--text:#1e293b;--card:#fff;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Poppins',system-ui;background:var(--bg);color:var(--text);}
+a{text-decoration:none;color:inherit;}
+header{display:flex;justify-content:space-between;align-items:center;padding:.9rem 1.2rem;background:var(--card);
+  border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:10;}
+.container{max-width:800px;margin:auto;padding:1.2rem;}
+h1{color:var(--emas);}
+img{max-width:100%;border-radius:10px;margin:.6rem 0;}
+.meta{color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:1rem;}
+.comment{border-top:1px solid rgba(255,255,255,.1);padding-top:.6rem;margin-top:1rem;}
+.comment b{color:var(--emas);}
+input,textarea{width:100%;padding:.6rem;margin-top:.4rem;border-radius:8px;border:none;background:var(--card);color:var(--text);}
+button{background:var(--emas);border:none;padding:.5rem 1rem;border-radius:8px;font-weight:700;margin-top:.6rem;cursor:pointer;}
+footer{text-align:center;padding:2rem 1rem;border-top:1px solid rgba(255,255,255,.1);margin-top:2rem;}
+.nav-nextprev{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;}
+.nav-nextprev a{flex:1;text-align:center;padding:.8rem;border-radius:8px;background:var(--card);border:1px solid rgba(255,255,255,.1);}
+.nav-nextprev a:hover{background:var(--emas);color:#0b132b;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <b>📰 Berita KARTEJI</b>
+  <div>
+    <button id="themeBtn">🌓</button>
+    <a href="index.html">↩️ Kembali</a>
+  </div>
+</header>
+
+<div class="container">
+  <h1 id="judul">Memuat...</h1>
+  <div id="meta" class="meta"></div>
+  <div id="galeri"></div>
+  <article id="isi"></article>
+
+  <div id="navContainer" class="nav-nextprev hidden">
+    <a id="prevLink">⬅️ Berita Sebelumnya</a>
+    <a id="nextLink">Berita Selanjutnya ➡️</a>
+  </div>
+
+  <section id="komentarSection">
+    <h3 style="color:var(--emas)">💬 Komentar</h3>
+    <div id="daftarKomentar" class="muted"></div>
+    <div id="formKomentar" class="hidden">
+      <textarea id="teksKomentar" placeholder="Tulis komentar kamu..."></textarea>
+      <button id="kirimKomentar">Kirim</button>
+    </div>
+    <p id="loginMsg" class="muted"></p>
+  </section>
+</div>
+
+<footer>
+  <p>© 2025 KARTEJI Cilosari Barat</p>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
+  authDomain: "karang-taruna-aadaf.firebaseapp.com",
+  projectId: "karang-taruna-aadaf",
+  storageBucket: "karang-taruna-aadaf.appspot.com",
+  messagingSenderId: "367208001887",
+  appId: "1:367208001887:web:bce5982d99edefb7e746ea"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+const $ = s => document.querySelector(s);
+$('#themeBtn').onclick = () => document.body.classList.toggle('light');
+
+let beritaList = [];
+let currentIndex = -1;
+let user = null;
+
+// 🔹 Load Semua Berita untuk navigasi
+async function loadAllBerita() {
+  const snap = await getDocs(query(collection(db, 'berita'), orderBy('createdAt', 'desc')));
+  beritaList = snap.docs.map((doc, i) => ({ id: doc.id, ...doc.data(), index: i }));
+  currentIndex = beritaList.findIndex(b => b.id === id);
+  if (currentIndex === -1) return;
+  loadBeritaDetail(beritaList[currentIndex]);
+  setupNavigation();
+}
+
+// 🔹 Tampilkan berita detail
+function loadBeritaDetail(b) {
+  $('#judul').textContent = b.judul;
+  $('#meta').innerHTML = `📅 ${(b.createdAt?.toDate ? b.createdAt.toDate() : new Date()).toLocaleDateString('id-ID')} · 🖋️ ${b.penulis || 'Anonim'}`;
+  $('#isi').innerHTML = (b.isi || '').replace(/\n/g, '<br>');
+  const gal = $('#galeri');
+  gal.innerHTML = '';
+  if (b.foto) {
+    (Array.isArray(b.foto) ? b.foto : [b.foto]).forEach(f => {
+      const img = document.createElement('img');
+      img.src = f;
+      gal.appendChild(img);
+    });
+  }
+
+  // SEO meta
+  $('#titleTag').textContent = `${b.judul} • KARTEJI`;
+  $('#metaDesc').content = (b.isi || '').slice(0, 150);
+  $('#ogTitle').content = b.judul;
+  $('#ogDesc').content = (b.isi || '').slice(0, 150);
+  $('#ogImage').content = Array.isArray(b.foto) ? b.foto[0] : b.foto || 'assets/logo.svg';
+  loadKomentar();
+}
+
+// 🔹 Setup tombol navigasi prev / next
+function setupNavigation() {
+  if (beritaList.length <= 1) return;
+  const prev = beritaList[currentIndex + 1];
+  const next = beritaList[currentIndex - 1];
+  const nav = $('#navContainer');
+  nav.classList.remove('hidden');
+  if (prev) {
+    $('#prevLink').href = `berita.html?id=${prev.id}`;
+    $('#prevLink').textContent = `⬅️ ${prev.judul.slice(0, 20)}`;
+  } else $('#prevLink').classList.add('hidden');
+  if (next) {
+    $('#nextLink').href = `berita.html?id=${next.id}`;
+    $('#nextLink').textContent = `${next.judul.slice(0, 20)} ➡️`;
+  } else $('#nextLink').classList.add('hidden');
+}
+
+// 🔹 Komentar
+onAuthStateChanged(auth, u => {
+  user = u;
+  if (u) {
+    $('#formKomentar').classList.remove('hidden');
+    $('#loginMsg').textContent = '';
+  } else {
+    $('#loginMsg').textContent = 'Masuk untuk berkomentar.';
+    $('#formKomentar').classList.add('hidden');
+  }
+});
+
+async function loadKomentar() {
+  const qy = query(collection(db, 'berita', id, 'komentar'), orderBy('createdAt', 'desc'));
+  const snap = await getDocs(qy);
+  const c = $('#daftarKomentar'); c.innerHTML = '';
+  if (snap.empty) {
+    c.innerHTML = '<p class="muted">Belum ada komentar.</p>';
+    return;
+  }
+  snap.forEach(d => {
+    const k = d.data();
+    const div = document.createElement('div');
+    div.className = 'comment';
+    div.innerHTML = `<b>${k.nama || 'Anonim'}</b><br>${k.teks || ''}`;
+    c.appendChild(div);
+  });
+}
+
+$('#kirimKomentar').onclick = async () => {
+  const teks = $('#teksKomentar').value.trim();
+  if (!teks || !user) return;
+  await addDoc(collection(db, 'berita', id, 'komentar'), {
+    nama: user.displayName || user.email || 'Anonim',
+    teks,
+    createdAt: new Date()
+  });
+  $('#teksKomentar').value = '';
+  await loadKomentar();
+  document.querySelector('#daftarKomentar').lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+};
+
+// Auto refresh komentar tiap 10 detik
+setInterval(loadKomentar, 10000);
+loadAllBerita();
+</script>
+</body>
+</html>
