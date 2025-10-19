@@ -1,503 +1,474 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard – KARTEJI</title>
-<link rel="stylesheet" href="/css/style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="assets/logo.svg"><link rel="stylesheet" href="css/style.css">
+<title>Dashboard • KARTEJI</title>
 </head>
 <body>
-<header class="hero">
-  <div class="header container">
-    <div class="mini">
-      <img src="/assets/logo.svg" alt="Logo" class="logo">
-      <div>
-        <h1>Dashboard KARTEJI</h1>
-        <span class="badge">Hanya Anggota</span>
-      </div>
+<header class="card" style="border-radius:0">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+    <div class="brand">
+      <img src="assets/logo.svg" alt="logo">
+      <div class="brand-title">Dashboard Karang Taruna</div>
     </div>
-    <div class="nav">
-      <div class="nav-d" id="whois">Memuat…</div>
-      <div class="hamb" onclick="document.getElementById('mnav').classList.toggle('show')">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <button id="btnLogout" class="btn btn-ghost">Keluar</button>
+    </nav>
   </div>
 </header>
-<nav class="mnav" id="mnav">
-  <a href="#" id="btnLogoutM">Keluar</a>
-</nav>
 
-<main class="container">
-  <div class="grid grid-2">
-    <aside class="card" id="menu">
-      <h3>Menu</h3>
-      <div class="row">
-        <button class="btn-ghost" onclick="showPanel('profil')">Profil</button>
-        <button class="btn-ghost role-super role-admin" onclick="showPanel('anggota')">Anggota</button>
-        <button class="btn-ghost role-super role-admin role-peng" onclick="showPanel('pengumuman')">Pengumuman</button>
-        <button class="btn-ghost role-super role-admin role-berita" onclick="showPanel('berita')">Berita</button>
-        <button class="btn-ghost role-super role-admin role-umkm" onclick="showPanel('umkm')">Produk</button>
-        <button class="btn-ghost role-super role-admin role-kas" onclick="showPanel('kas')">Kas</button>
-      </div>
-    </aside>
+<main class="container" style="display:grid;grid-template-columns:240px 1fr;gap:1rem">
+  <aside class="card" style="height:max-content">
+    <div class="pad">
+      <div class="badge" id="userEmail">-</div>
+      <div style="margin-top:.6rem;font-weight:800">Menu</div>
+      <div id="sideMenu" style="display:flex;flex-direction:column;gap:.4rem;margin-top:.4rem"></div>
+    </div>
+  </aside>
 
-    <section class="grid" id="panels">
+  <section id="content">
+    <!-- PROFIL -->
+    <div id="panel-profil" class="card"><div class="pad">
+      <h3 class="section-title">👤 Profil Saya</h3>
+      <input id="pNama" placeholder="Nama lengkap">
+      <input id="pFoto" type="file" accept="image/*" multiple>
+      <button class="btn btn-primary" id="pSimpan">Simpan Profil</button>
+      <p class="note">Foto profil mendukung multi-gambar (disimpan sebagai array URL Cloudinary).</p>
+      <div id="pGaleri" class="grid grid-3" style="margin-top:.8rem"></div>
+    </div></div>
 
-      <!-- PROFIL -->
-      <div class="card" id="panel-profil">
-        <h3>👤 Profil</h3>
-        <p>Email: <b id="profilEmail">-</b></p>
-        <p>Role: <span class="badgerole" id="profilRole">-</span></p>
-        <input id="pNama" placeholder="Nama lengkap">
-        <input id="pFoto" type="file" accept="image/*" multiple>
-        <button class="btn" id="pSimpan">Simpan Profil</button>
-      </div>
+    <!-- ANGGOTA (super_admin: ubah role) -->
+    <div id="panel-anggota" class="card" style="display:none"><div class="pad">
+      <h3 class="section-title">👥 Anggota</h3>
+      <div id="anggotaList" class="grid grid-2"></div>
+    </div></div>
 
-      <!-- ANGGOTA -->
-      <div class="card hide" id="panel-anggota">
-        <h3>👥 Anggota</h3>
-        <div id="anggotaList" class="grid"></div>
-      </div>
+    <!-- PENGUMUMAN -->
+    <div id="panel-pengumuman" class="card" style="display:none"><div class="pad">
+      <h3 class="section-title">📢 Pengumuman</h3>
+      <input id="gJudul" placeholder="Judul">
+      <textarea id="gIsi" placeholder="Isi pengumuman" rows="4"></textarea>
+      <input id="gTanggal" type="date">
+      <button class="btn btn-primary" id="gSimpan">Simpan</button>
+      <div id="pengList" class="grid grid-2" style="margin-top:1rem"></div>
+    </div></div>
 
-      <!-- PENGUMUMAN -->
-      <div class="card hide" id="panel-pengumuman">
-        <h3>📢 Pengumuman</h3>
-        <input id="pnJudul" placeholder="Judul">
-        <textarea id="pnIsi" rows="4" placeholder="Isi"></textarea>
-        <input id="pnTanggal" type="date">
-        <div class="row">
-          <button class="btn" id="pnSimpan">Simpan</button>
-          <button class="btn-ghost" id="pnBatal" style="display:none">Batal</button>
-        </div>
-        <div id="pengList" class="grid" style="margin-top:10px"></div>
-      </div>
+    <!-- BERITA -->
+    <div id="panel-berita" class="card" style="display:none"><div class="pad">
+      <h3 class="section-title">📰 Berita</h3>
+      <input id="bJudul" placeholder="Judul">
+      <textarea id="bIsi" placeholder="Isi berita" rows="5"></textarea>
+      <input id="bFoto" type="file" accept="image/*" multiple>
+      <button class="btn btn-primary" id="bSimpan">Simpan</button>
+      <div id="beritaList" class="grid grid-2" style="margin-top:1rem"></div>
+    </div></div>
 
-      <!-- BERITA -->
-      <div class="card hide" id="panel-berita">
-        <h3>📰 Berita</h3>
-        <input id="bJudul" placeholder="Judul Berita">
-        <textarea id="bIsi" rows="5" placeholder="Isi berita (boleh multi-baris)"></textarea>
-        <input id="bFoto" type="file" accept="image/*" multiple>
-        <div class="row">
-          <button class="btn" id="bSimpan">Simpan</button>
-          <button class="btn-ghost" id="bBatal" style="display:none">Batal</button>
-        </div>
-        <div id="beritaList" class="grid" style="margin-top:10px"></div>
-      </div>
+    <!-- UMKM / Produk -->
+    <div id="panel-umkm" class="card" style="display:none"><div class="pad">
+      <h3 class="section-title">🏪 Produk</h3>
+      <input id="uProduk" placeholder="Nama produk">
+      <input id="uPenjual" placeholder="Nama penjual">
+      <input id="uHarga" type="number" placeholder="Harga (Rp)">
+      <input id="uWa" placeholder="Nomor WhatsApp (628xxxx)">
+      <textarea id="uDes" placeholder="Deskripsi" rows="3"></textarea>
+      <input id="uFoto" type="file" accept="image/*" multiple>
+      <button class="btn btn-primary" id="uSimpan">Simpan</button>
+      <div id="umkmList" class="grid grid-2" style="margin-top:1rem"></div>
+    </div></div>
 
-      <!-- UMKM -->
-      <div class="card hide" id="panel-umkm">
-        <h3>🏪 Produk (UMKM)</h3>
-        <input id="uProduk" placeholder="Nama Produk">
-        <input id="uPenjual" placeholder="Nama Penjual">
-        <input id="uHarga" type="number" placeholder="Harga">
-        <input id="uWa" placeholder="Nomor WhatsApp (628xxxxxx)">
-        <textarea id="uDes" rows="3" placeholder="Deskripsi"></textarea>
-        <input id="uFoto" type="file" accept="image/*" multiple>
-        <div class="row">
-          <button class="btn" id="uSimpan">Simpan</button>
-          <button class="btn-ghost" id="uBatal" style="display:none">Batal</button>
-        </div>
-        <div id="umkmList" class="grid" style="margin-top:10px"></div>
-      </div>
+    <!-- KAS -->
+    <div id="panel-kas" class="card" style="display:none"><div class="pad">
+      <h3 class="section-title">💰 Kas</h3>
+      <input id="kNama" placeholder="Nama pembayar">
+      <input id="kTanggal" type="date">
+      <input id="kJumlah" type="number" placeholder="Jumlah (Rp)">
+      <select id="kTipe"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select>
+      <input id="kKet" placeholder="Keterangan">
+      <button class="btn btn-primary" id="kSimpan">Simpan</button>
+      <div id="kasList" style="margin-top:1rem"></div>
+    </div></div>
 
-      <!-- KAS -->
-      <div class="card hide" id="panel-kas">
-        <h3>💰 Kas</h3>
-        <input id="kNama" placeholder="Nama Pembayar">
-        <input id="kTanggal" type="date">
-        <input id="kJumlah" type="number" placeholder="Jumlah">
-        <select id="kTipe">
-          <option value="masuk">Pemasukan</option>
-          <option value="keluar">Pengeluaran</option>
-        </select>
-        <input id="kKet" placeholder="Keterangan">
-        <div class="row"><button class="btn" id="kSimpan">Simpan Kas</button></div>
-        <div id="kasList" style="margin-top:10px"></div>
-      </div>
-
-    </section>
-  </div>
+  </section>
 </main>
 
+<footer>© 2025 KARTEJI</footer>
+
 <script type="module">
-  // ===== Firebase =====
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { auth, db } from './js/firebase.js';
+import { onAuth, logout } from './js/auth.js';
+import { uploadToCloudinary } from './js/cloudinary.js';
+import { $, $$, fmtRupiah, nl2br } from './js/utils.js';
+import {
+  doc, getDoc, setDoc, updateDoc, deleteDoc,
+  collection, addDoc, getDocs, orderBy, query, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
-    authDomain: "karang-taruna-aadaf.firebaseapp.com",
-    projectId: "karang-taruna-aadaf",
-    storageBucket: "karang-taruna-aadaf.firebasestorage.app",
-    messagingSenderId: "367208001887",
-    appId: "1:367208001887:web:bce5982d99edefb7e746ea"
-  };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+/* ===== Auth guard ===== */
+let UID=null, ROLE='anggota', EMAIL='';
+onAuth(async (u)=>{
+  if(!u){ alert('Silakan login dulu'); location.href='login.html'; return; }
+  UID=u.uid; EMAIL=u.email;
+  $('#userEmail').textContent = EMAIL;
+  const usnap = await getDoc(doc(db,'users',UID));
+  const udata = usnap.exists()? usnap.data() : {};
+  ROLE = udata.role || 'anggota';
+  renderSidebarByRole();
+  loadProfil();
+  if(can('pengumuman')) loadPengumuman();
+  if(can('berita')) loadBerita();
+  if(can('umkm')) loadUmkm();
+  if(can('kas')) loadKas();
+  if(can('anggota')) loadAnggota();
+});
 
-  // ===== Cloudinary (Unsigned) =====
-  const CLOUD_NAME = "dxdmjdcz3";
-  const UPLOAD_PRESET = "karteji_upload";
+$('#btnLogout').onclick = async()=>{ await logout(); location.href='index.html'; };
 
-  async function uploadMany(files){
-    const urls=[];
-    for(const f of files){
-      const fd = new FormData();
-      fd.append("file", f);
-      fd.append("upload_preset", UPLOAD_PRESET);
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method:"POST", body: fd });
-      const data = await res.json();
-      if(data.secure_url) urls.push(data.secure_url);
-    }
-    return urls;
+/* ===== Role map ===== */
+const roleMap = {
+  super_admin: ['profil','anggota','pengumuman','berita','umkm','kas'],
+  admin:       ['profil','pengumuman','berita','umkm','kas'],
+  admin_pengumuman:['profil','pengumuman'],
+  admin_berita:['profil','berita'],
+  admin_umkm:['profil','umkm'],
+  admin_keuangan:['profil','kas'],
+  anggota:['profil']
+};
+function can(area){
+  if(ROLE==='super_admin') return true;
+  switch(area){
+    case 'anggota': return ROLE==='super_admin';
+    case 'pengumuman': return ['admin','admin_pengumuman'].includes(ROLE);
+    case 'berita': return ['admin','admin_berita'].includes(ROLE);
+    case 'umkm': return ['admin','admin_umkm'].includes(ROLE);
+    case 'kas': return ['admin','admin_keuangan'].includes(ROLE);
+    default: return true;
   }
+}
+function renderSidebarByRole(){
+  const menu = roleMap[ROLE] || ['profil'];
+  const wrap = $('#sideMenu');
+  wrap.innerHTML = '';
+  menu.forEach((id,i)=>{
+    const a=document.createElement('a');
+    a.href="#"; a.textContent=id.toUpperCase();
+    a.className="btn btn-ghost";
+    a.onclick=(e)=>{e.preventDefault(); showPanel(id);};
+    wrap.appendChild(a);
+    if(i===0) showPanel(id);
+  });
+}
+function showPanel(id){
+  ['profil','anggota','pengumuman','berita','umkm','kas'].forEach(pid=>{
+    const el = document.getElementById('panel-'+pid);
+    if(el) el.style.display = (pid===id ? 'block':'none');
+  });
+}
 
-  // ===== Role helpers =====
-  let UID=null, ROLE="anggota";
-  const can = {
-    anggota: () => ROLE === "anggota",
-    super:   () => ROLE === "super_admin",
-    admin:   () => ROLE === "admin" || ROLE === "super_admin",
-    peng:    () => ["super_admin","admin","admin_pengumuman"].includes(ROLE),
-    berita:  () => ["super_admin","admin","admin_berita"].includes(ROLE),
-    umkm:    () => ["super_admin","admin","admin_umkm"].includes(ROLE),
-    kas:     () => ["super_admin","admin","admin_keuangan"].includes(ROLE),
-  };
-  function setVisibilityByRole(){
-    // sidebar buttons visibility
-    document.querySelectorAll('.role-super').forEach(el=> el.style.display = can.super()? 'inline-block':'none');
-    document.querySelectorAll('.role-admin').forEach(el=> el.style.display = can.admin()? 'inline-block':'none');
-    document.querySelectorAll('.role-peng').forEach(el=> el.style.display = can.peng()? 'inline-block':'none');
-    document.querySelectorAll('.role-berita').forEach(el=> el.style.display = can.berita()? 'inline-block':'none');
-    document.querySelectorAll('.role-umkm').forEach(el=> el.style.display = can.umkm()? 'inline-block':'none');
-    document.querySelectorAll('.role-kas').forEach(el=> el.style.display = can.kas()? 'inline-block':'none');
+/* ===== PROFIL ===== */
+async function loadProfil(){
+  const us = await getDoc(doc(db,'users',UID));
+  const d  = us.exists()? us.data() : {};
+  $('#pNama').value = d.nama||'';
+  renderGaleri(d.foto);
+}
+function renderGaleri(fotos){
+  const g = $('#pGaleri'); g.innerHTML='';
+  const arr = Array.isArray(fotos)? fotos : (fotos?[fotos]:[]);
+  arr.forEach(url=>{
+    const el=document.createElement('img');
+    el.src=url; el.className='thumb'; g.appendChild(el);
+  });
+}
+$('#pSimpan').onclick = async()=>{
+  const nama = $('#pNama').value.trim();
+  const files = $('#pFoto').files;
+  let fotoUrls = [];
+  if(files && files.length>0){
+    fotoUrls = await uploadToCloudinary(files);
   }
+  await setDoc(doc(db,'users',UID), {
+    ...(nama && { nama }),
+    ...(fotoUrls.length>0 && { foto: fotoUrls })
+  }, { merge:true });
+  alert('Profil tersimpan.');
+  loadProfil();
+};
 
-  // ===== Panels =====
-  function showPanel(id){
-    document.querySelectorAll('#panels > .card').forEach(c=>c.classList.add('hide'));
-    document.getElementById('panel-'+id).classList.remove('hide');
-  }
-  window.showPanel = showPanel;
-
-  // ===== Auth gate =====
-  const whois = document.getElementById('whois');
-  const profilEmail = document.getElementById('profilEmail');
-  const profilRole = document.getElementById('profilRole');
-  document.getElementById('btnLogoutM').onclick = ()=> signOut(auth);
-
-  onAuthStateChanged(auth, async (user)=>{
-    if(!user){
-      alert('Silakan login dulu di aplikasi kamu (halaman login Firebase).');
-      location.href = '/index.html';
-      return;
-    }
-    UID = user.uid;
-    profilEmail.textContent = user.email;
-
-    // ensure user doc
-    const uref = doc(db,'users',UID);
-    const us = await getDoc(uref);
-    if(!us.exists()){
-      await setDoc(uref,{ email:user.email, role:'anggota', createdAt:serverTimestamp() });
-      ROLE = 'anggota';
-    }else{
-      ROLE = us.data().role || 'anggota';
-    }
-    profilRole.textContent = ROLE;
-    whois.innerHTML = `<span class="badge">Masuk sebagai ${user.email}</span> <a class="btn-ghost" href="#" id="btnLogout">Keluar</a>`;
-    const lo = document.getElementById('btnLogout'); if(lo) lo.onclick = ()=> signOut(auth);
-
-    setVisibilityByRole();
-    // preload
-    loadAnggota();
-    loadPengumuman();
-    loadBerita();
-    loadUmkm();
-    loadKas();
+/* ===== ANGGOTA ===== */
+async function loadAnggota(){
+  const c=$('#anggotaList'); c.innerHTML='Memuat...';
+  const snap=await getDocs(query(collection(db,'users'), orderBy('email')));
+  c.innerHTML='';
+  snap.forEach(u=>{
+    const d=u.data(); const id=u.id;
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`
+      <div class="pad">
+        <div class="badge">${d.role||'anggota'}</div>
+        <div style="font-weight:800;margin-top:.3rem">${d.nama||'(Tanpa nama)'}</div>
+        <div class="note">${d.email||''}</div>
+        ${ROLE==='super_admin'?`
+        <select id="role-${id}" style="margin-top:.5rem">
+          <option value="anggota" ${d.role==='anggota'?'selected':''}>anggota</option>
+          <option value="admin" ${d.role==='admin'?'selected':''}>admin</option>
+          <option value="admin_pengumuman" ${d.role==='admin_pengumuman'?'selected':''}>admin_pengumuman</option>
+          <option value="admin_berita" ${d.role==='admin_berita'?'selected':''}>admin_berita</option>
+          <option value="admin_umkm" ${d.role==='admin_umkm'?'selected':''}>admin_umkm</option>
+          <option value="admin_keuangan" ${d.role==='admin_keuangan'?'selected':''}>admin_keuangan</option>
+          <option value="super_admin" ${d.role==='super_admin'?'selected':''}>super_admin</option>
+        </select>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn btn-primary" data-act="save" data-id="${id}">Simpan</button>
+          <button class="btn btn-ghost" data-act="disable" data-id="${id}">Nonaktifkan</button>
+        </div>`:''}
+      </div>`;
+    c.appendChild(card);
   });
 
-  // ===== PROFIL =====
-  document.getElementById('pSimpan').onclick = async ()=>{
-    const nama = document.getElementById('pNama').value.trim();
-    const files = document.getElementById('pFoto').files;
-    let foto = null;
-    if(files && files.length>0){
-      const urls = await uploadMany(files);
-      foto = urls[0];
-    }
-    await setDoc(doc(db,'users',UID), { ...(nama&&{nama}), ...(foto&&{foto}) }, { merge:true });
-    alert('Profil disimpan.');
-  };
+  if(ROLE==='super_admin'){
+    c.addEventListener('click', async (e)=>{
+      const b=e.target.closest('button'); if(!b) return;
+      const id=b.getAttribute('data-id'); const act=b.getAttribute('data-act');
+      if(act==='save'){
+        const r=document.getElementById(`role-${id}`).value;
+        await setDoc(doc(db,'users',id), { role:r }, { merge:true });
+        alert('Role diperbarui.');
+        loadAnggota();
+      } else if (act==='disable'){
+        if(!confirm('Nonaktifkan user ini?')) return;
+        await setDoc(doc(db,'users',id), { status:'inactive' }, { merge:true });
+        loadAnggota();
+      }
+    }, { once:true });
+  }
+}
 
-  // ===== ANGGOTA (list + ubah role (super admin only)) =====
-  async function loadAnggota(){
-    const wrap = document.getElementById('anggotaList');
-    if(!wrap) return;
-    wrap.innerHTML = '<p class="note">Memuat…</p>';
-    const qs = await getDocs(query(collection(db,'users'), orderBy('email')));
-    wrap.innerHTML = '';
-    qs.forEach(u=>{
-      const d=u.data(), id=u.id;
-      const card = document.createElement('div'); card.className='card';
-      card.innerHTML = `
-        <div class="mini">
-          <img src="${d.foto||'/assets/logo.svg'}" alt="">
-          <div>
-            <div><b>${d.nama||'(Tanpa nama)'}</b> <span class="badgerole">${d.role||'anggota'}</span></div>
-            <div class="note">${d.email||''}</div>
-          </div>
+/* ===== PENGUMUMAN (CRUD) ===== */
+async function loadPengumuman(){
+  const c=$('#pengList'); c.innerHTML='Memuat...';
+  const snap=await getDocs(query(collection(db,'pengumuman'), orderBy('createdAt','desc')));
+  c.innerHTML='';
+  snap.forEach(d=>{
+    const p=d.data();
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML=`
+      <div class="pad">
+        <div class="badge">${p.tanggal||''}</div>
+        <h4 style="margin:.4rem 0">${p.judul||'(Tanpa judul)'}</h4>
+        <p style="white-space:pre-line">${nl2br(p.isi||'')}</p>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
+          <button class="btn btn-ghost" data-del="${d.id}">Hapus</button>
         </div>
-        ${can.super()?`
-        <div class="row" style="margin-top:8px">
-          <select id="role-${id}">
-            <option value="anggota" ${d.role==='anggota'?'selected':''}>anggota</option>
-            <option value="admin" ${d.role==='admin'?'selected':''}>admin</option>
-            <option value="admin_pengumuman" ${d.role==='admin_pengumuman'?'selected':''}>admin_pengumuman</option>
-            <option value="admin_berita" ${d.role==='admin_berita'?'selected':''}>admin_berita</option>
-            <option value="admin_umkm" ${d.role==='admin_umkm'?'selected':''}>admin_umkm</option>
-            <option value="admin_keuangan" ${d.role==='admin_keuangan'?'selected':''}>admin_keuangan</option>
-            <option value="super_admin" ${d.role==='super_admin'?'selected':''}>super_admin</option>
-          </select>
-          <button class="btn" onclick="window._saveRole('${id}')">Simpan</button>
-        </div>`:''}
-      `;
-      wrap.appendChild(card);
-    });
-  }
-  window._saveRole = async (uid)=>{
-    if(!can.super()) return alert('Hanya super_admin.');
-    const val = document.getElementById('role-'+uid).value;
-    await setDoc(doc(db,'users',uid), { role: val }, { merge:true });
-    alert('Role diperbarui.');
-    loadAnggota();
-  };
+      </div>`;
+    c.appendChild(el);
+  });
 
-  // ===== PENGUMUMAN =====
-  let editPengId=null;
-  document.getElementById('pnSimpan').onclick = async ()=>{
-    if(!can.peng()) return alert('Tidak punya akses.');
-    const judul = document.getElementById('pnJudul').value.trim();
-    const isi   = document.getElementById('pnIsi').value;
-    const tanggal = document.getElementById('pnTanggal').value || new Date().toISOString().slice(0,10);
-    if(!judul || !isi) return alert('Lengkapi judul & isi.');
-    if(editPengId){
-      await updateDoc(doc(db,'pengumuman',editPengId), { judul, isi, tanggal });
-      editPengId=null; document.getElementById('pnBatal').style.display='none';
-      alert('Diperbarui.');
-    }else{
-      await addDoc(collection(db,'pengumuman'), { judul, isi, tanggal, dibuatOleh: (auth.currentUser?.email||'anonim'), createdAt: serverTimestamp() });
-      alert('Disimpan.');
+  c.onclick=async(e)=>{
+    const id = e.target.getAttribute('data-edit') || e.target.getAttribute('data-del');
+    if(!id) return;
+    if(e.target.hasAttribute('data-edit')){
+      const v=(await getDoc(doc(db,'pengumuman',id))).data()||{};
+      $('#gJudul').value=v.judul||'';
+      $('#gIsi').value=v.isi||'';
+      $('#gTanggal').value=v.tanggal||'';
+      $('#gSimpan').setAttribute('data-editing', id);
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      if(!confirm('Hapus pengumuman?')) return;
+      await deleteDoc(doc(db,'pengumuman',id));
+      loadPengumuman();
     }
-    document.getElementById('pnJudul').value='';
-    document.getElementById('pnIsi').value='';
-    document.getElementById('pnTanggal').value='';
-    loadPengumuman();
   };
-  document.getElementById('pnBatal').onclick = ()=>{ editPengId=null; document.getElementById('pnBatal').style.display='none'; };
-  async function loadPengumuman(){
-    const wrap = document.getElementById('pengList');
-    const qs = await getDocs(query(collection(db,'pengumuman'), orderBy('createdAt','desc')));
-    wrap.innerHTML='';
-    qs.forEach(d=>{
-      const v=d.data();
-      const el=document.createElement('div'); el.className='card';
-      el.innerHTML = `
-        <h4>${v.judul||'(Tanpa judul)'}</h4>
-        <p style="white-space:pre-line">${v.isi||''}</p>
-        <small class="note">📅 ${v.tanggal||'-'} • ✍️ ${v.dibuatOleh||''}</small>
-        ${can.peng()?`<div class="row" style="margin-top:6px">
-          <button class="btn-ghost" onclick="window._editPeng('${d.id}')">Edit</button>
-          <button class="btn-ghost" onclick="window._delPeng('${d.id}')">Hapus</button>
-        </div>`:''}
-      `;
-      wrap.appendChild(el);
-    });
+}
+$('#gSimpan').onclick = async ()=>{
+  if(!can('pengumuman')) return alert('Akses ditolak.');
+  const judul=$('#gJudul').value.trim();
+  const isi=$('#gIsi').value.trim();
+  const tanggal=$('#gTanggal').value||new Date().toISOString().slice(0,10);
+  const editing = $('#gSimpan').getAttribute('data-editing');
+  if(editing){
+    await updateDoc(doc(db,'pengumuman',editing), { judul, isi, tanggal });
+    $('#gSimpan').removeAttribute('data-editing');
+  }else{
+    await addDoc(collection(db,'pengumuman'), { judul, isi, tanggal, createdAt:serverTimestamp() });
   }
-  window._editPeng = async (id)=>{
-    if(!can.peng()) return;
-    const v=(await getDoc(doc(db,'pengumuman',id))).data();
-    document.getElementById('pnJudul').value = v.judul||'';
-    document.getElementById('pnIsi').value = v.isi||'';
-    document.getElementById('pnTanggal').value = v.tanggal||'';
-    editPengId=id; document.getElementById('pnBatal').style.display='inline-block';
-    showPanel('pengumuman');
-  };
-  window._delPeng = async (id)=>{
-    if(!can.peng()) return;
-    if(!confirm('Hapus pengumuman ini?')) return;
-    await deleteDoc(doc(db,'pengumuman',id));
-    loadPengumuman();
-  };
+  $('#gJudul').value=''; $('#gIsi').value=''; $('#gTanggal').value='';
+  loadPengumuman();
+};
 
-  // ===== BERITA =====
-  let editBeritaId=null;
-  document.getElementById('bSimpan').onclick = async ()=>{
-    if(!can.berita()) return alert('Tidak punya akses.');
-    const judul=document.getElementById('bJudul').value.trim();
-    const isi=document.getElementById('bIsi').value;
-    const files=document.getElementById('bFoto').files;
-    let fotos=[];
-    if(files && files.length>0){ fotos = await uploadMany(files); }
-    if(editBeritaId){
-      await updateDoc(doc(db,'berita',editBeritaId), { judul, isi, ...(fotos.length?{foto:fotos}:{}) });
-      editBeritaId=null; document.getElementById('bBatal').style.display='none';
-      alert('Berita diperbarui.');
-    }else{
-      await addDoc(collection(db,'berita'), { judul, isi, foto: fotos, penulis: (auth.currentUser?.email||'anonim'), createdAt: serverTimestamp() });
-      alert('Berita disimpan.');
+/* ===== BERITA (CRUD + multi gambar) ===== */
+async function loadBerita(){
+  const c=$('#beritaList'); c.innerHTML='Memuat...';
+  const snap=await getDocs(query(collection(db,'berita'), orderBy('createdAt','desc')));
+  c.innerHTML='';
+  snap.forEach(d=>{
+    const b=d.data(); const imgs=Array.isArray(b.foto)?b.foto:[b.foto].filter(Boolean);
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML=`
+      ${imgs[0]?`<img class="thumb" src="${imgs[0]}" alt="">`:''}
+      <div class="pad">
+        <h4 style="margin:.4rem 0">${b.judul||'(Tanpa judul)'}</h4>
+        <p style="white-space:pre-line">${nl2br(b.isi||'')}</p>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
+          <button class="btn btn-ghost" data-del="${d.id}">Hapus</button>
+        </div>
+      </div>`;
+    c.appendChild(el);
+  });
+
+  c.onclick=async(e)=>{
+    const id = e.target.getAttribute('data-edit') || e.target.getAttribute('data-del');
+    if(!id) return;
+    if(e.target.hasAttribute('data-edit')){
+      const v=(await getDoc(doc(db,'berita',id))).data()||{};
+      $('#bJudul').value=v.judul||'';
+      $('#bIsi').value=v.isi||'';
+      $('#bSimpan').setAttribute('data-editing', id);
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      if(!confirm('Hapus berita?')) return;
+      await deleteDoc(doc(db,'berita',id));
+      loadBerita();
     }
-    document.getElementById('bJudul').value='';
-    document.getElementById('bIsi').value='';
-    document.getElementById('bFoto').value='';
-    loadBerita();
   };
-  document.getElementById('bBatal').onclick=()=>{ editBeritaId=null; document.getElementById('bBatal').style.display='none'; };
-  async function loadBerita(){
-    const wrap=document.getElementById('beritaList');
-    const qs=await getDocs(query(collection(db,'berita'), orderBy('createdAt','desc')));
-    wrap.innerHTML='';
-    qs.forEach(d=>{
-      const v=d.data(); const img = Array.isArray(v.foto)?(v.foto[0]||''):(v.foto||'');
-      const el=document.createElement('div'); el.className='card';
-      el.innerHTML = `${img?`<img class="thumb" src="${img}" alt="">`:''}
-        <h4>${v.judul||'(Tanpa judul)'}</h4>
-        <p style="white-space:pre-line">${(v.isi||'')}</p>
-        ${can.berita()?`<div class="row" style="margin-top:6px">
-          <button class="btn-ghost" onclick="window._editBerita('${d.id}')">Edit</button>
-          <button class="btn-ghost" onclick="window._delBerita('${d.id}')">Hapus</button>
-        </div>`:''}
-      `;
-      wrap.appendChild(el);
+}
+$('#bSimpan').onclick = async ()=>{
+  if(!can('berita')) return alert('Akses ditolak.');
+  const judul=$('#bJudul').value.trim();
+  const isi=$('#bIsi').value.trim();
+  const files=$('#bFoto').files;
+  let fotoUrls=[];
+  if(files && files.length>0) fotoUrls = await uploadToCloudinary(files);
+  const editing = $('#bSimpan').getAttribute('data-editing');
+  if(editing){
+    await updateDoc(doc(db,'berita',editing), {
+      judul, isi, ...(fotoUrls.length>0 && { foto: fotoUrls })
+    });
+    $('#bSimpan').removeAttribute('data-editing');
+  }else{
+    await addDoc(collection(db,'berita'), {
+      judul, isi, foto: fotoUrls, penulis: auth.currentUser?.email || 'anonim', createdAt: serverTimestamp()
     });
   }
-  window._editBerita = async (id)=>{
-    if(!can.berita()) return;
-    const v=(await getDoc(doc(db,'berita',id))).data();
-    document.getElementById('bJudul').value=v.judul||'';
-    document.getElementById('bIsi').value=v.isi||'';
-    editBeritaId=id; document.getElementById('bBatal').style.display='inline-block';
-    showPanel('berita');
-  };
-  window._delBerita = async (id)=>{
-    if(!can.berita()) return;
-    if(!confirm('Hapus berita ini?')) return;
-    await deleteDoc(doc(db,'berita',id));
-    loadBerita();
-  };
+  $('#bJudul').value=''; $('#bIsi').value=''; $('#bFoto').value='';
+  loadBerita();
+};
 
-  // ===== UMKM =====
-  let editUmkmId=null;
-  document.getElementById('uSimpan').onclick = async ()=>{
-    if(!can.umkm()) return alert('Tidak punya akses.');
-    const produk=document.getElementById('uProduk').value.trim();
-    const penjual=document.getElementById('uPenjual').value.trim();
-    const harga=Number(document.getElementById('uHarga').value||0);
-    const wa=document.getElementById('uWa').value.trim();
-    const des=document.getElementById('uDes').value;
-    const files=document.getElementById('uFoto').files;
-    let fotos=[]; if(files && files.length>0){ fotos = await uploadMany(files); }
-    if(editUmkmId){
-      await updateDoc(doc(db,'umkm',editUmkmId), { produk, penjual, harga, wa, deskripsi:des, ...(fotos.length?{foto:fotos}:{}) });
-      editUmkmId=null; document.getElementById('uBatal').style.display='none';
-      alert('Produk diperbarui.');
-    }else{
-      await addDoc(collection(db,'umkm'), { produk, penjual, harga, wa, deskripsi:des, foto:fotos, createdAt: serverTimestamp() });
-      alert('Produk disimpan.');
+/* ===== UMKM / Produk (CRUD + multi gambar) ===== */
+async function loadUmkm(){
+  const c=$('#umkmList'); c.innerHTML='Memuat...';
+  const snap=await getDocs(query(collection(db,'umkm'), orderBy('createdAt','desc')));
+  c.innerHTML='';
+  snap.forEach(d=>{
+    const u=d.data(); const imgs=Array.isArray(u.foto)?u.foto:[u.foto].filter(Boolean);
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML=`
+      ${imgs[0]?`<img class="thumb" src="${imgs[0]}" alt="">`:''}
+      <div class="pad">
+        <h4 style="margin:.4rem 0">${u.produk||'(Produk)'}</h4>
+        <p>👤 ${u.penjual||'-'} • 💰 ${fmtRupiah(u.harga||0)}</p>
+        <p style="white-space:pre-line">${nl2br(u.deskripsi||'')}</p>
+        ${u.wa?`<a class="btn btn-primary" target="_blank" href="https://wa.me/${u.wa}">WhatsApp</a>`:''}
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
+          <button class="btn btn-ghost" data-del="${d.id}">Hapus</button>
+        </div>
+      </div>`;
+    c.appendChild(el);
+  });
+
+  c.onclick=async(e)=>{
+    const id = e.target.getAttribute('data-edit') || e.target.getAttribute('data-del');
+    if(!id) return;
+    if(e.target.hasAttribute('data-edit')){
+      const v=(await getDoc(doc(db,'umkm',id))).data()||{};
+      $('#uProduk').value=v.produk||'';
+      $('#uPenjual').value=v.penjual||'';
+      $('#uHarga').value=v.harga||'';
+      $('#uWa').value=v.wa||'';
+      $('#uDes').value=v.deskripsi||'';
+      $('#uSimpan').setAttribute('data-editing', id);
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      if(!confirm('Hapus produk ini?')) return;
+      await deleteDoc(doc(db,'umkm',id));
+      loadUmkm();
     }
-    document.getElementById('uProduk').value='';
-    document.getElementById('uPenjual').value='';
-    document.getElementById('uHarga').value='';
-    document.getElementById('uWa').value='';
-    document.getElementById('uDes').value='';
-    document.getElementById('uFoto').value='';
-    loadUmkm();
   };
-  document.getElementById('uBatal').onclick=()=>{ editUmkmId=null; document.getElementById('uBatal').style.display='none'; };
-  async function loadUmkm(){
-    const wrap=document.getElementById('umkmList');
-    const qs=await getDocs(query(collection(db,'umkm'), orderBy('createdAt','desc')));
-    wrap.innerHTML='';
-    qs.forEach(d=>{
-      const v=d.data(); const img = Array.isArray(v.foto)?(v.foto[0]||''):(v.foto||'');
-      const el=document.createElement('div'); el.className='card';
-      el.innerHTML = `${img?`<img class="thumb" src="${img}" alt="">`:''}
-        <h4>${v.produk||'(Tanpa nama produk)'}</h4>
-        <p>👤 ${v.penjual||'-'} • 💰 Rp ${(Number(v.harga)||0).toLocaleString('id-ID')}</p>
-        <p style="white-space:pre-line">${v.deskripsi||''}</p>
-        ${v.wa?`<p><a class="btn-ghost" target="_blank" href="https://wa.me/${v.wa}">Hubungi</a></p>`:''}
-        ${can.umkm()?`<div class="row" style="margin-top:6px">
-          <button class="btn-ghost" onclick="window._editUmkm('${d.id}')">Edit</button>
-          <button class="btn-ghost" onclick="window._delUmkm('${d.id}')">Hapus</button>
-        </div>`:''}
-      `;
-      wrap.appendChild(el);
+}
+$('#uSimpan').onclick = async ()=>{
+  if(!can('umkm')) return alert('Akses ditolak.');
+  const produk=$('#uProduk').value.trim();
+  const penjual=$('#uPenjual').value.trim();
+  const harga=Number($('#uHarga').value||0);
+  const wa=$('#uWa').value.trim();
+  const des=$('#uDes').value.trim();
+  const files=$('#uFoto').files;
+  let fotoUrls=[];
+  if(files && files.length>0) fotoUrls = await uploadToCloudinary(files);
+  const editing = $('#uSimpan').getAttribute('data-editing');
+  if(editing){
+    await updateDoc(doc(db,'umkm',editing), {
+      produk, penjual, harga, wa, deskripsi:des, ...(fotoUrls.length>0 && { foto: fotoUrls })
+    });
+    $('#uSimpan').removeAttribute('data-editing');
+  }else{
+    await addDoc(collection(db,'umkm'), {
+      produk, penjual, harga, wa, deskripsi:des, foto: fotoUrls, createdAt: serverTimestamp()
     });
   }
-  window._editUmkm = async (id)=>{
-    if(!can.umkm()) return;
-    const v=(await getDoc(doc(db,'umkm',id))).data();
-    document.getElementById('uProduk').value=v.produk||'';
-    document.getElementById('uPenjual').value=v.penjual||'';
-    document.getElementById('uHarga').value=v.harga||'';
-    document.getElementById('uWa').value=v.wa||'';
-    document.getElementById('uDes').value=v.deskripsi||'';
-    editUmkmId=id; document.getElementById('uBatal').style.display='inline-block';
-    showPanel('umkm');
-  };
-  window._delUmkm = async (id)=>{
-    if(!can.umkm()) return;
-    if(!confirm('Hapus produk ini?')) return;
-    await deleteDoc(doc(db,'umkm',id));
-    loadUmkm();
-  };
+  $('#uProduk').value=''; $('#uPenjual').value=''; $('#uHarga').value=''; $('#uWa').value=''; $('#uDes').value=''; $('#uFoto').value='';
+  loadUmkm();
+};
 
-  // ===== KAS =====
-  document.getElementById('kSimpan').onclick = async ()=>{
-    if(!can.kas()) return alert('Tidak punya akses.');
-    const nama=document.getElementById('kNama').value.trim();
-    const tanggal=document.getElementById('kTanggal').value || new Date().toISOString().slice(0,10);
-    const jumlah=Number(document.getElementById('kJumlah').value||0);
-    const tipe=document.getElementById('kTipe').value;
-    const ket=document.getElementById('kKet').value.trim();
-    if(!nama || !jumlah) return alert('Isi nama & jumlah.');
-    await addDoc(collection(db,'kas'), { nama, tanggal, jumlah, tipe, keterangan:ket, dibuatOleh:(auth.currentUser?.email||'anonim'), createdAt: serverTimestamp() });
-    alert('Kas disimpan.');
-    document.getElementById('kNama').value=''; document.getElementById('kJumlah').value=''; document.getElementById('kKet').value='';
-    loadKas();
-  };
-  async function loadKas(){
-    const wrap=document.getElementById('kasList');
-    const qs=await getDocs(query(collection(db,'kas'), orderBy('createdAt','desc')));
-    wrap.innerHTML='';
-    let total=0;
-    qs.forEach(d=>{
-      const k=d.data();
-      total += (k.tipe==='masuk'?1:-1) * (Number(k.jumlah)||0);
-      const el=document.createElement('div'); el.className='card';
-      el.innerHTML = `<b>${k.tipe==='masuk'?'🟢 Masuk':'🔴 Keluar'} Rp ${(Number(k.jumlah)||0).toLocaleString('id-ID')}</b><br>
-        👤 ${k.nama||'-'} • 📅 ${k.tanggal||'-'}<br>
-        <span class="note">${k.keterangan||''}</span>
-        ${can.kas()?`<div class="row" style="margin-top:6px">
-          <button class="btn-ghost" onclick="window._delKas('${d.id}')">Hapus</button>
-        </div>`:''}`;
-      wrap.appendChild(el);
-    });
-    const sum=document.createElement('div'); sum.className='card';
-    sum.innerHTML=`<h4>Total Kas: Rp ${total.toLocaleString('id-ID')}</h4>`;
-    wrap.prepend(sum);
-  }
-  window._delKas = async (id)=>{
-    if(!can.kas()) return;
+/* ===== KAS (CRUD) ===== */
+async function loadKas(){
+  const c=$('#kasList'); c.innerHTML='';
+  const snap=await getDocs(query(collection(db,'kas'), orderBy('createdAt','desc')));
+  let total=0;
+  snap.forEach(d=>{
+    const k=d.data();
+    total += (k.tipe==='masuk'?1:-1)*(k.jumlah||0);
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML=`<div class="pad">
+      <div class="badge">${k.tipe==='masuk'?'Pemasukan':'Pengeluaran'}</div>
+      <div style="font-weight:800;margin-top:.3rem">${fmtRupiah(k.jumlah||0)}</div>
+      <div class="note">👤 ${k.nama||'-'} • 📅 ${k.tanggal||''}</div>
+      <div>${k.keterangan||''}</div>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem">
+        <button class="btn btn-ghost" data-del="${d.id}">Hapus</button>
+      </div>
+    </div>`;
+    c.appendChild(el);
+  });
+  const sum=document.createElement('div'); sum.className='card';
+  sum.innerHTML=`<div class="pad"><h4 style="margin:0">Total Kas: ${fmtRupiah(total)}</h4></div>`;
+  c.prepend(sum);
+
+  c.onclick = async(e)=>{
+    const id=e.target.getAttribute('data-del');
+    if(!id) return;
+    if(!can('kas')) return alert('Akses ditolak.');
     if(!confirm('Hapus transaksi ini?')) return;
-    await deleteDoc(doc(db,'kas',id));
-    loadKas();
+    await deleteDoc(doc(db,'kas',id)); loadKas();
   };
+}
+$('#kSimpan').onclick = async ()=>{
+  if(!can('kas')) return alert('Akses ditolak.');
+  const nama=$('#kNama').value.trim();
+  const tanggal=$('#kTanggal').value||new Date().toISOString().slice(0,10);
+  const jumlah=Number($('#kJumlah').value||0);
+  const tipe=$('#kTipe').value;
+  const ket=$('#kKet').value.trim();
+  if(!nama || !jumlah) return alert('Isi nama & jumlah.');
+  await addDoc(collection(db,'kas'), { nama, tanggal, jumlah, tipe, keterangan:ket, createdAt: serverTimestamp() });
+  $('#kNama').value=''; $('#kJumlah').value=''; $('#kKet').value='';
+  loadKas();
+};
 </script>
 </body>
 </html>
