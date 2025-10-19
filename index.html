@@ -26,10 +26,6 @@ nav a,nav span{font-weight:600;}
 .hero{padding:4rem 1rem;text-align:center;max-width:720px;margin:auto;}
 .hero h1{font-size:2rem;color:var(--emas);}
 .hero p{font-size:1.05rem;line-height:1.6;color:var(--text);}
-.features{display:grid;gap:1rem;padding:2rem 1rem;max-width:1000px;margin:auto;}
-@media(min-width:700px){.features{grid-template-columns:repeat(4,1fr)}}
-.feature{background:var(--card);padding:1.4rem;border-radius:14px;border:1px solid var(--line);text-align:center;}
-.feature span{font-size:2rem;display:block;margin-bottom:.5rem;}
 .section{padding:2rem 1rem;max-width:900px;margin:auto;}
 .section h2{text-align:center;color:var(--emas);}
 .item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem;margin:.6rem 0;}
@@ -68,19 +64,19 @@ body.light .muted{color:#64748b;}
   <a href="auth.html" class="btn btn-primary" id="ctaBtn">🚀 Mulai Sekarang</a>
 </section>
 
-<!-- === SECTION BERITA === -->
+<!-- === BERITA === -->
 <section id="berita" class="section fade-in" style="animation-delay:.6s;">
   <h2>📰 Berita Terbaru</h2>
-  <div id="beritaList" class="list"></div>
+  <div id="beritaList"></div>
 </section>
 
-<!-- === SECTION PENGUMUMAN === -->
+<!-- === PENGUMUMAN === -->
 <section id="pengumuman" class="section fade-in" style="animation-delay:.8s;">
   <h2>📢 Pengumuman</h2>
-  <div id="pengumumanList" class="list"></div>
+  <div id="pengumumanList"></div>
 </section>
 
-<!-- === SECTION KAS (Hanya login) === -->
+<!-- === KAS (login only) === -->
 <section id="kas" class="section fade-in hidden" style="animation-delay:1s;">
   <h2>💰 Kas RT / Karang Taruna</h2>
   <div id="kasRingkasan" class="item muted">Memuat...</div>
@@ -89,8 +85,7 @@ body.light .muted{color:#64748b;}
 <section id="tentang" class="section fade-in" style="animation-delay:1.2s;">
   <h2>Tentang KARTEJI</h2>
   <p>KARTEJI (Karang Taruna Cilosari Barat) adalah wadah generasi muda untuk berkreasi, 
-  berwirausaha, dan berkontribusi bagi lingkungan. Melalui portal ini, kami hadirkan
-  inovasi digital untuk memperkuat keterbukaan dan partisipasi warga.</p>
+  berwirausaha, dan berkontribusi bagi lingkungan.</p>
 </section>
 
 <footer class="fade-in" style="animation-delay:1.4s;">
@@ -98,12 +93,9 @@ body.light .muted{color:#64748b;}
 </footer>
 
 <script type="module">
-// === Firebase Setup ===
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { 
-  getFirestore, collection, getDocs, query, orderBy 
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
@@ -113,11 +105,12 @@ const firebaseConfig = {
   messagingSenderId: "367208001887",
   appId: "1:367208001887:web:bce5982d99edefb7e746ea"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db   = getFirestore(app);
+const db = getFirestore(app);
 
-// UI Elemen
+// UI refs
 const themeBtn=document.getElementById('themeBtn');
 const loginBtn=document.getElementById('loginBtn');
 const dashBtn=document.getElementById('dashBtn');
@@ -129,10 +122,28 @@ const kasSection=document.getElementById('kas');
 // Tema toggle
 themeBtn.onclick=()=>document.body.classList.toggle('light');
 
-// ===== Load data Firestore =====
+// ===== Load Data =====
+async function loadBerita(){
+  const snap=await getDocs(query(collection(db,'berita'),orderBy('createdAt','desc')));
+  const c=document.getElementById('beritaList');
+  c.innerHTML='';
+  if(snap.empty){c.innerHTML='<p class="muted">Belum ada berita.</p>';return;}
+  snap.forEach(d=>{
+    const b=d.data(), id=d.id;
+    const foto=Array.isArray(b.foto)?b.foto[0]:b.foto;
+    const el=document.createElement('div');
+    el.className='item';
+    el.innerHTML=`<a href="berita.html?id=${id}" style="text-decoration:none;color:inherit;">
+      ${foto?`<img src="${foto}" alt="">`:''}
+      <b>${b.judul||'(Tanpa judul)'}</b>
+      <p>${(b.isi||'').slice(0,180)}${b.isi&&b.isi.length>180?'…':''}</p>
+    </a>`;
+    c.appendChild(el);
+  });
+}
+
 async function loadPengumuman(){
-  const qy=query(collection(db,'pengumuman'),orderBy('createdAt','desc'));
-  const snap=await getDocs(qy);
+  const snap=await getDocs(query(collection(db,'pengumuman'),orderBy('createdAt','desc')));
   const c=document.getElementById('pengumumanList');
   c.innerHTML='';
   if(snap.empty){c.innerHTML='<p class="muted">Belum ada pengumuman.</p>';return;}
@@ -140,33 +151,13 @@ async function loadPengumuman(){
     const p=d.data();
     const el=document.createElement('div');
     el.className='item';
-    el.innerHTML=`<b>${p.judul||'(Tanpa judul)'}</b><br>
-    <small class="muted">📅 ${p.tanggal||''}</small>
-    <p>${(p.isi||'').slice(0,180)}${p.isi&&p.isi.length>180?'…':''}</p>`;
-    c.appendChild(el);
-  });
-}
-
-async function loadBerita(){
-  const qy=query(collection(db,'berita'),orderBy('createdAt','desc'));
-  const snap=await getDocs(qy);
-  const c=document.getElementById('beritaList');
-  c.innerHTML='';
-  if(snap.empty){c.innerHTML='<p class="muted">Belum ada berita.</p>';return;}
-  snap.forEach(d=>{
-    const b=d.data(); const foto=Array.isArray(b.foto)?b.foto[0]:b.foto;
-    const el=document.createElement('div');
-    el.className='item';
-    el.innerHTML=`${foto?`<img src="${foto}" alt="">`:''}
-    <b>${b.judul||'(Tanpa judul)'}</b>
-    <p>${(b.isi||'').slice(0,200)}${b.isi&&b.isi.length>200?'…':''}</p>`;
+    el.innerHTML=`<b>${p.judul||'(Tanpa judul)'}</b><p>${(p.isi||'').slice(0,180)}${p.isi&&p.isi.length>180?'…':''}</p>`;
     c.appendChild(el);
   });
 }
 
 async function loadKas(){
-  const qy=query(collection(db,'kas'),orderBy('createdAt','desc'));
-  const snap=await getDocs(qy);
+  const snap=await getDocs(collection(db,'kas'));
   let masuk=0,keluar=0;
   snap.forEach(d=>{
     const k=d.data();
@@ -174,13 +165,10 @@ async function loadKas(){
     else keluar+=Number(k.jumlah||0);
   });
   const total=masuk-keluar;
-  const kasDiv=document.getElementById('kasRingkasan');
-  kasDiv.innerHTML=`Total Pemasukan: <b>Rp ${masuk.toLocaleString('id-ID')}</b><br>
-  Total Pengeluaran: <b>Rp ${keluar.toLocaleString('id-ID')}</b><br>
-  <hr>Saldo saat ini: <b>Rp ${total.toLocaleString('id-ID')}</b>`;
+  document.getElementById('kasRingkasan').innerHTML=`💸 Total Kas Saat Ini: <b>Rp ${total.toLocaleString('id-ID')}</b>`;
 }
 
-// ===== Cek login =====
+// Login check
 onAuthStateChanged(auth,(user)=>{
   if(user){
     const name=user.displayName||user.email;
@@ -202,11 +190,9 @@ onAuthStateChanged(auth,(user)=>{
     ctaBtn.textContent="🚀 Mulai Sekarang";
     ctaBtn.href="auth.html";
   }
-  // load publik
   loadBerita();
   loadPengumuman();
 });
-
 logoutBtn.onclick=()=>signOut(auth).then(()=>location.reload());
 </script>
 </body>
