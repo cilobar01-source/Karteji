@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KARTEJI – Portal Karang Taruna Cilosari Barat</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/css/style.css">
+<meta name="theme-color" content="#f6c445">
+</head>
+<body>
+<header class="hero">
+  <div class="header container">
+    <div class="mini">
+      <img src="/assets/logo.svg" alt="Logo" class="logo">
+      <div>
+        <h1>KARTEJI – Cilosari Barat RT01 / RW08</h1>
+        <span class="badge">Semarang Timur</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-d">
+        <a href="#pengumuman">Pengumuman</a>
+        <a href="#berita">Berita</a>
+        <a href="#umkm">Produk</a>
+        <a href="#kas">Ringkasan Kas</a>
+        <a class="badge" href="/dashboard.html">Dashboard</a>
+      </div>
+      <div class="hamb" onclick="document.getElementById('mnav').classList.toggle('show')">
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+  </div>
+</header>
+<nav class="mnav" id="mnav">
+  <a href="#pengumuman">Pengumuman</a>
+  <a href="#berita">Berita</a>
+  <a href="#umkm">Produk</a>
+  <a href="#kas">Ringkasan Kas</a>
+  <a href="/dashboard.html">Dashboard</a>
+</nav>
+
+<main class="container">
+  <section class="kpi">
+    <div class="card"><div>
+      <div class="note">Total Kas</div>
+      <div class="kpi-num" id="kpiKas">Rp 0</div>
+    </div></div>
+    <div class="card"><div>
+      <div class="note">Pengumuman</div>
+      <div class="kpi-num" id="kpiPeng">0</div>
+    </div></div>
+  </section>
+
+  <h2 class="section-title" id="pengumuman">Pengumuman</h2>
+  <div class="grid grid-2" id="pengList"><p class="note">Memuat…</p></div>
+
+  <h2 class="section-title" id="berita">Berita</h2>
+  <div class="grid grid-3" id="beritaList"><p class="note">Memuat…</p></div>
+
+  <h2 class="section-title" id="umkm">Produk</h2>
+  <div class="grid grid-3" id="umkmList"><p class="note">Memuat…</p></div>
+
+  <h2 class="section-title" id="kas">Ringkasan Kas</h2>
+  <div class="card">
+    <div class="badge">Total</div>
+    <div class="kpi-num" id="kasTotal">Rp 0</div>
+    <p class="note">Detail transaksi lengkap tersedia bagi anggota di Dashboard.</p>
+  </div>
+</main>
+
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('/service-worker.js'); }
+</script>
+
+<!-- DATA: Firebase Read-only for homepage -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
+    authDomain: "karang-taruna-aadaf.firebaseapp.com",
+    projectId: "karang-taruna-aadaf",
+    storageBucket: "karang-taruna-aadaf.firebasestorage.app",
+    messagingSenderId: "367208001887",
+    appId: "1:367208001887:web:bce5982d99edefb7e746ea"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const pengList = document.getElementById('pengList');
+  const beritaList = document.getElementById('beritaList');
+  const umkmList = document.getElementById('umkmList');
+  const kasTotal = document.getElementById('kasTotal');
+  const kpiKas = document.getElementById('kpiKas');
+  const kpiPeng = document.getElementById('kpiPeng');
+
+  const rupiah = n => 'Rp ' + (Number(n||0)).toLocaleString('id-ID');
+
+  async function loadPengumuman(){
+    const snap = await getDocs(query(collection(db,'pengumuman'), orderBy('createdAt','desc')));
+    pengList.innerHTML=''; let count = 0;
+    snap.forEach(doc=>{
+      const p = doc.data(); count++;
+      const div = document.createElement('div');
+      div.className='card';
+      div.innerHTML = `<h3>${p.judul||'(Tanpa judul)'}</h3>
+        <p style="white-space:pre-line">${(p.isi||'').slice(0,200)}${(p.isi||'').length>200?'…':''}</p>`;
+      pengList.appendChild(div);
+    });
+    kpiPeng.textContent = count;
+  }
+
+  async function loadBerita(){
+    const snap = await getDocs(query(collection(db,'berita'), orderBy('createdAt','desc')));
+    beritaList.innerHTML='';
+    snap.forEach(doc=>{
+      const b = doc.data();
+      const img = Array.isArray(b.foto)?(b.foto[0]||''):(b.foto||'');
+      const div = document.createElement('div');
+      div.className='card';
+      div.innerHTML = `${img?`<img class="thumb" src="${img}" alt="">`:''}
+        <h3>${b.judul||'(Tanpa judul)'}</h3>
+        <p style="white-space:pre-line">${(b.isi||'').slice(0,160)}${(b.isi||'').length>160?'…':''}</p>`;
+      beritaList.appendChild(div);
+    });
+  }
+
+  async function loadUmkm(){
+    const snap = await getDocs(query(collection(db,'umkm'), orderBy('createdAt','desc')));
+    umkmList.innerHTML='';
+    snap.forEach(doc=>{
+      const u = doc.data();
+      const img = Array.isArray(u.foto)?(u.foto[0]||''):(u.foto||'');
+      const div = document.createElement('div');
+      div.className='card';
+      div.innerHTML = `${img?`<img class="thumb" src="${img}" alt="">`:''}
+        <h3>${u.produk||'Produk'}</h3>
+        <p>👤 ${u.penjual||'-'} • 💰 ${rupiah(u.harga)}</p>`;
+      umkmList.appendChild(div);
+    });
+  }
+
+  async function loadKas(){
+    const snap = await getDocs(collection(db,'kas'));
+    let total = 0;
+    snap.forEach(d=>{
+      const k=d.data(); total += (k.tipe==='masuk'?1:-1) * (Number(k.jumlah)||0);
+    });
+    kasTotal.textContent = rupiah(total);
+    kpiKas.textContent = rupiah(total);
+  }
+
+  loadPengumuman(); loadBerita(); loadUmkm(); loadKas();
+</script>
+</body>
+</html>
