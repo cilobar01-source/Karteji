@@ -1,4 +1,8 @@
-
 // js/config.js
-export const UNIT_ID = "cilosari_barat";         // ID Karang Taruna aktif pada portal ini
-export const UNIT_PRIVACY = true;                // true = isolasi per-unit
+// Konfigurasi umum sistem portal
+
+export let UNIT_ID = null;           // Akan diisi otomatis dari profil user
+export const UNIT_PRIVACY = true;    // Batasi data per-unit Karang Taruna
+
+export const UI_THEME = "translucent";  // Tema default: transparan futuristik
+export const ENABLE_LOGGING = true;
