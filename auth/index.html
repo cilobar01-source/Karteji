@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portal Karang Taruna</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="header-glass">
+  <div class="header-title">
+    <img src="../assets/icons/kt.svg" width="36" height="36">
+    <div>Portal Karang Taruna</div>
+  </div>
+</header>
+
+<main class="container" style="text-align:center;max-width:600px">
+  <h2>Selamat Datang di Portal Karang Taruna</h2>
+  <p>Platform digital untuk kegiatan, iuran, dan komunikasi antar pemuda di seluruh wilayah.</p>
+
+  <div style="margin-top:1.5rem;">
+    <a href="./portal_auth.html" class="btn-glass">🔑 Masuk / Daftar</a>
+  </div>
+
+  <section class="card-glass" style="margin-top:2rem;">
+    <h3>📢 Pengumuman Publik</h3>
+    <ul id="announceList"></ul>
+  </section>
+
+  <div id="footerInfo" style="margin-top:1.5rem;color:#ccc;font-size:.9em;"></div>
+</main>
+
+<script type="module">
+import { db } from "../js/firebase.js";
+import { collection, getDocs, limit, orderBy, query } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const list=document.getElementById("announceList");
+const q=query(collection(db,"forum"),orderBy("dibuat","desc"),limit(5));
+const snap=await getDocs(q);
+snap.forEach(d=>{list.innerHTML+=`<li>${d.data().judul || 'Tanpa judul'}</li>`});
+
+function clock(){
+  const n=new Date();
+  document.getElementById('footerInfo').innerHTML=`🕒 ${n.toLocaleString('id-ID',{weekday:'long',hour:'2-digit',minute:'2-digit'})}`;
+}
+setInterval(clock,1000);
+clock();
+</script>
+</body>
+</html>
