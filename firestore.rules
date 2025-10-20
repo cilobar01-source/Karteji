@@ -1,0 +1,29 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users: each user can read/write only their own profile doc
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Shared collections (unit-isolated): require id_katar to match user's
+    function userUnit() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.id_katar;
+    }
+
+    match /{collection}/{doc} {
+      allow read, create, update, delete: if request.auth != null
+        && request.resource.data.id_katar == userUnit()
+        && (resource == null || resource.data.id_katar == userUnit());
+    }
+
+    // Sistem branding doc: must carry id_katar and match user's
+    match /sistem/{docId} {
+      allow read: if true; // branding bisa dibaca publik jika mau
+      allow write: if request.auth != null
+        && request.resource.data.id_katar == userUnit();
+    }
+  }
+}

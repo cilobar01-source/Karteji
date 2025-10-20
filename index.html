@@ -4,15 +4,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Portal Karang Taruna (v6.8 Transparent)</title>
+  <title>Karang Taruna Cilosari Barat (v6.8 Transparent)</title>
   <link rel="stylesheet" href="./css/style.css">
+
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
 </head>
 <body>
   <header class="header-glass">
     <div class="header-title">
       <img id="logoImg" class="logo-glow" src="./assets/icons/kt.svg" alt="KT">
       <div>
-        <div id="portalName">Portal Karang Taruna</div>
+        <div id="portalName">Karang Taruna Cilosari Barat</div>
         <small class="info-chip">🌤 Cuaca | 🕒 <span id="clock">--:--</span> WIB | 🕌 <span id="shalat">...</span></small>
       </div>
     </div>
@@ -71,10 +75,34 @@
 
   <!-- Modular scripts -->
   <script type="module" src="./js/firebase.js"></script>
+  <script type="module" src="./js/config.js"></script>
+  <script type="module" src="./js/guard.js"></script>
   <script type="module" src="./js/motion.js"></script>
   <script type="module" src="./js/ui.js"></script>
   <script type="module" src="./js/data.js"></script>
   <script type="module" src="./js/cloudinary.js"></script>
   <script type="module" src="./js/app.js"></script>
+
+  <!-- Splash overlay -->
+  <div id="splash" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(18px);z-index:9999">
+    <div style="text-align:center">
+      <img src="./assets/icons/kt.svg" width="88" height="88" style="opacity:.95;filter:drop-shadow(0 0 24px rgba(255,255,255,.25))">
+      <div style="margin-top:12px;color:#fff;letter-spacing:.8px">Karang Taruna Cilosari Barat</div>
+      <div class="info-chip" style="margin-top:12px">Memuat aplikasi…</div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('load', ()=>{
+      setTimeout(()=>{ const s=document.getElementById('splash'); if(s) s.style.display='none'; }, 800);
+    });
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(()=>console.log('SW ready'));
+    }
+  </script>
+
+  <script type="module">
+    import { onReady } from "./js/guard.js";
+    onReady(()=>{});
+  </script>
 </body>
 </html>

@@ -41,3 +41,17 @@ Halaman tersedia di `/pages/`:
 - `laporan.html` (ringkasan)
 
 Masing-masing sudah terhubung ke Firestore (CRUD dasar) dan Cloudinary (untuk foto).
+
+
+# v7.1 FINAL
+- PWA aktif (manifest + service worker + splash)
+- Role Guard (per-unit) dengan `js/guard.js` + `js/config.js`
+- Firestore Security Rules (`firestore.rules`) untuk isolasi per Karang Taruna
+- Auto Report PDF (`js/autoReport.js`) + tombol di `/pages/laporan.html`
+- Semua modul tetap: kas, kegiatan, forum, academy, sertifikat, anggota, pengaturan, umkm, laporan
+
+## Deploy
+- Netlify/Vercel: drag-drop folder ini
+- Firebase Hosting: `firebase deploy` (salin `firestore.rules` ke project Firestore rules)
+- Edit `js/cloudinary.js`: isi `YOUR_CLOUD_NAME` & `YOUR_UPLOAD_PRESET`
+
