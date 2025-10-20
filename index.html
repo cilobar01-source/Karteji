@@ -3,81 +3,103 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>KARTEJI Portal • Cilosari Barat</title>
+<title>Portal KARTEJI • Cilosari Barat</title>
 <link rel="icon" href="assets/logo.svg" />
+
 <style>
-:root{
-  --primary:#0e4c92;
-  --accent:#f6c445;
-  --text:#f5f5f7;
-  --muted:#c9c9c9;
-  --card:rgba(255,255,255,0.08);
-  --line:rgba(255,255,255,0.15);
-  --blur:20px;
-  --shadow:0 8px 40px rgba(0,0,0,0.3);
+/* === WARNA ADAPTIF (TERANG/GELAP) === */
+:root {
+  --glass-bg: rgba(255,255,255,0.65);
+  --text: #111;
+  --muted: #444;
+  --accent: #0e4c92;
+  --highlight: #f6c445;
+  --line: rgba(0,0,0,0.08);
+  --shadow: 0 8px 32px rgba(0,0,0,.15);
 }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --glass-bg: rgba(25,25,30,0.55);
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --accent: #1a73e8;
+    --highlight: #ffd966;
+    --line: rgba(255,255,255,0.12);
+    --shadow: 0 8px 40px rgba(0,0,0,.4);
+  }
+}
+
 *{box-sizing:border-box;transition:.3s ease all}
 body{
   margin:0;font-family:'Poppins',system-ui,Arial;
+  background:url('assets/bg/blur-home.jpg') center/cover no-repeat fixed;
   color:var(--text);
-  background-size:cover;background-position:center;
-  backdrop-filter:blur(12px);
-  min-height:100vh;
+  display:flex;min-height:100vh;
 }
-a{text-decoration:none;color:inherit}
 
-/* === HEADER === */
+/* === SIDEBAR === */
+aside{
+  width:240px;
+  backdrop-filter:blur(24px);
+  background:var(--glass-bg);
+  border-right:1px solid var(--line);
+  padding:1rem;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+aside .logo{
+  display:flex;align-items:center;gap:.7rem;
+  font-weight:700;font-size:1.1rem;margin-bottom:2rem;
+}
+aside .logo img{width:38px;height:38px;border-radius:8px;}
+aside nav a{
+  display:block;padding:.7rem 1rem;margin-bottom:.4rem;
+  border-radius:10px;text-decoration:none;
+  color:var(--text);font-weight:600;
+}
+aside nav a:hover{background:rgba(0,0,0,0.08)}
+@media(prefers-color-scheme:dark){
+  aside nav a:hover{background:rgba(255,255,255,0.1);}
+}
+
+/* === HEADER TOP === */
 header{
-  position:sticky;top:0;z-index:40;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 1.5rem;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(var(--blur));
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(18px);
+  background:var(--glass-bg);
   border-bottom:1px solid var(--line);
-  box-shadow:var(--shadow);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.8rem 1.2rem;margin-bottom:1rem;
+  border-radius:16px;
 }
-.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.1rem}
-.brand img{width:40px;height:40px;border-radius:10px}
-nav{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.btn{
-  padding:.6rem 1rem;border-radius:12px;font-weight:600;cursor:pointer;
-  border:none;backdrop-filter:blur(10px);
+.profile{
+  display:flex;align-items:center;gap:.6rem;
 }
-.btn-primary{background:var(--accent);color:#0b132b;}
-.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent);}
-.btn-outline:hover{background:var(--accent);color:#0b132b}
-#themeBtn{background:transparent;border:none;color:var(--text);cursor:pointer}
-.profile-pic{
-  width:42px;height:42px;border-radius:50%;
-  object-fit:cover;border:2px solid rgba(255,255,255,0.6);
-  cursor:pointer;transition:.3s;
+.profile img{
+  width:42px;height:42px;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(0,0,0,.15);cursor:pointer;
 }
-.profile-pic:hover{transform:scale(1.05);}
 
-/* === HERO === */
-.hero{
-  text-align:center;
-  max-width:760px;margin:5rem auto 3rem;
-  background:var(--card);
+/* === MAIN === */
+main{
+  flex:1;padding:2rem;
+  display:flex;flex-direction:column;gap:2rem;
+  backdrop-filter:blur(24px);
+}
+.section{
+  background:var(--glass-bg);
   border:1px solid var(--line);
-  border-radius:24px;
-  padding:2.5rem 1.5rem;
+  border-radius:20px;
+  padding:1.5rem;
   box-shadow:var(--shadow);
-  backdrop-filter:blur(var(--blur));
-  animation:fadeIn 1.2s ease forwards;
 }
-.hero h1{
-  font-size:2.4rem;
-  background:linear-gradient(90deg,var(--accent),#ffe89b);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin-bottom:.6rem;
+.section h2{
+  margin-top:0;margin-bottom:1rem;
+  font-size:1.2rem;color:var(--accent);
+  border-left:4px solid var(--highlight);
+  padding-left:.5rem;
 }
-.hero p{color:var(--muted);line-height:1.6;margin-bottom:2rem;}
-.hero .btn-primary{font-size:1.05rem;padding:.8rem 1.8rem;border-radius:14px;}
-
-/* === SECTION === */
-.section{max-width:1100px;margin:auto;padding:2rem 1rem;}
-.section h2{text-align:center;color:var(--accent);margin-bottom:1.4rem;}
 
 /* === UMKM HORIZONTAL === */
 .umkm-scroll{
@@ -85,90 +107,90 @@ nav{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
   scroll-snap-type:x mandatory;padding-bottom:1rem;
 }
 .umkm-card{
-  flex:0 0 200px;scroll-snap-align:start;
-  background:var(--card);
+  flex:0 0 180px;scroll-snap-align:start;
+  background:var(--glass-bg);
   border:1px solid var(--line);
-  border-radius:16px;box-shadow:var(--shadow);
-  text-align:center;padding:1rem;
-  cursor:pointer;
-  backdrop-filter:blur(var(--blur));
-  transform:translateY(0);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  padding:.8rem;
+  text-align:center;cursor:pointer;
 }
-.umkm-card:hover{transform:translateY(-5px);}
-.umkm-card img{width:100%;height:150px;object-fit:cover;border-radius:12px;margin-bottom:.6rem;}
-.umkm-card b{display:block;font-size:.95rem;margin-bottom:.3rem;}
-.umkm-card span{color:var(--accent);font-weight:600;font-size:.9rem;}
+.umkm-card img{
+  width:100%;height:140px;object-fit:cover;
+  border-radius:10px;margin-bottom:.4rem;
+}
+.umkm-card b{font-size:.95rem;display:block;}
+.umkm-card span{color:var(--highlight);font-weight:600;font-size:.9rem;}
 
-/* === BERITA GRID === */
+/* === BERITA CARD === */
 .berita-grid{display:grid;gap:1.2rem;}
 @media(min-width:700px){.berita-grid{grid-template-columns:repeat(3,1fr)}}
 .berita-card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:18px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  backdrop-filter:blur(var(--blur));
-  cursor:pointer;
-  animation:fadeInUp .8s ease both;
+  background:var(--glass-bg);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow);
+  overflow:hidden;cursor:pointer;
 }
-.berita-card img{width:100%;height:160px;object-fit:cover;}
-.berita-card .isi{padding:1rem;}
-.berita-card b{font-size:1.05rem;color:#fff;margin-bottom:.4rem;display:block;}
+.berita-card img{width:100%;height:150px;object-fit:cover;}
+.berita-card .isi{padding:.8rem;}
+.berita-card b{display:block;font-size:1rem;margin-bottom:.4rem;}
 .berita-card p{color:var(--muted);font-size:.9rem;}
 
 /* === FOOTER === */
-footer{text-align:center;padding:2rem 1rem;color:var(--muted);margin-top:3rem;backdrop-filter:blur(var(--blur));}
-
-/* === ANIMASI === */
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+footer{
+  text-align:center;padding:2rem 1rem;
+  color:var(--muted);font-size:.9rem;
+}
 .hidden{display:none;}
 </style>
 </head>
+
 <body>
-<header>
-  <div class="brand">
-    <img src="assets/logo.svg" alt="Logo">
-    <span>KARTEJI Portal</span>
+<!-- === SIDEBAR === -->
+<aside>
+  <div>
+    <div class="logo"><img src="assets/logo.svg"><span>KARTEJI</span></div>
+    <nav>
+      <a href="#kegiatan">💪 Kegiatan</a>
+      <a href="#berita">📰 Berita</a>
+      <a href="#umkm">🏪 UMKM</a>
+      <a href="#pengumuman">📢 Pengumuman</a>
+    </nav>
   </div>
-  <nav>
-    <a href="#kegiatan">Kegiatan</a>
-    <a href="#berita">Berita</a>
-    <a href="#umkm">UMKM</a>
-    <a href="#pengumuman">Pengumuman</a>
-    <button id="themeBtn">🌓</button>
-    <span id="userName" class="hidden"></span>
-    <span id="poinUser" class="poinBox hidden">🏅 0 pts</span>
-    <img id="userPhoto" class="profile-pic hidden" src="assets/default-avatar.png" alt="Profil">
-    <a id="loginBtn" href="auth.html" class="btn btn-primary">Masuk / Daftar</a>
-    <a id="dashBtn" href="dashboard.html" class="btn btn-outline hidden">Dashboard</a>
-    <button id="logoutBtn" class="btn btn-outline hidden">Keluar</button>
-  </nav>
-</header>
+  <div>
+    <a href="auth.html" id="loginBtn" class="btn-outline">🔐 Masuk / Daftar</a>
+    <a href="dashboard.html" id="dashBtn" class="btn-outline hidden">📊 Dashboard</a>
+    <button id="logoutBtn" class="btn-outline hidden" style="width:100%">Keluar</button>
+  </div>
+</aside>
 
-<section class="hero">
-  <h1>Portal Digital Karang Taruna<br>Cilosari Barat RT01/RW08</h1>
-  <p>💪 Pelatihan, lomba, kegiatan sosial<br>💰 Informasi kas dan iuran<br>🧠 Konten edukatif<br>🏅 Poin & lencana keaktifan</p>
-  <a href="auth.html" class="btn btn-primary" id="ctaBtn">🚀 Mulai Sekarang</a>
-</section>
+<!-- === KONTEN === -->
+<main>
+  <header>
+    <h1>Portal Digital Cilosari Barat</h1>
+    <div class="profile">
+      <span id="userName" class="hidden"></span>
+      <span id="poinUser" class="hidden">🏅 0 pts</span>
+      <img id="userPhoto" class="hidden" src="assets/default-avatar.png">
+    </div>
+  </header>
 
-<section id="umkm" class="section">
-  <h2>🏪 Produk UMKM</h2>
-  <div id="umkmList" class="umkm-scroll"></div>
-</section>
+  <section id="umkm" class="section">
+    <h2>🏪 Produk UMKM</h2>
+    <div id="umkmList" class="umkm-scroll"></div>
+  </section>
 
-<section id="berita" class="section">
-  <h2>📰 Berita Terbaru</h2>
-  <div id="beritaList" class="berita-grid"></div>
-</section>
+  <section id="berita" class="section">
+    <h2>📰 Berita Terbaru</h2>
+    <div id="beritaList" class="berita-grid"></div>
+  </section>
 
-<section id="pengumuman" class="section">
-  <h2>📢 Pengumuman</h2>
-  <div id="pengumumanList"></div>
-</section>
+  <section id="pengumuman" class="section">
+    <h2>📢 Pengumuman</h2>
+    <div id="pengumumanList"></div>
+  </section>
 
-<footer><p>© 2025 KARTEJI Cilosari Barat · Dibuat dengan 💙 di Semarang</p></footer>
+  <footer>© 2025 KARTEJI Cilosari Barat · Dibuat dengan 💙 Semarang</footer>
+</main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -180,42 +202,25 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 
-const themeBtn=document.getElementById('themeBtn');
 const loginBtn=document.getElementById('loginBtn');
 const dashBtn=document.getElementById('dashBtn');
 const logoutBtn=document.getElementById('logoutBtn');
-const ctaBtn=document.getElementById('ctaBtn');
 const userName=document.getElementById('userName');
 const poinUser=document.getElementById('poinUser');
 const userPhoto=document.getElementById('userPhoto');
 
-themeBtn.onclick=()=>document.body.classList.toggle('light');
-
-/* === BACKGROUND FIRESTORE (hanya super admin ubah) === */
-async function loadBackground(){
-  try{
-    const snap=await getDoc(doc(db,"settings","background"));
-    if(snap.exists()){
-      const data=snap.data();
-      if(data.url) document.body.style.backgroundImage=`url('${data.url}')`;
-    }else{
-      document.body.style.background=`linear-gradient(120deg,#bcbfc4,#d4d7da)`;
-    }
-  }catch(e){console.warn("BG error:",e);}
-}
-
-/* === LOAD DATA === */
+/* === FIRESTORE LOAD === */
 async function loadUmkm(){
   const snap=await getDocs(query(collection(db,'umkm'),orderBy('createdAt','desc')));
   const c=document.getElementById('umkmList');
   c.innerHTML='';
-  if(snap.empty){c.innerHTML='<p class="muted">Belum ada produk.</p>';return;}
+  if(snap.empty){c.innerHTML='<p>Tidak ada produk.</p>';return;}
   snap.forEach(d=>{
     const u=d.data(), id=d.id;
     const foto=Array.isArray(u.foto)?u.foto[0]:u.foto;
     const el=document.createElement('div');
     el.className='umkm-card';
-    el.innerHTML=`${foto?`<img src="${foto}">`:''}<b>${u.produk||'(Tanpa nama)'}</b><span>Rp ${(u.harga||0).toLocaleString('id-ID')}</span>`;
+    el.innerHTML=`${foto?`<img src="${foto}">`:''}<b>${u.produk||'Tanpa nama'}</b><span>Rp ${(u.harga||0).toLocaleString('id-ID')}</span>`;
     el.onclick=()=>location.href=`umkm.html?id=${id}`;
     c.appendChild(el);
   });
@@ -225,64 +230,58 @@ async function loadBerita(){
   const snap=await getDocs(query(collection(db,'berita'),orderBy('createdAt','desc')));
   const c=document.getElementById('beritaList');
   c.innerHTML='';
-  if(snap.empty){c.innerHTML='<p class="muted">Belum ada berita.</p>';return;}
+  if(snap.empty){c.innerHTML='<p>Belum ada berita.</p>';return;}
   snap.forEach(d=>{
     const b=d.data(),id=d.id;
     const f=Array.isArray(b.foto)?b.foto[0]:b.foto;
     const el=document.createElement('div');
     el.className='berita-card';
-    el.innerHTML=`<a href="berita.html?id=${id}">${f?`<img src="${f}" alt="">`:''}<div class="isi"><b>${b.judul||'(Tanpa judul)'}</b><p>${(b.isi||'').slice(0,120)}${b.isi&&b.isi.length>120?'…':''}</p></div></a>`;
+    el.innerHTML=`<a href="berita.html?id=${id}">${f?`<img src="${f}" alt="">`:''}<div class="isi"><b>${b.judul||'Tanpa judul'}</b><p>${(b.isi||'').slice(0,120)}${b.isi&&b.isi.length>120?'…':''}</p></div></a>`;
     c.appendChild(el);
   });
 }
 
 async function loadPengumuman(){
   const snap=await getDocs(query(collection(db,'pengumuman'),orderBy('createdAt','desc')));
-  const c=document.getElementById('pengumumanList');c.innerHTML='';
-  if(snap.empty){c.innerHTML='<p class="muted">Belum ada pengumuman.</p>';return;}
+  const c=document.getElementById('pengumumanList');
+  c.innerHTML='';
   snap.forEach(d=>{
     const p=d.data();
     const el=document.createElement('div');
     el.className='berita-card';
-    el.innerHTML=`<div class="isi"><b>${p.judul||'(Tanpa judul)'}</b><p>${p.isi||''}</p></div>`;
+    el.innerHTML=`<div class="isi"><b>${p.judul||'Tanpa judul'}</b><p>${p.isi||''}</p></div>`;
     c.appendChild(el);
   });
 }
 
-/* === AUTH STATE === */
+/* === AUTH === */
 onAuthStateChanged(auth, async (user)=>{
   if(user){
     const name=user.displayName||user.email;
-    userName.textContent=`👋 ${name}`;
+    userName.textContent=name;
     userName.classList.remove('hidden');
-    poinUser.classList.remove('hidden');
     loginBtn.classList.add('hidden');
     logoutBtn.classList.remove('hidden');
     dashBtn.classList.remove('hidden');
     userPhoto.classList.remove('hidden');
-    ctaBtn.textContent="🏠 Buka Dashboard";
-    ctaBtn.href="dashboard.html";
 
     const snap=await getDoc(doc(db,'users',user.uid));
     if(snap.exists()){
       const data=snap.data();
       poinUser.textContent=`🏅 ${data.poin||0} pts`;
-      userPhoto.src=data.foto||"assets/default-avatar.png";
+      poinUser.classList.remove('hidden');
+      if(data.foto) userPhoto.src=data.foto;
     }
   }else{
     userName.classList.add('hidden');
     poinUser.classList.add('hidden');
+    userPhoto.classList.add('hidden');
     loginBtn.classList.remove('hidden');
     logoutBtn.classList.add('hidden');
     dashBtn.classList.add('hidden');
-    userPhoto.classList.add('hidden');
-    ctaBtn.textContent="🚀 Mulai Sekarang";
-    ctaBtn.href="auth.html";
   }
-  await loadBackground();
   loadUmkm();loadBerita();loadPengumuman();
 });
-
 logoutBtn.onclick=()=>signOut(auth).then(()=>location.reload());
 </script>
 </body>
