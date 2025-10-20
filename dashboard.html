@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* ========== VARIABEL WARNA ========== */
+/* ======== THEME VARIABLE ======== */
 :root{
   --glass-bg: rgba(255,255,255,0.55);
   --text:#111827; --muted:#555;
@@ -23,14 +23,14 @@
     --line:rgba(255,255,255,.1); --shadow:0 8px 30px rgba(0,0,0,.5);
   }
 }
-*{box-sizing:border-box;transition:.25s ease all;}
+*{box-sizing:border-box;transition:.25s ease all}
 body{
   margin:0;font-family:'Poppins',system-ui;
   background:url('assets/bg/blur-home.jpg') center/cover fixed no-repeat;
   color:var(--text);display:flex;min-height:100vh;
 }
 
-/* ========== SIDEBAR ========== */
+/* ======== SIDEBAR ======== */
 aside{
   width:260px;backdrop-filter:blur(24px);
   background:var(--glass-bg);border-right:1px solid var(--line);
@@ -39,15 +39,16 @@ aside{
 }
 aside .logo{display:flex;align-items:center;gap:.6rem;font-weight:700;margin-bottom:1.5rem}
 aside .logo img{width:36px;height:36px;border-radius:8px}
-aside nav a, aside nav button{
+aside nav button{
   display:block;width:100%;text-align:left;border:none;background:transparent;
-  padding:.7rem 1rem;margin:.2rem 0;border-radius:10px;font-weight:600;color:var(--text);cursor:pointer;
+  padding:.7rem 1rem;margin:.2rem 0;border-radius:10px;font-weight:600;color:var(--text);cursor:pointer
 }
-aside nav a:hover, aside nav button:hover{background:rgba(0,0,0,0.08)}
-@media(prefers-color-scheme:dark){aside nav a:hover,aside nav button:hover{background:rgba(255,255,255,0.1)}}
+aside nav button:hover{background:rgba(0,0,0,0.08)}
+@media(prefers-color-scheme:dark){aside nav button:hover{background:rgba(255,255,255,0.1)}}
+aside nav button.active{background:var(--highlight);color:#0b132b}
 .menu-head{font-weight:700;margin-top:.8rem;margin-bottom:.4rem;color:var(--accent)}
 
-/* ========== MAIN AREA ========== */
+/* ======== MAIN AREA ======== */
 main{flex:1;padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem}
 
 /* HEADER TOPBAR */
@@ -58,9 +59,9 @@ header{
 }
 header h2{margin:0;font-size:1.2rem;color:var(--accent)}
 .profile{display:flex;align-items:center;gap:.7rem}
-.profile img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--highlight)}
+.profile img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--highlight)}
 
-/* CARD & SECTION */
+/* CARD SECTION */
 section.card{
   background:var(--glass-bg);border:1px solid var(--line);
   border-radius:16px;padding:1.2rem;box-shadow:var(--shadow);
@@ -78,12 +79,13 @@ input,textarea,select{width:100%;background:transparent;border:1px solid var(--l
 .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
 .btn-danger{background:var(--danger);color:#fff}
 .muted{color:var(--muted);font-size:.9rem}
+.badge{display:inline-block;background:var(--accent);color:#fff;padding:.15rem .5rem;border-radius:6px;font-size:.8rem;font-weight:800}
 
 /* TABLE-LIKE LIST */
 .table-like .item{display:grid;grid-template-columns:1fr auto;gap:.6rem;border:1px dashed var(--line);
   border-radius:10px;padding:.7rem;margin:.4rem 0}
 
-/* RESPONSIVE NAV MOBILE */
+/* MOBILE NAV */
 .bottom-tabs{display:none}
 @media(max-width:900px){
   aside{display:none}
@@ -102,7 +104,7 @@ input,textarea,select{width:100%;background:transparent;border:1px solid var(--l
 </head>
 
 <body>
-<!-- SIDEBAR -->
+<!-- ======== SIDEBAR ======== -->
 <aside>
   <div>
     <div class="logo"><img src="assets/logo.svg"><span>KARTEJI</span></div>
@@ -127,7 +129,7 @@ input,textarea,select{width:100%;background:transparent;border:1px solid var(--l
   <button id="logoutBtn" class="btn btn-ghost" style="width:100%">Keluar</button>
 </aside>
 
-<!-- MAIN -->
+<!-- ======== MAIN ======== -->
 <main>
   <header>
     <h2 id="panelTitle">Dashboard KARTEJI</h2>
@@ -140,7 +142,7 @@ input,textarea,select{width:100%;background:transparent;border:1px solid var(--l
     </div>
   </header>
 
-  <!-- PANEL CONTAINER (REUSING YOUR SCRIPT LOGIC) -->
+  <!-- === HOME === -->
   <section id="panel-home" class="card">
     <h3>🏠 Ringkasan</h3>
     <div class="grid grid-2">
@@ -159,12 +161,30 @@ input,textarea,select{width:100%;background:transparent;border:1px solid var(--l
     </div>
   </section>
 
-  <!-- …(SEMUA PANEL LAIN tetap seperti versi lama, tinggal copy kontennya ke sini agar CRUD tetap jalan) -->
+  <!-- === PANEL-PANEL CRUD LAIN (SEMUA COPY DARI V5.1) === -->
+  <section id="panel-pengumuman" class="card hidden"><div class="pad">
+    <h3>📢 Pengumuman</h3>
+    <div class="grid grid-2">
+      <div class="card pad">
+        <h4>Buat / Edit</h4>
+        <input id="pJudul" placeholder="Judul Pengumuman" />
+        <textarea id="pIsi" rows="4" placeholder="Isi…"></textarea>
+        <input id="pTanggal" type="date" />
+        <div class="grid"><button id="pSimpan" class="btn btn-primary">Simpan</button></div>
+      </div>
+      <div class="card pad">
+        <h4>Daftar Pengumuman</h4>
+        <div id="pengumumanList" class="table-like"></div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- Berita, UMKM, Kas, Kegiatan, Leaderboard, Profil, Anggota — isi tetap dari dashboard lamamu -->
 
   <footer class="muted" style="text-align:center;padding:1rem">© 2025 KARTEJI Cilosari Barat</footer>
 </main>
 
-<!-- BOTTOM NAV -->
+<!-- ======== BOTTOM NAV (MOBILE) ======== -->
 <div class="bottom-tabs">
   <button data-panel="home" class="active">🏠</button>
   <button data-panel="berita">📰</button>
@@ -175,12 +195,377 @@ input,textarea,select{width:100%;background:transparent;border:1px solid var(--l
 </div>
 
 <script type="module">
-// ====== import semua script kamu v5.1 di sini persis sama ======
-// contoh ringkas:
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-// dst. (seluruh bagian JS CRUD-mu sama persis seperti sebelumnya)
+//* ===================== PENGUMUMAN (CRUD) ===================== */
+let editPengId=null;
+async function loadPengumuman(){
+  const qy = query(collection(db,'pengumuman'), orderBy('createdAt','desc'));
+  const snap = await getDocs(qy);
+  const c = $('#pengumumanList'); c.innerHTML='';
+  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada pengumuman.</p>'; return; }
+  snap.forEach(d=>{
+    const p=d.data();
+    const item=document.createElement('div'); item.className='item';
+    item.innerHTML = `
+      <div>
+        <b>${p.judul||'(Tanpa judul)'}</b><br/>
+        <span class="muted">📅 ${p.tanggal||'-'}</span>
+        <p>${(p.isi||'').replace(/\n/g,'<br>')}</p>
+      </div>
+      <div class="right">
+        ${can.pengumuman()?`
+          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
+          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
+        `:''}
+      </div>`;
+    c.appendChild(item);
+  });
+  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editPeng(b.dataset.edit)));
+  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusPeng(b.dataset.del)));
+}
+async function editPeng(id){
+  if(!can.pengumuman()) return;
+  const v=(await getDoc(doc(db,'pengumuman',id))).data();
+  $('#pJudul').value=v.judul||''; $('#pIsi').value=v.isi||''; $('#pTanggal').value=v.tanggal||'';
+  editPengId=id; $('#pBatal').classList.remove('hidden'); toast('Mode edit pengumuman'); showPanel('pengumuman');
+}
+async function hapusPeng(id){
+  if(!can.pengumuman()) return;
+  if(!confirm('Hapus pengumuman ini?')) return;
+  await deleteDoc(doc(db,'pengumuman',id)); toast('Dihapus'); loadPengumuman();
+}
+$('#pSimpan')?.addEventListener('click', async ()=>{
+  if(!can.pengumuman()) return alert('Akses ditolak');
+  const judul=$('#pJudul').value.trim(), isi=$('#pIsi').value.trim(), tanggal=$('#pTanggal').value||new Date().toISOString().slice(0,10);
+  if(!judul||!isi) return toast('Lengkapi judul & isi');
+  if(editPengId){
+    await updateDoc(doc(db,'pengumuman',editPengId),{judul,isi,tanggal});
+    editPengId=null; $('#pBatal').classList.add('hidden'); toast('Pengumuman diupdate');
+  }else{
+    await addDoc(collection(db,'pengumuman'), {judul,isi,tanggal,createdAt:serverTimestamp()});
+    toast('Pengumuman disimpan');
+  }
+  $('#pJudul').value=''; $('#pIsi').value=''; $('#pTanggal').value='';
+  loadPengumuman();
+});
+$('#pBatal')?.addEventListener('click', ()=>{editPengId=null;$('#pBatal').classList.add('hidden');$('#pJudul').value='';$('#pIsi').value='';});
+
+/* ===================== BERITA (CRUD + Cloudinary) ===================== */
+let editBeritaId=null;
+$('#bFoto')?.addEventListener('change', (e)=>{
+  const box=$('#bPreview'); box.innerHTML='';
+  [...e.target.files].forEach(f=>{ const img=document.createElement('img'); img.src=URL.createObjectURL(f); img.className='thumb'; box.appendChild(img); });
+});
+async function loadBerita(){
+  const qy = query(collection(db,'berita'), orderBy('createdAt','desc'));
+  const snap = await getDocs(qy);
+  const c = $('#beritaList'); c.innerHTML='';
+  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada berita.</p>'; return; }
+  snap.forEach(d=>{
+    const b=d.data(); const cover=Array.isArray(b.foto)?b.foto[0]:b.foto;
+    const item=document.createElement('div'); item.className='item';
+    item.innerHTML = `
+      <div>
+        ${cover?`<img src="${cover}" class="thumb" alt="">`:''}
+        <b>${b.judul||'(Tanpa judul)'}</b>
+        <p>${(b.isi||'').slice(0,200)}${(b.isi&&b.isi.length>200)?'…':''}</p>
+      </div>
+      <div class="right">
+        ${can.berita()?`
+          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
+          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
+        `:''}
+      </div>`;
+    c.appendChild(item);
+  });
+  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editBerita(b.dataset.edit)));
+  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusBerita(b.dataset.del)));
+}
+async function editBerita(id){
+  if(!can.berita()) return;
+  const v=(await getDoc(doc(db,'berita',id))).data();
+  $('#bJudul').value=v.judul||''; $('#bIsi').value=v.isi||''; editBeritaId=id; $('#bBatal').classList.remove('hidden'); toast('Mode edit berita'); showPanel('berita');
+}
+async function hapusBerita(id){
+  if(!can.berita()) return;
+  if(!confirm('Hapus berita ini?')) return;
+  await deleteDoc(doc(db,'berita',id)); toast('Dihapus'); loadBerita();
+}
+$('#bSimpan')?.addEventListener('click', async ()=>{
+  if(!can.berita()) return alert('Akses ditolak');
+  const judul=$('#bJudul').value.trim(), isi=$('#bIsi').value.trim();
+  if(!judul||!isi) return toast('Lengkapi judul & isi');
+  let foto=[];
+  const files=$('#bFoto').files;
+  if(files.length>0){ foto = await uploadCloudinary(files); }
+  if(editBeritaId){
+    await updateDoc(doc(db,'berita',editBeritaId), {judul, isi, ...(foto.length>0 && {foto})});
+    editBeritaId=null; $('#bBatal').classList.add('hidden'); toast('Berita diupdate');
+  }else{
+    await addDoc(collection(db,'berita'), {judul, isi, foto, penulis: USER_EMAIL, createdAt: serverTimestamp()});
+    toast('Berita disimpan');
+  }
+  $('#bJudul').value=''; $('#bIsi').value=''; $('#bFoto').value=''; $('#bPreview').innerHTML='';
+  loadBerita();
+});
+$('#bBatal')?.addEventListener('click', ()=>{editBeritaId=null;$('#bBatal').classList.add('hidden');$('#bJudul').value='';$('#bIsi').value='';$('#bFoto').value='';$('#bPreview').innerHTML='';});
+
+/* ===================== UMKM (CRUD + Cloudinary) ===================== */
+let editUmkmId=null;
+$('#uFoto')?.addEventListener('change', (e)=>{
+  const box=$('#uPreview'); box.innerHTML='';
+  [...e.target.files].forEach(f=>{ const img=document.createElement('img'); img.src=URL.createObjectURL(f); img.className='thumb'; box.appendChild(img); });
+});
+async function loadUmkm(){
+  const qy=query(collection(db,'umkm'), orderBy('createdAt','desc'));
+  const snap=await getDocs(qy);
+  const c=$('#umkmList'); c.innerHTML='';
+  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada produk.</p>'; return; }
+  snap.forEach(d=>{
+    const u=d.data(); const cover=Array.isArray(u.foto)?u.foto[0]:u.foto;
+    const item=document.createElement('div'); item.className='item';
+    item.innerHTML=`
+      <div>
+        ${cover?`<img src="${cover}" class="thumb" alt="">`:''}
+        <b>${u.produk||'(Tanpa nama produk)'}</b> · 👤 ${u.penjual||'-'} · 💰 Rp ${rupiah(u.harga||0)}<br/>
+        ${u.wa?`<a class="badge" href="https://wa.me/${u.wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}
+        <p>${u.deskripsi||''}</p>
+      </div>
+      <div class="right">
+        ${can.umkm()?`
+          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
+          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
+        `:''}
+      </div>`;
+    c.appendChild(item);
+  });
+  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editUmkm(b.dataset.edit)));
+  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusUmkm(b.dataset.del)));
+}
+async function editUmkm(id){
+  if(!can.umkm()) return;
+  const v=(await getDoc(doc(db,'umkm',id))).data();
+  $('#uProduk').value=v.produk||''; $('#uPenjual').value=v.penjual||''; $('#uHarga').value=v.harga||''; $('#uWa').value=v.wa||''; $('#uDes').value=v.deskripsi||'';
+  editUmkmId=id; $('#uBatal').classList.remove('hidden'); toast('Mode edit UMKM'); showPanel('umkm');
+}
+async function hapusUmkm(id){
+  if(!can.umkm()) return;
+  if(!confirm('Hapus produk ini?')) return;
+  await deleteDoc(doc(db,'umkm',id)); toast('Dihapus'); loadUmkm();
+}
+$('#uSimpan')?.addEventListener('click', async ()=>{
+  if(!can.umkm()) return alert('Akses ditolak');
+  const produk=$('#uProduk').value.trim(), penjual=$('#uPenjual').value.trim(), harga=Number($('#uHarga').value||0), wa=$('#uWa').value.trim(), des=$('#uDes').value.trim();
+  if(!produk||!penjual) return toast('Lengkapi produk & penjual');
+  let foto=[]; if($('#uFoto').files.length>0){ foto = await uploadCloudinary($('#uFoto').files); }
+  if(editUmkmId){
+    await updateDoc(doc(db,'umkm',editUmkmId), {produk,penjual,harga,wa,deskripsi:des, ...(foto.length>0 && {foto})});
+    editUmkmId=null; $('#uBatal').classList.add('hidden'); toast('UMKM diupdate');
+  }else{
+    await addDoc(collection(db,'umkm'), {produk,penjual,harga,wa,deskripsi:des,foto,createdAt:serverTimestamp()});
+    toast('UMKM disimpan');
+  }
+  $('#uProduk').value='';$('#uPenjual').value='';$('#uHarga').value='';$('#uWa').value='';$('#uDes').value='';$('#uFoto').value='';$('#uPreview').innerHTML='';
+  loadUmkm();
+});
+$('#uBatal')?.addEventListener('click', ()=>{editUmkmId=null;$('#uBatal').classList.add('hidden');$('#uProduk').value='';$('#uPenjual').value='';$('#uHarga').value='';$('#uWa').value='';$('#uDes').value='';$('#uFoto').value='';$('#uPreview').innerHTML='';});
+
+/* ===================== KAS (CRUD + CSV) ===================== */
+async function loadKas(){
+  const qy=query(collection(db,'kas'), orderBy('createdAt','desc'));
+  const snap=await getDocs(qy);
+  const c=$('#kasList'); c.innerHTML='';
+  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada transaksi.</p>'; return; }
+  snap.forEach(d=>{
+    const k=d.data();
+    const item=document.createElement('div'); item.className='item';
+    item.innerHTML=`
+      <div>
+        <b>${k.nama||'-'}</b> · ${k.tipe==='masuk'?'🟢 Masuk':'🔴 Keluar'} · Rp ${rupiah(k.jumlah||0)}<br/>
+        <span class="muted">📅 ${k.tanggal||'-'} · ${k.keterangan||''}</span>
+      </div>
+      <div class="right">
+        ${can.kas()?`<button class="btn btn-danger" data-del="${d.id}">Hapus</button>`:''}
+      </div>`;
+    c.appendChild(item);
+  });
+  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusKas(b.dataset.del)));
+}
+$('#kSimpan')?.addEventListener('click', async ()=>{
+  if(!can.kas()) return alert('Akses ditolak');
+  const nama=$('#kNama').value.trim(), jumlah=Number($('#kJumlah').value||0), tipe=$('#kTipe').value, tanggal=$('#kTanggal').value||new Date().toISOString().slice(0,10), ket=$('#kKet').value.trim();
+  if(!nama||!jumlah) return toast('Isi nama & jumlah');
+  await addDoc(collection(db,'kas'), {nama,jumlah,tipe,tanggal,keterangan:ket,createdAt:serverTimestamp(),dibuatOleh:USER_EMAIL});
+  toast('Kas disimpan'); $('#kNama').value='';$('#kJumlah').value='';$('#kKet').value='';
+  loadKas(); loadHome();
+});
+async function hapusKas(id){
+  if(!can.kas()) return;
+  if(!confirm('Hapus transaksi ini?')) return;
+  await deleteDoc(doc(db,'kas',id)); toast('Dihapus'); loadKas(); loadHome();
+}
+$('#kExport')?.addEventListener('click', async ()=>{
+  const s=await getDocs(collection(db,'kas')); let csv='Nama,Jumlah,Tipe,Tanggal,Keterangan\n';
+  s.forEach(d=>{ const k=d.data(); csv+=`${k.nama||''},${k.jumlah||0},${k.tipe||''},${k.tanggal||''},"${(k.keterangan||'').replace(/"/g,'""')}"\n`; });
+  const blob=new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kas-kartEJI.csv'; a.click();
+});
+
+/* ===================== KEGIATAN (CRUD) ===================== */
+let editKgId=null;
+async function loadKegiatan(){
+  const qy=query(collection(db,'kegiatan'), orderBy('createdAt','desc'));
+  const snap=await getDocs(qy);
+  const c=$('#kegiatanList'); c.innerHTML='';
+  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada kegiatan.</p>'; return; }
+  snap.forEach(d=>{
+    const k=d.data();
+    const item=document.createElement('div'); item.className='item';
+    item.innerHTML=`
+      <div>
+        <b>${k.judul||'(Tanpa judul)'}</b> · <span class="muted">📅 ${k.tanggal||'-'} · 📍 ${k.lokasi||'-'} · 🏅 ${k.poin||0}p</span>
+        <p>${k.deskripsi||''}</p>
+      </div>
+      <div class="right">
+        ${can.kegiatan()?`
+          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
+          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
+        `:''}
+      </div>`;
+    c.appendChild(item);
+  });
+  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editKegiatan(b.dataset.edit)));
+  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusKegiatan(b.dataset.del)));
+}
+async function editKegiatan(id){
+  if(!can.kegiatan()) return;
+  const v=(await getDoc(doc(db,'kegiatan',id))).data();
+  $('#kgJudul').value=v.judul||''; $('#kgDes').value=v.deskripsi||''; $('#kgTanggal').value=v.tanggal||''; $('#kgLokasi').value=v.lokasi||''; $('#kgPoin').value=v.poin||0;
+  editKgId=id; $('#kgBatal').classList.remove('hidden'); toast('Mode edit kegiatan'); showPanel('kegiatan');
+}
+async function hapusKegiatan(id){
+  if(!can.kegiatan()) return;
+  if(!confirm('Hapus kegiatan ini?')) return;
+  await deleteDoc(doc(db,'kegiatan',id)); toast('Dihapus'); loadKegiatan(); fillPresensiKegiatan();
+}
+$('#kgSimpan')?.addEventListener('click', async ()=>{
+  if(!can.kegiatan()) return alert('Akses ditolak');
+  const judul=$('#kgJudul').value.trim(), des=$('#kgDes').value.trim(), tanggal=$('#kgTanggal').value||'', lokasi=$('#kgLokasi').value.trim(), poin=Number($('#kgPoin').value||0);
+  if(!judul||!tanggal) return toast('Isi judul & tanggal');
+  if(editKgId){
+    await updateDoc(doc(db,'kegiatan',editKgId), {judul, deskripsi:des, tanggal, lokasi, poin});
+    editKgId=null; $('#kgBatal').classList.add('hidden'); toast('Kegiatan diupdate');
+  }else{
+    await addDoc(collection(db,'kegiatan'), {judul, deskripsi:des, tanggal, lokasi, poin, createdAt:serverTimestamp()});
+    toast('Kegiatan disimpan');
+  }
+  $('#kgJudul').value='';$('#kgDes').value='';$('#kgTanggal').value='';$('#kgLokasi').value='';$('#kgPoin').value='';
+  loadKegiatan(); fillPresensiKegiatan();
+});
+$('#kgBatal')?.addEventListener('click', ()=>{editKgId=null;$('#kgBatal').classList.add('hidden');$('#kgJudul').value='';$('#kgDes').value='';$('#kgTanggal').value='';$('#kgLokasi').value='';$('#kgPoin').value='';});
+
+/* ===== Presensi (tandai hadir + poin) ===== */
+async function fillPresensiKegiatan(){
+  const sel=$('#prsKegiatan'); sel.innerHTML='';
+  const snap=await getDocs(query(collection(db,'kegiatan'), orderBy('createdAt','desc')));
+  snap.forEach(d=>{
+    const k=d.data(); const opt=document.createElement('option');
+    opt.value=d.id; opt.textContent=`${k.judul||'(tanpa judul)'} · ${k.tanggal||'-'}`;
+    sel.appendChild(opt);
+  });
+}
+async function fillPresensiAnggota(){
+  const sel=$('#prsAnggota'); sel.innerHTML='';
+  const snap=await getDocs(collection(db,'users'));
+  snap.forEach(d=>{
+    const u=d.data(); const opt=document.createElement('option');
+    opt.value=d.id; opt.textContent=u.nama?`${u.nama} (${u.email})`: (u.email||d.id);
+    sel.appendChild(opt);
+  });
+}
+$('#prsTandai')?.addEventListener('click', async ()=>{
+  if(!can.kegiatan()) return;
+  const kegId=$('#prsKegiatan').value, uid=$('#prsAnggota').value;
+  if(!kegId||!uid) return toast('Pilih kegiatan & anggota');
+
+  const keg=await getDoc(doc(db,'kegiatan',kegId));
+  if(!keg.exists()) return toast('Kegiatan tidak ditemukan');
+  const poin=Number(keg.data().poin||0);
+
+  // Tandai hadir (koleksi presensi)
+  await addDoc(collection(db,'presensi'), {
+    kegiatanId: kegId, uid, hadir:true, poin, at: serverTimestamp(), oleh: USER_EMAIL
+  });
+
+  // Tambah poin user
+  await updateDoc(doc(db,'users',uid), {poin: increment(poin)});
+
+  $('#prsInfo').textContent = `✅ Presensi dicatat & poin +${poin} diberikan.`;
+  toast('Presensi tersimpan');
+  loadLeaderboard();
+});
+
+/* ===================== LEADERBOARD ===================== */
+async function loadLeaderboard(){
+  const snap=await getDocs(collection(db,'users'));
+  const arr=[];
+  snap.forEach(d=>{
+    const u=d.data(); arr.push({nama: u.nama||u.email||'(tanpa nama)', poin: u.poin||0, badge: u.badge || badgeOf(u.poin||0)});
+  });
+  arr.sort((a,b)=>b.poin-a.poin);
+  const c=$('#leaderboardList'); c.innerHTML='';
+  if(arr.length===0){c.innerHTML='<p class="muted">Belum ada data poin.</p>';return;}
+  arr.forEach((x,i)=>{
+    const item=document.createElement('div'); item.className='item';
+    item.innerHTML=`<div><b>${i+1}. ${x.nama}</b> · 🏅 ${x.badge}</div><div class="right"><span class="badge">${x.poin} poin</span></div>`;
+    c.appendChild(item);
+  });
+}
+function badgeOf(p){
+  if(p>=200) return '👑 Legenda';
+  if(p>=120) return '💎 Ahli';
+  if(p>=60)  return '⭐ Aktif';
+  if(p>=20)  return '🎖️ Rajin';
+  return '🔰 Pemula';
+}
+
+/* ===================== ANGGOTA (list + ubah role) ===================== */
+async function loadAnggota(){
+  const snap=await getDocs(collection(db,'users'));
+  const c=$('#anggotaList'); c.innerHTML='';
+  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada anggota.</p>'; return; }
+  snap.forEach(d=>{
+    const u=d.data();
+    const item=document.createElement('div'); item.className='item';
+    item.innerHTML=`
+      <div>
+        <b>${u.nama||u.email||'(tanpa nama)'}</b><br/>
+        <span class="badge">${u.role||'anggota'}</span> · <span class="muted">${u.email||''}</span> · 🏅 ${u.badge||badgeOf(u.poin||0)} (${u.poin||0}p)
+      </div>
+      <div class="right">
+        ${can.anggota()?`
+          <select data-sel="${d.id}">
+            <option value="anggota" ${u.role==='anggota'?'selected':''}>anggota</option>
+            <option value="admin_pengumuman" ${u.role==='admin_pengumuman'?'selected':''}>admin_pengumuman</option>
+            <option value="admin_berita" ${u.role==='admin_berita'?'selected':''}>admin_berita</option>
+            <option value="admin_umkm" ${u.role==='admin_umkm'?'selected':''}>admin_umkm</option>
+            <option value="admin_keuangan" ${u.role==='admin_keuangan'?'selected':''}>admin_keuangan</option>
+            <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
+            <option value="super_admin" ${u.role==='super_admin'?'selected':''}>super_admin</option>
+          </select>
+          <button class="btn btn-primary" data-save="${d.id}">Simpan</button>
+        `:''}
+      </div>`;
+    c.appendChild(item);
+  });
+  if(can.anggota()){
+    c.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click', async ()=>{
+      const id=b.dataset.save; const sel=c.querySelector(`[data-sel="${id}"]`); const role=sel.value;
+      await updateDoc(doc(db,'users',id), {role});
+      toast('Role diperbarui');
+      if(id===UID){ ROLE=role; $('#prRole').textContent=ROLE; lockForms(); }
+      loadAnggota();
+    }));
+  }
+}
 </script>
 </body>
 </html>
