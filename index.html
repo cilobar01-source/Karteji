@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Portal KARTEJI • Cilosari Barat</title>
 <link rel="icon" href="assets/logo.svg" />
-
-<!-- === STYLE ELEGAN === -->
 <style>
 :root{
   --biru:#0e4c92;--biru2:#1a6ac2;--emas:#f6c445;
@@ -18,10 +16,7 @@ body.light{
   --line:rgba(0,0,0,.08);--muted:#475569;--shadow:0 4px 18px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;transition:.25s ease all}
-body{
-  margin:0;font-family:'Poppins',system-ui,Arial;
-  background:var(--bg);color:var(--text);scroll-behavior:smooth;
-}
+body{margin:0;font-family:'Poppins',system-ui,Arial;background:var(--bg);color:var(--text);}
 a{text-decoration:none;color:inherit}
 header{
   display:flex;align-items:center;justify-content:space-between;
@@ -33,63 +28,45 @@ body.light header{background:rgba(255,255,255,0.7)}
 .brand{display:flex;align-items:center;gap:.6rem;font-weight:700}
 .brand img{width:40px;height:40px;border-radius:8px}
 nav{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap}
-nav a,nav span{font-weight:600}
 .btn{padding:.55rem 1rem;border-radius:12px;font-weight:700;cursor:pointer;border:none}
-.btn-primary{background:var(--emas);color:#0b132b;box-shadow:0 3px 10px rgba(246,196,69,.4)}
+.btn-primary{background:var(--emas);color:#0b132b}
 .btn-outline{background:transparent;border:1px solid var(--emas);color:var(--emas)}
-.btn-outline:hover{background:var(--emas);color:#0b132b}
 #themeBtn{background:transparent;border:none;font-size:1rem;cursor:pointer}
 .poinBox{background:rgba(255,255,255,.08);padding:.35rem .8rem;border-radius:12px;font-size:.9rem;border:1px solid var(--line)}
 body.light .poinBox{background:#f2f2f7}
 
-/* HERO */
+/* Hero */
 .hero{padding:4rem 1rem;text-align:center;max-width:760px;margin:auto}
-.hero h1{font-size:2.2rem;margin-bottom:.6rem;background:linear-gradient(90deg,var(--emas),#ffd55f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1{font-size:2.2rem;background:linear-gradient(90deg,var(--emas),#ffd55f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero p{font-size:1.05rem;line-height:1.65;color:var(--muted);margin-bottom:2rem}
-.hero .btn-primary{font-size:1.05rem;border-radius:14px;padding:.7rem 1.5rem}
 
-/* SECTIONS */
+/* Section umum */
 .section{padding:2.2rem 1rem;max-width:1000px;margin:auto}
-.section h2{text-align:center;font-size:1.4rem;color:var(--emas);margin-bottom:1.4rem}
+.section h2{text-align:center;font-size:1.4rem;color:var(--emas);margin-bottom:1.2rem}
 
-/* Kegiatan Grid */
-.kegiatan-grid{display:grid;gap:1.4rem}
-@media(min-width:700px){.kegiatan-grid{grid-template-columns:repeat(2,1fr)}}
-.kegiatan-item{
-  background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:1.1rem;box-shadow:var(--shadow);overflow:hidden;
-  transform:translateY(0);transition:transform .25s;
+/* UMKM horizontal */
+.umkm-scroll{display:flex;overflow-x:auto;gap:1rem;scroll-snap-type:x mandatory;padding-bottom:1rem}
+.umkm-card{
+  flex:0 0 180px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow);padding:.8rem;cursor:pointer;text-align:center;
 }
-.kegiatan-item:hover{transform:translateY(-5px)}
-.kegiatan-item img{width:100%;border-radius:12px;margin-bottom:.6rem;object-fit:cover;max-height:220px}
-.kegiatan-item b{font-size:1.05rem}
-.kegiatan-item .muted{font-size:.9rem}
-
-/* Item umum */
-.item{
-  background:var(--card);border:1px solid var(--line);border-radius:14px;
-  padding:1rem;margin:.6rem 0;box-shadow:var(--shadow);transition:transform .25s;
-}
-.item:hover{transform:translateY(-3px)}
-.item img{width:100%;border-radius:10px;margin:.6rem 0;max-height:260px;object-fit:cover}
-.muted{color:var(--muted);font-size:.9rem}
+.umkm-card img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:.4rem}
+.umkm-card b{font-size:.95rem;display:block}
+.umkm-card span{color:var(--emas);font-weight:700;font-size:.9rem}
 
 /* Footer */
 footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);border-top:1px solid var(--line);margin-top:3rem}
-.fade-in{opacity:0;transform:translateY(20px);animation:fadeIn .8s forwards}
-@keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
+.muted{color:var(--muted)}
 .hidden{display:none}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand fade-in">
-    <img src="assets/logo.svg" alt="Logo KARTEJI">
-    <span>KARTEJI Portal</span>
-  </div>
-  <nav class="fade-in" style="animation-delay:.3s;">
+  <div class="brand"><img src="assets/logo.svg"/><span>KARTEJI Portal</span></div>
+  <nav>
     <a href="#kegiatan">Kegiatan</a>
     <a href="#berita">Berita</a>
+    <a href="#umkm">UMKM</a>
     <a href="#pengumuman">Pengumuman</a>
     <button id="themeBtn">🌓</button>
     <span id="userName" class="hidden"></span>
@@ -100,175 +77,84 @@ footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);border-top:1px s
   </nav>
 </header>
 
-<section class="hero fade-in" style="animation-delay:.4s;">
-  <h1>Portal Digital Karang Taruna<br/>Cilosari Barat RT01/RW08</h1>
-  <p>
-    💪 Melihat program pelatihan, lomba, dan kegiatan sosial.<br>
-    💰 Mengakses informasi kas dan iuran anggota.<br>
-    🧠 Belajar bersama lewat konten edukatif dan inspiratif.<br>
-    🏅 Mengumpulkan poin & lencana keaktifan sebagai bentuk apresiasi.
-  </p>
+<section class="hero">
+  <h1>Portal Digital Karang Taruna<br>Cilosari Barat RT01/RW08</h1>
+  <p>💪 Pelatihan, lomba, kegiatan sosial<br>💰 Informasi kas dan iuran<br>🧠 Konten edukatif<br>🏅 Poin & lencana keaktifan</p>
   <a href="auth.html" class="btn btn-primary" id="ctaBtn">🚀 Mulai Sekarang</a>
 </section>
 
-<section id="kegiatan" class="section fade-in" style="animation-delay:.55s;">
-  <h2>💪 Kegiatan Terbaru</h2>
-  <div id="kegiatanList" class="kegiatan-grid"></div>
+<section id="umkm" class="section">
+  <h2>🏪 Produk UMKM</h2>
+  <div id="umkmList" class="umkm-scroll"></div>
 </section>
 
-<section id="berita" class="section fade-in" style="animation-delay:.7s;">
+<section id="kegiatan" class="section">
+  <h2>💪 Kegiatan Terbaru</h2>
+  <div id="kegiatanList"></div>
+</section>
+
+<section id="berita" class="section">
   <h2>📰 Berita Terbaru</h2>
   <div id="beritaList"></div>
 </section>
 
-<section id="pengumuman" class="section fade-in" style="animation-delay:.9s;">
+<section id="pengumuman" class="section">
   <h2>📢 Pengumuman</h2>
   <div id="pengumumanList"></div>
 </section>
 
-<section id="kas" class="section fade-in hidden" style="animation-delay:1.1s;">
-  <h2>💰 Kas RT / Karang Taruna</h2>
-  <div id="kasRingkasan" class="item muted">Memuat...</div>
-</section>
-
-<section id="tentang" class="section fade-in" style="animation-delay:1.3s;">
-  <h2>Tentang KARTEJI</h2>
-  <p style="text-align:center;max-width:720px;margin:auto;color:var(--muted)">
-    KARTEJI (Karang Taruna Cilosari Barat) adalah wadah generasi muda untuk berkreasi, 
-    berwirausaha, dan berkontribusi bagi lingkungan melalui inovasi digital dan semangat gotong royong.
-  </p>
-</section>
-
-<footer class="fade-in" style="animation-delay:1.5s;">
-  <p>© 2025 KARTEJI Cilosari Barat · Dibuat dengan 💙 di Semarang</p>
-</footer>
+<footer><p>© 2025 KARTEJI Cilosari Barat · 💙 Semarang</p></footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getAuth,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore,collection,getDocs,query,orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
-  authDomain: "karang-taruna-aadaf.firebaseapp.com",
-  projectId: "karang-taruna-aadaf",
-  storageBucket: "karang-taruna-aadaf.appspot.com",
-  messagingSenderId: "367208001887",
-  appId: "1:367208001887:web:bce5982d99edefb7e746ea"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const firebaseConfig={apiKey:"AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",authDomain:"karang-taruna-aadaf.firebaseapp.com",projectId:"karang-taruna-aadaf",storageBucket:"karang-taruna-aadaf.appspot.com",messagingSenderId:"367208001887",appId:"1:367208001887:web:bce5982d99edefb7e746ea"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+document.getElementById('themeBtn').onclick=()=>document.body.classList.toggle('light');
 
-const themeBtn=document.getElementById('themeBtn');
-const loginBtn=document.getElementById('loginBtn');
-const dashBtn=document.getElementById('dashBtn');
-const logoutBtn=document.getElementById('logoutBtn');
-const ctaBtn=document.getElementById('ctaBtn');
-const userName=document.getElementById('userName');
-const poinUser=document.getElementById('poinUser');
-const kasSection=document.getElementById('kas');
-
-themeBtn.onclick=()=>document.body.classList.toggle('light');
+async function loadUmkm(){
+  const snap=await getDocs(query(collection(db,'umkm'),orderBy('createdAt','desc')));
+  const c=document.getElementById('umkmList');
+  c.innerHTML='';
+  if(snap.empty){c.innerHTML='<p class="muted">Belum ada produk.</p>';return;}
+  snap.forEach(d=>{
+    const u=d.data(), id=d.id;
+    const foto=Array.isArray(u.foto)?u.foto[0]:u.foto;
+    const el=document.createElement('div');
+    el.className='umkm-card';
+    el.innerHTML=`${foto?`<img src="${foto}">`:''}<b>${u.produk||'(Tanpa nama)'}</b><span>Rp ${(u.harga||0).toLocaleString('id-ID')}</span>`;
+    el.onclick=()=>location.href=`umkm.html?id=${id}`;
+    c.appendChild(el);
+  });
+}
 
 async function loadKegiatan(){
   const snap=await getDocs(query(collection(db,'kegiatan'),orderBy('createdAt','desc')));
   const c=document.getElementById('kegiatanList');
   c.innerHTML='';
-  if(snap.empty){c.innerHTML='<p class="muted">Belum ada kegiatan.</p>';return;}
   snap.forEach(d=>{
-    const k=d.data(), id=d.id;
-    const foto=Array.isArray(k.foto)?k.foto[0]:k.foto;
-    const el=document.createElement('div');
-    el.className='kegiatan-item';
-    el.innerHTML=`
-      ${foto?`<img src="${foto}" alt="">`:''}
-      <b>${k.judul||'(Tanpa judul)'}</b><br>
-      <span class="muted">${k.tanggal||''} · ${k.lokasi||''}</span>
-      <p>${(k.deskripsi||'').slice(0,120)}${k.deskripsi&&k.deskripsi.length>120?'…':''}</p>`;
-    c.appendChild(el);
+    const k=d.data();
+    c.innerHTML+=`<div class="item"><b>${k.judul||'(Tanpa judul)'}</b><p>${k.deskripsi||''}</p></div>`;
   });
 }
-
 async function loadBerita(){
   const snap=await getDocs(query(collection(db,'berita'),orderBy('createdAt','desc')));
   const c=document.getElementById('beritaList');
   c.innerHTML='';
-  if(snap.empty){c.innerHTML='<p class="muted">Belum ada berita.</p>';return;}
   snap.forEach(d=>{
-    const b=d.data(), id=d.id;
-    const foto=Array.isArray(b.foto)?b.foto[0]:b.foto;
-    const el=document.createElement('div');
-    el.className='item';
-    el.innerHTML=`<a href="berita.html?id=${id}" style="text-decoration:none;color:inherit;">
-      ${foto?`<img src="${foto}" alt="">`:''}
-      <b>${b.judul||'(Tanpa judul)'}</b>
-      <p>${(b.isi||'').slice(0,180)}${b.isi&&b.isi.length>180?'…':''}</p>
-    </a>`;
-    c.appendChild(el);
+    const b=d.data(),id=d.id;
+    const f=Array.isArray(b.foto)?b.foto[0]:b.foto;
+    c.innerHTML+=`<div class="item"><a href="berita.html?id=${id}">${f?`<img src="${f}">`:''}<b>${b.judul||''}</b></a></div>`;
   });
 }
-
 async function loadPengumuman(){
   const snap=await getDocs(query(collection(db,'pengumuman'),orderBy('createdAt','desc')));
-  const c=document.getElementById('pengumumanList');
-  c.innerHTML='';
-  if(snap.empty){c.innerHTML='<p class="muted">Belum ada pengumuman.</p>';return;}
-  snap.forEach(d=>{
-    const p=d.data();
-    const el=document.createElement('div');
-    el.className='item';
-    el.innerHTML=`<b>${p.judul||'(Tanpa judul)'}</b>
-      <p>${(p.isi||'').slice(0,180)}${p.isi&&p.isi.length>180?'…':''}</p>`;
-    c.appendChild(el);
-  });
+  const c=document.getElementById('pengumumanList');c.innerHTML='';
+  snap.forEach(d=>{const p=d.data();c.innerHTML+=`<div class="item"><b>${p.judul||''}</b><p>${p.isi||''}</p></div>`});
 }
-
-async function loadKas(){
-  const snap=await getDocs(collection(db,'kas'));
-  let masuk=0,keluar=0;
-  snap.forEach(d=>{
-    const k=d.data();
-    if(k.tipe==='masuk') masuk+=Number(k.jumlah||0);
-    else keluar+=Number(k.jumlah||0);
-  });
-  const total=masuk-keluar;
-  document.getElementById('kasRingkasan').innerHTML=
-    `💸 Total Kas Saat Ini: <b>Rp ${total.toLocaleString('id-ID')}</b>`;
-}
-
-onAuthStateChanged(auth, async (user)=>{
-  if(user){
-    const name=user.displayName||user.email;
-    userName.textContent=`👋 ${name}`;
-    userName.classList.remove('hidden');
-    loginBtn.classList.add('hidden');
-    logoutBtn.classList.remove('hidden');
-    dashBtn.classList.remove('hidden');
-    kasSection.classList.remove('hidden');
-    ctaBtn.textContent="🏠 Buka Dashboard";
-    ctaBtn.href="dashboard.html";
-
-    const snap=await getDoc(doc(db,'users',user.uid));
-    if(snap.exists()){
-      const data=snap.data();
-      poinUser.textContent=`🏅 ${data.poin||0} pts`;
-      poinUser.classList.remove('hidden');
-    }
-    loadKas();
-  }else{
-    userName.classList.add('hidden');
-    poinUser.classList.add('hidden');
-    loginBtn.classList.remove('hidden');
-    logoutBtn.classList.add('hidden');
-    dashBtn.classList.add('hidden');
-    kasSection.classList.add('hidden');
-    ctaBtn.textContent="🚀 Mulai Sekarang";
-    ctaBtn.href="auth.html";
-  }
-  loadKegiatan(); loadBerita(); loadPengumuman();
-});
-logoutBtn.onclick=()=>signOut(auth).then(()=>location.reload());
+onAuthStateChanged(auth,()=>{loadUmkm();loadKegiatan();loadBerita();loadPengumuman();});
 </script>
 </body>
 </html>
