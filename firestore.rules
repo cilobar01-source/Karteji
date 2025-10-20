@@ -1,29 +1,29 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function userData() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
-    }
-    function userUnit() { return userData().id_katar; }
-    function userRole() { return userData().role; }
 
-    match /users/{uid} {
-      allow create: if request.auth != null && request.auth.uid == uid;
-      allow read, update: if request.auth != null && request.auth.uid == uid;
+    // Users: each user can read/write only their own profile doc
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    match /karangtaruna/{id} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && userRole() == "super_admin" && userUnit() == id;
+    // Shared collections (unit-isolated): require id_katar to match user's
+    function userUnit() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.id_katar;
     }
 
-    match /{collection}/{docId} {
-      allow read: if request.auth != null && resource.data.id_katar == userUnit();
-      allow create, update, delete: if request.auth != null &&
-        userData().status == "approved" &&
-        resource.data.id_katar == userUnit() &&
-        userRole() in ["super_admin","admin","admin_keuangan","admin_berita","admin_umkm"];
+    match /{collection}/{doc} {
+      allow read, create, update, delete: if request.auth != null
+        && request.resource.data.id_katar == userUnit()
+        && (resource == null || resource.data.id_katar == userUnit());
+    }
+
+    // Sistem branding doc: must carry id_katar and match user's
+    match /sistem/{docId} {
+      allow read: if true; // branding bisa dibaca publik jika mau
+      allow write: if request.auth != null
+        && request.resource.data.id_katar == userUnit();
     }
   }
 }

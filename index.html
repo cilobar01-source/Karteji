@@ -1,41 +1,108 @@
+
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Portal Karang Taruna</title>
-<link rel="stylesheet" href="./css/style.css">
-<link rel="manifest" href="./manifest.webmanifest">
-<meta name="theme-color" content="#000000">
-<style>
-  body{
-    margin:0;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(circle at center,#0e4c92,#052f63);
-    height:100vh;overflow:hidden;
-  }
-  .splash{
-    text-align:center;color:#fff;
-    animation:fadein 1s ease forwards;
-  }
-  .splash img{
-    width:90px;height:90px;animation:spin 2s linear infinite;
-    filter:drop-shadow(0 0 12px rgba(255,255,255,.5));
-  }
-  .splash h1{font-family:'Poppins',sans-serif;margin-top:12px;font-weight:600;letter-spacing:.5px;}
-  @keyframes fadein{from{opacity:0;transform:scale(.8);}to{opacity:1;transform:scale(1);}}
-  @keyframes spin{to{transform:rotate(360deg);}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Karang Taruna Cilosari Barat (v6.8 Transparent)</title>
+  <link rel="stylesheet" href="./css/style.css">
+
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
 </head>
 <body>
-<div class="splash">
-  <img src="./assets/icons/kt.svg" alt="Logo Karang Taruna">
-  <h1>Portal Karang Taruna</h1>
-  <p style="color:#f6c445;font-size:0.9rem;">Memuat...</p>
-</div>
+  <header class="header-glass">
+    <div class="header-title">
+      <img id="logoImg" class="logo-glow" src="./assets/icons/kt.svg" alt="KT">
+      <div>
+        <div id="portalName">Karang Taruna Cilosari Barat</div>
+        <small class="info-chip">🌤 Cuaca | 🕒 <span id="clock">--:--</span> WIB | 🕌 <span id="shalat">...</span></small>
+      </div>
+    </div>
+    <label class="info-chip" style="cursor:pointer">
+      <input type="file" id="logoUpload" hidden> Ganti Logo
+    </label>
+  </header>
 
-<script>
-setTimeout(()=>{ location.href="/auth/index.html"; },2000);
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('/service-worker.js'); }
-</script>
+  <main class="container">
+    <section class="grid">
+      <div class="card-glass span-3">
+        <p class="card-title">Saldo Kas</p>
+        <p class="card-value">Rp 0</p>
+      </div>
+      <div class="card-glass span-3">
+        <p class="card-title">Kegiatan</p>
+        <p class="card-value">0</p>
+      </div>
+      <div class="card-glass span-3">
+        <p class="card-title">Anggota</p>
+        <p class="card-value">0</p>
+      </div>
+      <div class="card-glass span-3">
+        <p class="card-title">Poin Komunitas</p>
+        <p class="card-value">0</p>
+      </div>
+
+      <div class="card-glass span-8">
+        <p class="card-title">Agenda Terdekat</p>
+        <div class="info-chip">Belum ada agenda.</div>
+      </div>
+      <div class="card-glass span-4">
+        <p class="card-title">Notifikasi</p>
+        <div class="info-chip">Tidak ada notifikasi.</div>
+      </div>
+    </section>
+
+    <p class="footer-note">v6.8 • Transparent Spatial UI • Firebase + Cloudinary</p>
+  </main>
+
+  <nav class="nav-float">
+    <a class="active" href="#">🏠</a>
+    <a href="#">📅</a>
+    <a href="#">💬</a>
+    <a href="#">🎓</a>
+    <a href="#">⚙️</a>
+  </nav>
+
+  <!-- Minimal clock script -->
+  <script>
+    setInterval(()=>{
+      const el = document.getElementById('clock');
+      if(el) el.textContent = new Date().toLocaleTimeString('id-ID', {hour12:false});
+    }, 1000);
+  </script>
+
+  <!-- Modular scripts -->
+  <script type="module" src="./js/firebase.js"></script>
+  <script type="module" src="./js/config.js"></script>
+  <script type="module" src="./js/guard.js"></script>
+  <script type="module" src="./js/motion.js"></script>
+  <script type="module" src="./js/ui.js"></script>
+  <script type="module" src="./js/data.js"></script>
+  <script type="module" src="./js/cloudinary.js"></script>
+  <script type="module" src="./js/app.js"></script>
+
+  <!-- Splash overlay -->
+  <div id="splash" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(18px);z-index:9999">
+    <div style="text-align:center">
+      <img src="./assets/icons/kt.svg" width="88" height="88" style="opacity:.95;filter:drop-shadow(0 0 24px rgba(255,255,255,.25))">
+      <div style="margin-top:12px;color:#fff;letter-spacing:.8px">Karang Taruna Cilosari Barat</div>
+      <div class="info-chip" style="margin-top:12px">Memuat aplikasi…</div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('load', ()=>{
+      setTimeout(()=>{ const s=document.getElementById('splash'); if(s) s.style.display='none'; }, 800);
+    });
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(()=>console.log('SW ready'));
+    }
+  </script>
+
+  <script type="module">
+    import { onReady } from "./js/guard.js";
+    onReady(()=>{});
+  </script>
 </body>
 </html>
