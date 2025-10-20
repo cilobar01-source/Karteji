@@ -3,28 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Portal Karang Taruna • Publik</title>
+<title>Portal Karang Taruna</title>
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <header class="header-glass">
   <div class="header-title">
     <img src="../assets/icons/kt.svg" width="36" height="36" class="logo-glow">
-    <div>Halaman Publik</div>
+    <div>Portal Karang Taruna</div>
   </div>
-  <a class="info-chip" href="./login.html">🔑 Login / Daftar</a>
 </header>
 
 <main class="container" style="text-align:center;max-width:720px">
   <h2>Selamat Datang di Portal Karang Taruna</h2>
-  <p>Informasi publik terbaru dari Karang Taruna berbagai wilayah.</p>
+  <p>Platform digital resmi untuk menghubungkan seluruh Karang Taruna dan anggota di wilayah Anda.</p>
 
-  <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;">
-    <a href="#pengumuman" class="btn-glass">📣 Lihat Pengumuman Publik</a>
-    <a href="./login.html" class="btn-glass">📝 Ajukan Pendaftaran Unit</a>
+  <div style="display:flex;justify-content:center;margin-top:20px;">
+    <a href="./login.html" class="btn-glass">🔑 Login / Daftar</a>
   </div>
 
-  <section class="card-glass" id="pengumuman" style="margin-top:2rem;text-align:left">
+  <section class="card-glass" style="margin-top:2rem;">
     <h3>📢 Pengumuman Publik</h3>
     <ul id="announceList"></ul>
   </section>
@@ -33,10 +31,13 @@
 <script type="module">
 import { db } from "../js/firebase.js";
 import { collection, getDocs, limit, orderBy, query } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
 const list=document.getElementById("announceList");
-const q=query(collection(db,"forum"),orderBy("dibuat","desc"),limit(10));
+const q=query(collection(db,"forum"),orderBy("dibuat","desc"),limit(5));
 const snap=await getDocs(q);
-snap.forEach(d=>{ list.innerHTML += `<li>${d.data().judul || 'Tanpa judul'}</li>`; });
+snap.forEach(d=>{
+  list.innerHTML += `<li>${d.data().judul || 'Tanpa judul'}</li>`;
+});
 </script>
 </body>
 </html>
