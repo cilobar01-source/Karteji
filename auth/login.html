@@ -1,10 +1,9 @@
-
 <!doctype html>
 <html lang="id">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Masuk • Karang Taruna</title>
+  <title>Portal Karang Taruna • Login & Register</title>
   <link rel="stylesheet" href="../css/style.css">
 
   <link rel="manifest" href="../manifest.webmanifest">
@@ -14,39 +13,131 @@
 <body>
   <header class="header-glass">
     <div class="header-title">
-      <div class="logo-glow"></div>
-      <div>Masuk Portal Karang Taruna</div>
+      <img class="logo-glow" src="../assets/icons/kt.svg" width="36" height="36">
+      <div>Portal Karang Taruna</div>
     </div>
   </header>
 
   <main class="container" style="max-width:520px">
-    <div class="card-glass">
-      <div class="input-wrap">
-        <label>Email</label>
-        <input id="email" type="email" placeholder="nama@email.com">
+    <div class="card-glass" id="formWrapper">
+
+      <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px">
+        <button id="tabLogin" class="btn-glass" style="flex:1; background:rgba(255,255,255,.15)">Masuk</button>
+        <button id="tabRegister" class="btn-glass" style="flex:1;">Daftar Karang Taruna Baru</button>
       </div>
-      <div class="input-wrap" style="margin-top:10px">
-        <label>Password</label>
-        <input id="password" type="password" placeholder="••••••••">
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <div class="input-wrap">
+          <label>Email</label>
+          <input id="loginEmail" type="email" placeholder="nama@email.com">
+        </div>
+        <div class="input-wrap" style="margin-top:10px">
+          <label>Password</label>
+          <input id="loginPassword" type="password" placeholder="••••••••">
+        </div>
+        <div style="margin-top:14px">
+          <button id="btnLogin" class="btn-glass" style="width:100%">Masuk</button>
+        </div>
       </div>
-      <div style="display:flex; gap:10px; margin-top:14px">
-        <button id="btnLogin" class="btn-glass">Masuk</button>
-        <a href="#" class="info-chip" onclick="alert('Register dibuat terpisah sesuai kebijakan unit.')">Daftar</a>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm" style="display:none">
+        <div class="input-wrap"><label>Nama Karang Taruna</label><input id="nama_katar" type="text" placeholder="Karang Taruna Cilosari Timur"></div>
+        <div class="input-wrap"><label>ID Unik (tanpa spasi)</label><input id="id_katar" type="text" placeholder="cilosari_timur"></div>
+        <div class="input-wrap"><label>Email Ketua</label><input id="email" type="email" placeholder="email@contoh.com"></div>
+        <div class="input-wrap"><label>Password</label><input id="password" type="password" placeholder="••••••••"></div>
+        <div class="input-wrap"><label>Logo (opsional)</label><input id="logo" type="file" accept="image/*"></div>
+        <div style="margin-top:14px">
+          <button id="btnDaftar" class="btn-glass" style="width:100%">Daftar Karang Taruna</button>
+        </div>
       </div>
     </div>
-    <p class="footer-note">v6.8 • Transparent Spatial UI • Firebase Auth</p>
+
+    <p class="footer-note">v7.2 • Transparent Spatial UI • Firebase + Cloudinary + Multi-Unit</p>
   </main>
 
   <script type="module">
     import { login } from "../js/auth.js";
+    import { auth, db } from "../js/firebase.js";
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    import { uploadToCloudinary } from "../js/cloudinary.js";
+
+    // Toggle tabs
+    const tabLogin = document.getElementById("tabLogin");
+    const tabRegister = document.getElementById("tabRegister");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+
+    tabLogin.onclick = () => {
+      tabLogin.style.background = "rgba(255,255,255,.15)";
+      tabRegister.style.background = "transparent";
+      loginForm.style.display = "block";
+      registerForm.style.display = "none";
+    };
+    tabRegister.onclick = () => {
+      tabRegister.style.background = "rgba(255,255,255,.15)";
+      tabLogin.style.background = "transparent";
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
+    };
+
+    // LOGIN
     document.getElementById('btnLogin').addEventListener('click', async ()=>{
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      try{
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      try {
         await login(email, password);
         location.href = "/index.html";
-      }catch(err){
+      } catch (err) {
         alert(err.message);
+      }
+    });
+
+    // REGISTER
+    document.getElementById("btnDaftar").addEventListener("click", async ()=>{
+      const nama_katar = document.getElementById("nama_katar").value.trim();
+      const id_katar = document.getElementById("id_katar").value.trim().toLowerCase().replace(/\s+/g,"_");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const file = document.getElementById("logo").files[0];
+      if(!nama_katar || !id_katar || !email || !password){
+        alert("Harap lengkapi semua data utama!");
+        return;
+      }
+
+      try {
+        let logoURL = "";
+        if(file) logoURL = await uploadToCloudinary(file, "logo_katar");
+
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = userCred.user.uid;
+
+        await setDoc(doc(db, "users", uid), {
+          nama: "Ketua Karang Taruna",
+          email,
+          role: "super_admin",
+          id_katar,
+          dibuat: Date.now()
+        });
+
+        await setDoc(doc(db, "karangtaruna", id_katar), {
+          nama: nama_katar,
+          logo: logoURL,
+          dibuat: Date.now()
+        });
+
+        await setDoc(doc(db, "sistem", "branding_" + id_katar), {
+          id_katar,
+          nama_portal: nama_katar,
+          logo: logoURL
+        });
+
+        alert("🎉 Karang Taruna berhasil terdaftar!");
+        location.href = "/index.html";
+      } catch(err){
+        alert("Gagal mendaftar: " + err.message);
       }
     });
   </script>
