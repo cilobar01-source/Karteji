@@ -1,27 +1,21 @@
+
 // js/cloudinary.js
-// Upload multi file ke Cloudinary (unsigned)
-const CLOUD_NAME = "dxdmjdcz3";
-const UPLOAD_PRESET = "karteji_upload"; // harus unsigned preset
+export async function uploadToCloudinary(file, folder = "karangtaruna"){
+  const cloudName = "YOUR_CLOUD_NAME";          // <-- ganti
+  const uploadPreset = "YOUR_UPLOAD_PRESET";    // <-- ganti
 
-export async function uploadToCloudinary(files){
-  if(!files || files.length===0) return [];
-  const urls = [];
-  for (const file of files){
-    const form = new FormData();
-    form.append("file", file);
-    form.append("upload_preset", UPLOAD_PRESET);
-    // optional: form.append("folder","karteji");
+  if(!cloudName || !uploadPreset) throw new Error("Cloudinary belum dikonfigurasi.");
 
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {
-      method: "POST",
-      body: form
-    });
-    if(!res.ok){
-      const t = await res.text();
-      throw new Error("Upload gagal: "+t);
-    }
-    const json = await res.json();
-    urls.push(json.secure_url);
-  }
-  return urls;
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", uploadPreset);
+  formData.append("folder", folder);
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+    method: "POST",
+    body: formData
+  });
+  if(!res.ok) throw new Error("Upload gagal ke Cloudinary");
+  const data = await res.json();
+  return data.secure_url;
 }

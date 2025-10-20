@@ -1,3 +1,4 @@
+
 // js/firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { 
@@ -23,10 +24,10 @@ const firebaseConfig = {
 
 // Inisialisasi Firebase
 export const app = initializeApp(firebaseConfig);
-
-// Auth + Firestore
 export const auth = getAuth(app);
 export const db   = getFirestore(app);
 
 // Persist login agar tidak logout saat refresh
 await setPersistence(auth, browserLocalPersistence);
+
+export default { app, auth, db };
