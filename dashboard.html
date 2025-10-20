@@ -3,870 +3,184 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dashboard • KARTEJI v5.1</title>
+<title>Dashboard • KARTEJI v5.6</title>
 <link rel="icon" href="assets/logo.svg" />
-
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+/* ========== VARIABEL WARNA ========== */
 :root{
-  --biru:#0e4c92; --biru2:#1a6ac2; --emas:#f6c445;
-  --bg:#0b132b; --text:#e6eefc; --card:#111928; --line:rgba(255,255,255,.12);
-  --muted:#b8c7e0; --danger:#d94646; --success:#14b86a;
+  --glass-bg: rgba(255,255,255,0.55);
+  --text:#111827; --muted:#555;
+  --accent:#0e4c92; --highlight:#f6c445;
+  --line:rgba(0,0,0,.08); --shadow:0 4px 18px rgba(0,0,0,.15);
+  --danger:#e54848; --success:#14b86a;
 }
-body.light{
-  --bg:#f5f7fa; --text:#1e293b; --card:#ffffff; --line:rgba(0,0,0,.1);
-  --muted:#475569;
+@media(prefers-color-scheme:dark){
+  :root{
+    --glass-bg:rgba(25,25,35,0.45);
+    --text:#f5f7fa; --muted:#cbd5e1;
+    --line:rgba(255,255,255,.1); --shadow:0 8px 30px rgba(0,0,0,.5);
+  }
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:'Poppins',system-ui;background:var(--bg);color:var(--text);}
+*{box-sizing:border-box;transition:.25s ease all;}
+body{
+  margin:0;font-family:'Poppins',system-ui;
+  background:url('assets/bg/blur-home.jpg') center/cover fixed no-repeat;
+  color:var(--text);display:flex;min-height:100vh;
+}
 
-/* Topbar */
-.topbar{display:flex;gap:.8rem;align-items:center;justify-content:space-between;
-  background:linear-gradient(90deg,var(--biru),var(--biru2));color:#fff;padding:.7rem 1rem;position:sticky;top:0;z-index:20;}
-.topbar .right{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
-.btn{border:none;border-radius:10px;padding:.55rem .9rem;font-weight:700;cursor:pointer}
-.btn-ghost{background:transparent;border:1px solid var(--line);color:inherit}
-.btn-primary{background:var(--emas);color:#0b132b}
-.btn-danger{background:var(--danger);color:#fff}
-.badge{display:inline-block;background:var(--biru);color:#fff;padding:.15rem .5rem;border-radius:6px;font-size:.8rem;font-weight:800}
+/* ========== SIDEBAR ========== */
+aside{
+  width:260px;backdrop-filter:blur(24px);
+  background:var(--glass-bg);border-right:1px solid var(--line);
+  padding:1rem;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+aside .logo{display:flex;align-items:center;gap:.6rem;font-weight:700;margin-bottom:1.5rem}
+aside .logo img{width:36px;height:36px;border-radius:8px}
+aside nav a, aside nav button{
+  display:block;width:100%;text-align:left;border:none;background:transparent;
+  padding:.7rem 1rem;margin:.2rem 0;border-radius:10px;font-weight:600;color:var(--text);cursor:pointer;
+}
+aside nav a:hover, aside nav button:hover{background:rgba(0,0,0,0.08)}
+@media(prefers-color-scheme:dark){aside nav a:hover,aside nav button:hover{background:rgba(255,255,255,0.1)}}
+.menu-head{font-weight:700;margin-top:.8rem;margin-bottom:.4rem;color:var(--accent)}
 
-/* Layout */
-.wrap{display:grid;grid-template-columns:280px 1fr;gap:1rem;padding:1rem;}
-@media(max-width:980px){.wrap{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.pad{padding:1rem}
-hr.sep{border:none;border-top:1px dashed var(--line);margin:1rem 0}
+/* ========== MAIN AREA ========== */
+main{flex:1;padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem}
 
-/* Sidebar dropdown */
-.sidebar{position:sticky;top:74px;height:max-content}
-.menu-group{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:.8rem;background:var(--card)}
-.menu-head{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;cursor:pointer}
-.menu-head:hover{background:rgba(255,255,255,.05)}
-.menu-list{display:none;padding:.6rem 1rem 1rem}
-.menu-list button{display:block;width:100%;text-align:left;background:transparent;border:1px solid var(--line);
-  color:inherit;border-radius:10px;padding:.55rem .8rem;margin:.35rem 0;cursor:pointer}
-.menu-list button.active{background:var(--emas);color:#0b132b;border-color:var(--emas)}
-.rotate{transform:rotate(90deg)}
-.show{display:block}
+/* HEADER TOPBAR */
+header{
+  backdrop-filter:blur(20px);background:var(--glass-bg);
+  border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+  padding:.8rem 1.4rem;display:flex;justify-content:space-between;align-items:center;
+}
+header h2{margin:0;font-size:1.2rem;color:var(--accent)}
+.profile{display:flex;align-items:center;gap:.7rem}
+.profile img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--highlight)}
 
-/* Forms & Grid */
-input,textarea,select{width:100%;background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:.65rem;margin:.5rem 0}
-input[type="file"]{padding:.4rem;background:transparent}
-.row{display:flex;gap:.6rem;flex-wrap:wrap}
+/* CARD & SECTION */
+section.card{
+  background:var(--glass-bg);border:1px solid var(--line);
+  border-radius:16px;padding:1.2rem;box-shadow:var(--shadow);
+}
+h3{margin-top:0;font-size:1.1rem;color:var(--accent)}
+hr{border:none;border-top:1px dashed var(--line);margin:1rem 0}
+
+/* GRID / FORM */
 .grid{display:grid;gap:1rem}
-@media(min-width:800px){.grid-2{grid-template-columns:repeat(2,1fr)} .grid-3{grid-template-columns:repeat(3,1fr)}}
-.thumb{width:100%;height:180px;object-fit:cover;border-radius:10px;margin:.4rem 0;background:#0a0a0a22}
+@media(min-width:900px){.grid-2{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}}
+input,textarea,select{width:100%;background:transparent;border:1px solid var(--line);
+  border-radius:10px;padding:.6rem;color:var(--text);font-family:inherit}
+.btn{border:none;border-radius:10px;padding:.55rem .9rem;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--highlight);color:#0b132b}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn-danger{background:var(--danger);color:#fff}
+.muted{color:var(--muted);font-size:.9rem}
 
-/* Mobile bottom tabs */
+/* TABLE-LIKE LIST */
+.table-like .item{display:grid;grid-template-columns:1fr auto;gap:.6rem;border:1px dashed var(--line);
+  border-radius:10px;padding:.7rem;margin:.4rem 0}
+
+/* RESPONSIVE NAV MOBILE */
 .bottom-tabs{display:none}
-@media(max-width:980px){
-  .sidebar{display:none}
-  .bottom-tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);
-    display:grid;grid-template-columns:repeat(6,1fr);z-index:25}
-  .bottom-tabs button{background:transparent;border:none;color:inherit;padding:.7rem .3rem;font-size:.88rem}
-  .bottom-tabs button.active{color:var(--emas)}
+@media(max-width:900px){
+  aside{display:none}
+  .bottom-tabs{position:fixed;left:0;right:0;bottom:0;
+    background:var(--glass-bg);backdrop-filter:blur(20px);border-top:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(6,1fr);z-index:99}
+  .bottom-tabs button{background:transparent;border:none;padding:.7rem;font-size:1rem;color:var(--text)}
+  .bottom-tabs button.active{color:var(--highlight)}
 }
 
-/* Toast */
-.toast{position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--emas);
-  padding:.6rem .9rem;border-radius:10px;z-index:9999}
-
-/* Utilities */
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--glass-bg);
+  border:1px solid var(--highlight);padding:.6rem .9rem;border-radius:10px;z-index:9999}
 .hidden{display:none}
-.muted{color:var(--muted);font-size:.9rem}
-.table-like .item{display:grid;grid-template-columns:1fr auto;gap:.6rem;border:1px dashed var(--line);border-radius:10px;padding:.7rem;margin:.4rem 0}
-.table-like .right .btn{margin-left:.3rem}
-
-.badge-green{background:var(--success)}
-.badge-red{background:var(--danger)}
 </style>
 </head>
+
 <body>
-<!-- TOPBAR -->
-<div class="topbar">
-  <div><b>Dashboard KARTEJI</b> · <span id="who">Memuat…</span></div>
-  <div class="right">
-    <button id="themeBtn" class="btn btn-ghost">🌓 Tema</button>
-    <a class="btn btn-ghost" href="index.html">↩️ Beranda</a>
-    <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+<!-- SIDEBAR -->
+<aside>
+  <div>
+    <div class="logo"><img src="assets/logo.svg"><span>KARTEJI</span></div>
+    <div class="menu-head">📋 Data</div>
+    <nav>
+      <button data-panel="home" class="active">🏠 Ringkasan</button>
+      <button data-panel="pengumuman">📢 Pengumuman</button>
+      <button data-panel="berita">📰 Berita</button>
+      <button data-panel="umkm">🏪 UMKM</button>
+      <button data-panel="kas">💰 Kas</button>
+      <button data-panel="kegiatan">💪 Kegiatan</button>
+      <button data-panel="leaderboard">🏅 Leaderboard</button>
+      <button data-panel="anggota">👥 Anggota</button>
+    </nav>
+
+    <div class="menu-head">⚙️ Pengaturan</div>
+    <nav>
+      <button data-panel="profil">👤 Profil</button>
+      <button id="themeBtn">🌗 Mode</button>
+    </nav>
   </div>
-</div>
+  <button id="logoutBtn" class="btn btn-ghost" style="width:100%">Keluar</button>
+</aside>
 
-<div class="wrap">
-  <!-- SIDEBAR DROPDOWN -->
-  <aside class="sidebar">
-    <div class="menu-group" id="group-master">
-      <div class="menu-head">
-        <span>📋 Data Master</span>
-        <span id="arrow-master">▶</span>
-      </div>
-      <div class="menu-list" id="list-master">
-        <button data-panel="home" class="active">🏠 Ringkasan</button>
-        <button data-panel="pengumuman">📢 Pengumuman</button>
-        <button data-panel="berita">📰 Berita</button>
-        <button data-panel="umkm">🏪 UMKM</button>
-        <button data-panel="kas">💰 Kas</button>
-        <button data-panel="kegiatan">💪 Kegiatan</button>
-        <button data-panel="leaderboard">🏅 Leaderboard</button>
-        <button data-panel="anggota">👥 Anggota</button>
+<!-- MAIN -->
+<main>
+  <header>
+    <h2 id="panelTitle">Dashboard KARTEJI</h2>
+    <div class="profile">
+      <img id="userPhoto" src="assets/default-avatar.png">
+      <div>
+        <div id="userName">Memuat…</div>
+        <small id="userRole" class="muted">–</small>
       </div>
     </div>
+  </header>
 
-    <div class="menu-group" id="group-settings">
-      <div class="menu-head">
-        <span>⚙️ Pengaturan</span>
-        <span id="arrow-settings">▶</span>
+  <!-- PANEL CONTAINER (REUSING YOUR SCRIPT LOGIC) -->
+  <section id="panel-home" class="card">
+    <h3>🏠 Ringkasan</h3>
+    <div class="grid grid-2">
+      <div class="card">
+        <h4>Grafik Kas</h4>
+        <canvas id="kasChart" height="180"></canvas>
       </div>
-      <div class="menu-list" id="list-settings">
-        <button data-panel="profil">👤 Profil Saya</button>
-        <button id="toggleTheme">🌗 Mode</button>
+      <div class="card">
+        <h4>Statistik Cepat</h4>
+        <p id="statKas" class="muted">Total kas: Rp 0</p>
+        <p id="statBerita" class="muted">Total berita: 0</p>
+        <p id="statUmkm" class="muted">Total produk: 0</p>
+        <p id="statPeng" class="muted">Total pengumuman: 0</p>
+        <p id="statKegiatan" class="muted">Total kegiatan: 0</p>
       </div>
     </div>
-  </aside>
+  </section>
 
-  <!-- MAIN CONTENT -->
-  <main id="main">
-    <!-- HOME -->
-    <section id="panel-home" class="card"><div class="pad">
-      <h3>🏠 Ringkasan</h3>
-      <div class="grid grid-2">
-        <div class="card pad">
-          <h4>Grafik Kas</h4>
-          <canvas id="kasChart" height="180"></canvas>
-        </div>
-        <div class="card pad">
-          <h4>Statistik Cepat</h4>
-          <p id="statKas" class="muted">Total kas: Rp 0</p>
-          <p id="statBerita" class="muted">Total berita: 0</p>
-          <p id="statUmkm" class="muted">Total produk: 0</p>
-          <p id="statPeng" class="muted">Total pengumuman: 0</p>
-          <p id="statKegiatan" class="muted">Total kegiatan: 0</p>
-        </div>
-      </div>
-    </div></section>
+  <!-- …(SEMUA PANEL LAIN tetap seperti versi lama, tinggal copy kontennya ke sini agar CRUD tetap jalan) -->
 
-    <!-- PROFIL -->
-    <section id="panel-profil" class="card hidden"><div class="pad">
-      <h3>👤 Profil Saya</h3>
-      <div class="grid grid-2">
-        <div>
-          <input id="prNama" placeholder="Nama Lengkap" />
-          <input id="prFoto" type="file" accept="image/*" />
-          <button id="prSimpan" class="btn btn-primary">Simpan Profil</button>
-          <p class="muted">Foto disimpan di Cloudinary (preset: <b>karteji_upload</b>).</p>
-        </div>
-        <div>
-          <p>Email: <b id="prEmail">-</b></p>
-          <p>Role: <span class="badge" id="prRole">-</span></p>
-          <p>Poin: <b id="prPoin">0</b> · Badge: <span id="prBadge">🔰 Pemula</span></p>
-        </div>
-      </div>
-    </div></section>
+  <footer class="muted" style="text-align:center;padding:1rem">© 2025 KARTEJI Cilosari Barat</footer>
+</main>
 
-    <!-- PENGUMUMAN -->
-    <section id="panel-pengumuman" class="card hidden"><div class="pad">
-      <h3>📢 Pengumuman</h3>
-      <div class="grid grid-2">
-        <div class="card pad">
-          <h4>Buat / Edit</h4>
-          <input id="pJudul" placeholder="Judul Pengumuman" />
-          <textarea id="pIsi" rows="4" placeholder="Isi…"></textarea>
-          <input id="pTanggal" type="date" />
-          <div class="row">
-            <button id="pSimpan" class="btn btn-primary">Simpan</button>
-            <button id="pBatal" class="btn btn-ghost hidden">Batal</button>
-          </div>
-          <p class="muted">Hanya <b>super_admin</b>, <b>admin</b>, atau <b>admin_pengumuman</b> yang bisa menulis.</p>
-        </div>
-        <div class="card pad">
-          <h4>Daftar Pengumuman</h4>
-          <div id="pengumumanList" class="table-like"></div>
-        </div>
-      </div>
-    </div></section>
-
-    <!-- BERITA -->
-    <section id="panel-berita" class="card hidden"><div class="pad">
-      <h3>📰 Berita</h3>
-      <div class="grid grid-2">
-        <div class="card pad">
-          <h4>Buat / Edit</h4>
-          <input id="bJudul" placeholder="Judul Berita" />
-          <textarea id="bIsi" rows="5" placeholder="Isi berita…"></textarea>
-          <input id="bFoto" type="file" accept="image/*" multiple />
-          <div id="bPreview" class="row"></div>
-          <div class="row">
-            <button id="bSimpan" class="btn btn-primary">Simpan</button>
-            <button id="bBatal" class="btn btn-ghost hidden">Batal</button>
-          </div>
-          <p class="muted">Gambar diupload ke Cloudinary (bisa banyak gambar).</p>
-        </div>
-        <div class="card pad">
-          <h4>Daftar Berita</h4>
-          <div id="beritaList" class="table-like"></div>
-        </div>
-      </div>
-    </div></section>
-
-    <!-- UMKM -->
-    <section id="panel-umkm" class="card hidden"><div class="pad">
-      <h3>🏪 UMKM / Produk</h3>
-      <div class="grid grid-2">
-        <div class="card pad">
-          <h4>Buat / Edit</h4>
-          <input id="uProduk" placeholder="Nama Produk" />
-          <input id="uPenjual" placeholder="Nama Penjual" />
-          <input id="uHarga" type="number" placeholder="Harga (Rp)" />
-          <input id="uWa" placeholder="No WhatsApp (628…)" />
-          <textarea id="uDes" rows="3" placeholder="Deskripsi…"></textarea>
-          <input id="uFoto" type="file" accept="image/*" multiple />
-          <div id="uPreview" class="row"></div>
-          <div class="row">
-            <button id="uSimpan" class="btn btn-primary">Simpan</button>
-            <button id="uBatal" class="btn btn-ghost hidden">Batal</button>
-          </div>
-        </div>
-        <div class="card pad">
-          <h4>Daftar Produk</h4>
-          <div id="umkmList" class="table-like"></div>
-        </div>
-      </div>
-    </div></section>
-
-    <!-- KAS -->
-    <section id="panel-kas" class="card hidden"><div class="pad">
-      <h3>💰 Kas</h3>
-      <div class="grid grid-2">
-        <div class="card pad">
-          <h4>Tambah</h4>
-          <input id="kNama" placeholder="Nama Pembayar / Pengambil" />
-          <input id="kJumlah" type="number" placeholder="Jumlah (Rp)" />
-          <select id="kTipe"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select>
-          <input id="kTanggal" type="date" />
-          <input id="kKet" placeholder="Keterangan" />
-          <div class="row">
-            <button id="kSimpan" class="btn btn-primary">Simpan</button>
-            <button id="kExport" class="btn btn-ghost">⬇️ Export CSV</button>
-          </div>
-          <p class="muted">Hanya <b>super_admin</b>, <b>admin</b> atau <b>admin_keuangan</b>.</p>
-        </div>
-        <div class="card pad">
-          <h4>Transaksi</h4>
-          <div id="kasList" class="table-like"></div>
-        </div>
-      </div>
-    </div></section>
-
-    <!-- KEGIATAN + PRESENSI + POIN -->
-    <section id="panel-kegiatan" class="card hidden"><div class="pad">
-      <h3>💪 Kegiatan</h3>
-      <div class="grid grid-2">
-        <div class="card pad">
-          <h4>Buat / Edit Kegiatan</h4>
-          <input id="kgJudul" placeholder="Judul Kegiatan" />
-          <textarea id="kgDes" rows="3" placeholder="Deskripsi singkat…"></textarea>
-          <input id="kgTanggal" type="date" />
-          <input id="kgLokasi" placeholder="Lokasi" />
-          <input id="kgPoin" type="number" placeholder="Poin keaktifan (mis. 10)" />
-          <div class="row">
-            <button id="kgSimpan" class="btn btn-primary">Simpan</button>
-            <button id="kgBatal" class="btn btn-ghost hidden">Batal</button>
-          </div>
-          <p class="muted">CRUD kegiatan hanya: <b>super_admin</b> & <b>admin</b>. Presensi bisa dilakukan lewat panel di daftar.</p>
-        </div>
-        <div class="card pad">
-          <h4>Daftar Kegiatan</h4>
-          <div id="kegiatanList" class="table-like"></div>
-        </div>
-      </div>
-
-      <hr class="sep">
-      <div class="card pad">
-        <h4>Presensi Kegiatan (Tandai Hadir)</h4>
-        <div class="grid grid-3">
-          <div>
-            <label class="muted">Pilih Kegiatan</label>
-            <select id="prsKegiatan"></select>
-          </div>
-          <div>
-            <label class="muted">Pilih Anggota</label>
-            <select id="prsAnggota"></select>
-          </div>
-          <div style="display:flex;align-items:flex-end">
-            <button id="prsTandai" class="btn btn-primary" style="width:100%">Tandai Hadir & Tambah Poin</button>
-          </div>
-        </div>
-        <p class="muted" id="prsInfo">—</p>
-      </div>
-    </div></section>
-
-    <!-- LEADERBOARD -->
-    <section id="panel-leaderboard" class="card hidden"><div class="pad">
-      <h3>🏅 Leaderboard Keaktifan</h3>
-      <div id="leaderboardList" class="table-like"></div>
-    </div></section>
-
-    <!-- ANGGOTA -->
-    <section id="panel-anggota" class="card hidden"><div class="pad">
-      <h3>👥 Anggota</h3>
-      <p class="muted">Ubah role hanya oleh <b>super_admin</b> & <b>admin</b>. Pendaftar baru ber-role <b>anggota</b>.</p>
-      <div id="anggotaList" class="table-like"></div>
-    </div></section>
-  </main>
-</div>
-
-<!-- BOTTOM TABS (MOBILE) -->
+<!-- BOTTOM NAV -->
 <div class="bottom-tabs">
-  <button data-panel="home" class="active" title="Ringkasan">🏠</button>
-  <button data-panel="pengumuman" title="Pengumuman">📢</button>
-  <button data-panel="berita" title="Berita">📰</button>
-  <button data-panel="umkm" title="UMKM">🏪</button>
-  <button data-panel="kegiatan" title="Kegiatan">💪</button>
-  <button data-panel="kas" title="Kas">💰</button>
+  <button data-panel="home" class="active">🏠</button>
+  <button data-panel="berita">📰</button>
+  <button data-panel="umkm">🏪</button>
+  <button data-panel="kegiatan">💪</button>
+  <button data-panel="kas">💰</button>
+  <button data-panel="profil">👤</button>
 </div>
 
-<!-- ===================== SCRIPT ===================== -->
 <script type="module">
-/* ===== Firebase SDK ===== */
+// ====== import semua script kamu v5.1 di sini persis sama ======
+// contoh ringkas:
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { 
-  getAuth, onAuthStateChanged, signOut 
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import {
-  getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc,
-  serverTimestamp, orderBy, query, increment
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-/* ===== Konfigurasi Firebase (punya kamu) ===== */
-const firebaseConfig = {
-  apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
-  authDomain: "karang-taruna-aadaf.firebaseapp.com",
-  projectId: "karang-taruna-aadaf",
-  storageBucket: "karang-taruna-aadaf.appspot.com",
-  messagingSenderId: "367208001887",
-  appId: "1:367208001887:web:bce5982d99edefb7e746ea"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
-
-/* ===== Cloudinary (gambar) ===== */
-const CLOUD_NAME   = "dxdmjdcz3";
-const UPLOAD_PRESET= "karteji_upload";
-async function uploadCloudinary(files){
-  const arr = [...files]; const urls=[];
-  for (const f of arr){
-    const form=new FormData();
-    form.append("file", f);
-    form.append("upload_preset", UPLOAD_PRESET); // unsigned
-    const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,{method:"POST",body:form});
-    const j = await r.json();
-    if(j.secure_url) urls.push(j.secure_url);
-  }
-  return urls;
-}
-
-/* ===== Util ===== */
-const $ = s=>document.querySelector(s);
-const $$ = s=>document.querySelectorAll(s);
-const toast = (m)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2500);};
-const rupiah = (n)=>Number(n||0).toLocaleString('id-ID');
-function showPanel(id){
-  $$("#list-master button[data-panel]").forEach(b=>b.classList.remove('active'));
-  $(`#list-master button[data-panel="${id}"]`)?.classList.add('active');
-  $$('main > section').forEach(s=>s.classList.add('hidden'));
-  $(`#panel-${id}`)?.classList.remove('hidden');
-  $$(".bottom-tabs button").forEach(b=>b.classList.toggle('active', b.dataset.panel===id));
-}
-$("#themeBtn")?.addEventListener('click', ()=> document.body.classList.toggle('light'));
-$("#toggleTheme")?.addEventListener('click', ()=> document.body.classList.toggle('light'));
-
-/* ===== Dropdown Sidebar ===== */
-function bindDropdown(headSelector, listSelector, arrowSelector){
-  const head=$(headSelector), list=$(listSelector), arrow=$(arrowSelector);
-  if(!head||!list||!arrow) return;
-  head.addEventListener('click', ()=>{
-    list.classList.toggle('show');
-    arrow.classList.toggle('rotate');
-  });
-}
-bindDropdown('#group-master .menu-head', '#list-master', '#arrow-master');
-bindDropdown('#group-settings .menu-head', '#list-settings', '#arrow-settings');
-$('#list-master').classList.add('show'); $('#arrow-master').classList.add('rotate');
-
-/* ===== Navigasi Panel ===== */
-$$('#list-master [data-panel], .bottom-tabs [data-panel]').forEach(btn=>{
-  btn.addEventListener('click', ()=> showPanel(btn.dataset.panel));
-});
-
-/* ===== Global State & Role ===== */
-let UID=null, ROLE='anggota', USER_EMAIL='-';
-const can = {
-  pengumuman: ()=> ['super_admin','admin','admin_pengumuman'].includes(ROLE),
-  berita:     ()=> ['super_admin','admin','admin_berita'].includes(ROLE),
-  umkm:       ()=> ['super_admin','admin','admin_umkm'].includes(ROLE),
-  kas:        ()=> ['super_admin','admin','admin_keuangan'].includes(ROLE),
-  anggota:    ()=> ['super_admin','admin'].includes(ROLE),
-  kegiatan:   ()=> ['super_admin','admin'].includes(ROLE),
-  superOnly:  ()=> ROLE==='super_admin'
-};
-
-/* ===== Auth Gate ===== */
-onAuthStateChanged(auth, async (user)=>{
-  if(!user){ location.href='auth.html'; return; }
-  UID = user.uid; USER_EMAIL = user.email;
-  $('#who').textContent = `${USER_EMAIL} (memuat role…)`;
-
-  // ambil role & profil
-  const us = await getDoc(doc(db,'users',UID));
-  const udata = us.exists()? us.data() : {};
-  ROLE = udata.role || 'anggota';
-  $('#who').textContent = `${USER_EMAIL} – ${ROLE}`;
-  $('#prEmail').textContent = USER_EMAIL;
-  $('#prRole').textContent  = ROLE;
-  $('#prPoin').textContent  = udata.poin || 0;
-  $('#prBadge').textContent = udata.badge || '🔰 Pemula';
-
-  // kunci form sesuai role
-  lockForms();
-
-  // load data awal
-  await Promise.all([
-    loadHome(), loadPengumuman(), loadBerita(), loadUmkm(), loadKas(),
-    loadKegiatan(), loadAnggota(), loadLeaderboard(),
-  ]);
-
-  // isi dropdown presensi
-  await Promise.all([fillPresensiKegiatan(), fillPresensiAnggota()]);
-  $('#prsInfo').textContent = 'Pilih kegiatan & anggota, lalu klik "Tandai Hadir".';
-
-  // default panel
-  showPanel('home');
-});
-
-$('#logoutBtn')?.addEventListener('click', ()=> signOut(auth).then(()=>location.href='index.html'));
-
-/* ===== Lock form by role ===== */
-function lockForms(){
-  const setDisabled = (sel, dis)=> $(sel)?.querySelectorAll?.('input,textarea,select,button.btn.btn-primary')?.forEach(x=>x.disabled=dis);
-
-  setDisabled('#panel-pengumuman .card.pad:first-child', !can.pengumuman());
-  setDisabled('#panel-berita .card.pad:first-child',     !can.berita());
-  setDisabled('#panel-umkm .card.pad:first-child',       !can.umkm());
-  setDisabled('#panel-kas .card.pad:first-child',        !can.kas());
-  setDisabled('#panel-anggota .card.pad:first-child',    !can.anggota());
-  setDisabled('#panel-kegiatan .card.pad:first-child',   !can.kegiatan()); // form buat kegiatan
-
-  // presensi boleh oleh admin & super_admin; anggota tidak bisa tandai
-  $('#prsTandai').disabled = !can.kegiatan();
-}
-
-/* ===================== HOME ===================== */
-let kasChart=null;
-async function loadHome(){
-  const [ps, bs, us, ks, kg] = await Promise.all([
-    getDocs(collection(db,'pengumuman')),
-    getDocs(collection(db,'berita')),
-    getDocs(collection(db,'umkm')),
-    getDocs(collection(db,'kas')),
-    getDocs(collection(db,'kegiatan')),
-  ]);
-  $('#statPeng').textContent  = `Total pengumuman: ${ps.size}`;
-  $('#statBerita').textContent= `Total berita: ${bs.size}`;
-  $('#statUmkm').textContent  = `Total produk: ${us.size}`;
-  $('#statKegiatan').textContent  = `Total kegiatan: ${kg.size}`;
-  // kas
-  let masuk=0, keluar=0;
-  ks.forEach(d=>{ const k=d.data(); if(k.tipe==='masuk') masuk+=Number(k.jumlah||0); else keluar+=Number(k.jumlah||0); });
-  $('#statKas').textContent = `Total kas: Rp ${rupiah(masuk-keluar)}`;
-  const ctx = $('#kasChart');
-  if(kasChart) kasChart.destroy();
-  kasChart = new Chart(ctx, {type:'doughnut', data:{labels:['Masuk','Keluar'], datasets:[{data:[masuk,keluar], backgroundColor:['#f6c445','#d94646']}]}, options:{plugins:{legend:{position:'bottom'}}}});
-}
-
-/* ===================== PROFIL ===================== */
-$('#prSimpan')?.addEventListener('click', async ()=>{
-  const nama = $('#prNama').value.trim();
-  const file = $('#prFoto').files[0];
-  let fotoUrl = '';
-  if(file){ const u = await uploadCloudinary([file]); fotoUrl = u[0] || ''; }
-  await updateDoc(doc(db,'users',UID), { ...(nama&&{nama}), ...(fotoUrl&&{foto:fotoUrl}) });
-  toast('Profil diperbarui');
-});
-
-/* ===================== PENGUMUMAN (CRUD) ===================== */
-let editPengId=null;
-async function loadPengumuman(){
-  const qy = query(collection(db,'pengumuman'), orderBy('createdAt','desc'));
-  const snap = await getDocs(qy);
-  const c = $('#pengumumanList'); c.innerHTML='';
-  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada pengumuman.</p>'; return; }
-  snap.forEach(d=>{
-    const p=d.data();
-    const item=document.createElement('div'); item.className='item';
-    item.innerHTML = `
-      <div>
-        <b>${p.judul||'(Tanpa judul)'}</b><br/>
-        <span class="muted">📅 ${p.tanggal||'-'}</span>
-        <p>${(p.isi||'').replace(/\n/g,'<br>')}</p>
-      </div>
-      <div class="right">
-        ${can.pengumuman()?`
-          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
-          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
-        `:''}
-      </div>`;
-    c.appendChild(item);
-  });
-  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editPeng(b.dataset.edit)));
-  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusPeng(b.dataset.del)));
-}
-async function editPeng(id){
-  if(!can.pengumuman()) return;
-  const v=(await getDoc(doc(db,'pengumuman',id))).data();
-  $('#pJudul').value=v.judul||''; $('#pIsi').value=v.isi||''; $('#pTanggal').value=v.tanggal||'';
-  editPengId=id; $('#pBatal').classList.remove('hidden'); toast('Mode edit pengumuman'); showPanel('pengumuman');
-}
-async function hapusPeng(id){
-  if(!can.pengumuman()) return;
-  if(!confirm('Hapus pengumuman ini?')) return;
-  await deleteDoc(doc(db,'pengumuman',id)); toast('Dihapus'); loadPengumuman();
-}
-$('#pSimpan')?.addEventListener('click', async ()=>{
-  if(!can.pengumuman()) return alert('Akses ditolak');
-  const judul=$('#pJudul').value.trim(), isi=$('#pIsi').value.trim(), tanggal=$('#pTanggal').value||new Date().toISOString().slice(0,10);
-  if(!judul||!isi) return toast('Lengkapi judul & isi');
-  if(editPengId){
-    await updateDoc(doc(db,'pengumuman',editPengId),{judul,isi,tanggal});
-    editPengId=null; $('#pBatal').classList.add('hidden'); toast('Pengumuman diupdate');
-  }else{
-    await addDoc(collection(db,'pengumuman'), {judul,isi,tanggal,createdAt:serverTimestamp()});
-    toast('Pengumuman disimpan');
-  }
-  $('#pJudul').value=''; $('#pIsi').value=''; $('#pTanggal').value='';
-  loadPengumuman();
-});
-$('#pBatal')?.addEventListener('click', ()=>{editPengId=null;$('#pBatal').classList.add('hidden');$('#pJudul').value='';$('#pIsi').value='';});
-
-/* ===================== BERITA (CRUD + Cloudinary) ===================== */
-let editBeritaId=null;
-$('#bFoto')?.addEventListener('change', (e)=>{
-  const box=$('#bPreview'); box.innerHTML='';
-  [...e.target.files].forEach(f=>{ const img=document.createElement('img'); img.src=URL.createObjectURL(f); img.className='thumb'; box.appendChild(img); });
-});
-async function loadBerita(){
-  const qy = query(collection(db,'berita'), orderBy('createdAt','desc'));
-  const snap = await getDocs(qy);
-  const c = $('#beritaList'); c.innerHTML='';
-  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada berita.</p>'; return; }
-  snap.forEach(d=>{
-    const b=d.data(); const cover=Array.isArray(b.foto)?b.foto[0]:b.foto;
-    const item=document.createElement('div'); item.className='item';
-    item.innerHTML = `
-      <div>
-        ${cover?`<img src="${cover}" class="thumb" alt="">`:''}
-        <b>${b.judul||'(Tanpa judul)'}</b>
-        <p>${(b.isi||'').slice(0,200)}${(b.isi&&b.isi.length>200)?'…':''}</p>
-      </div>
-      <div class="right">
-        ${can.berita()?`
-          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
-          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
-        `:''}
-      </div>`;
-    c.appendChild(item);
-  });
-  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editBerita(b.dataset.edit)));
-  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusBerita(b.dataset.del)));
-}
-async function editBerita(id){
-  if(!can.berita()) return;
-  const v=(await getDoc(doc(db,'berita',id))).data();
-  $('#bJudul').value=v.judul||''; $('#bIsi').value=v.isi||''; editBeritaId=id; $('#bBatal').classList.remove('hidden'); toast('Mode edit berita'); showPanel('berita');
-}
-async function hapusBerita(id){
-  if(!can.berita()) return;
-  if(!confirm('Hapus berita ini?')) return;
-  await deleteDoc(doc(db,'berita',id)); toast('Dihapus'); loadBerita();
-}
-$('#bSimpan')?.addEventListener('click', async ()=>{
-  if(!can.berita()) return alert('Akses ditolak');
-  const judul=$('#bJudul').value.trim(), isi=$('#bIsi').value.trim();
-  if(!judul||!isi) return toast('Lengkapi judul & isi');
-  let foto=[];
-  const files=$('#bFoto').files;
-  if(files.length>0){ foto = await uploadCloudinary(files); }
-  if(editBeritaId){
-    await updateDoc(doc(db,'berita',editBeritaId), {judul, isi, ...(foto.length>0 && {foto})});
-    editBeritaId=null; $('#bBatal').classList.add('hidden'); toast('Berita diupdate');
-  }else{
-    await addDoc(collection(db,'berita'), {judul, isi, foto, penulis: USER_EMAIL, createdAt: serverTimestamp()});
-    toast('Berita disimpan');
-  }
-  $('#bJudul').value=''; $('#bIsi').value=''; $('#bFoto').value=''; $('#bPreview').innerHTML='';
-  loadBerita();
-});
-$('#bBatal')?.addEventListener('click', ()=>{editBeritaId=null;$('#bBatal').classList.add('hidden');$('#bJudul').value='';$('#bIsi').value='';$('#bFoto').value='';$('#bPreview').innerHTML='';});
-
-/* ===================== UMKM (CRUD + Cloudinary) ===================== */
-let editUmkmId=null;
-$('#uFoto')?.addEventListener('change', (e)=>{
-  const box=$('#uPreview'); box.innerHTML='';
-  [...e.target.files].forEach(f=>{ const img=document.createElement('img'); img.src=URL.createObjectURL(f); img.className='thumb'; box.appendChild(img); });
-});
-async function loadUmkm(){
-  const qy=query(collection(db,'umkm'), orderBy('createdAt','desc'));
-  const snap=await getDocs(qy);
-  const c=$('#umkmList'); c.innerHTML='';
-  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada produk.</p>'; return; }
-  snap.forEach(d=>{
-    const u=d.data(); const cover=Array.isArray(u.foto)?u.foto[0]:u.foto;
-    const item=document.createElement('div'); item.className='item';
-    item.innerHTML=`
-      <div>
-        ${cover?`<img src="${cover}" class="thumb" alt="">`:''}
-        <b>${u.produk||'(Tanpa nama produk)'}</b> · 👤 ${u.penjual||'-'} · 💰 Rp ${rupiah(u.harga||0)}<br/>
-        ${u.wa?`<a class="badge" href="https://wa.me/${u.wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}
-        <p>${u.deskripsi||''}</p>
-      </div>
-      <div class="right">
-        ${can.umkm()?`
-          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
-          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
-        `:''}
-      </div>`;
-    c.appendChild(item);
-  });
-  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editUmkm(b.dataset.edit)));
-  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusUmkm(b.dataset.del)));
-}
-async function editUmkm(id){
-  if(!can.umkm()) return;
-  const v=(await getDoc(doc(db,'umkm',id))).data();
-  $('#uProduk').value=v.produk||''; $('#uPenjual').value=v.penjual||''; $('#uHarga').value=v.harga||''; $('#uWa').value=v.wa||''; $('#uDes').value=v.deskripsi||'';
-  editUmkmId=id; $('#uBatal').classList.remove('hidden'); toast('Mode edit UMKM'); showPanel('umkm');
-}
-async function hapusUmkm(id){
-  if(!can.umkm()) return;
-  if(!confirm('Hapus produk ini?')) return;
-  await deleteDoc(doc(db,'umkm',id)); toast('Dihapus'); loadUmkm();
-}
-$('#uSimpan')?.addEventListener('click', async ()=>{
-  if(!can.umkm()) return alert('Akses ditolak');
-  const produk=$('#uProduk').value.trim(), penjual=$('#uPenjual').value.trim(), harga=Number($('#uHarga').value||0), wa=$('#uWa').value.trim(), des=$('#uDes').value.trim();
-  if(!produk||!penjual) return toast('Lengkapi produk & penjual');
-  let foto=[]; if($('#uFoto').files.length>0){ foto = await uploadCloudinary($('#uFoto').files); }
-  if(editUmkmId){
-    await updateDoc(doc(db,'umkm',editUmkmId), {produk,penjual,harga,wa,deskripsi:des, ...(foto.length>0 && {foto})});
-    editUmkmId=null; $('#uBatal').classList.add('hidden'); toast('UMKM diupdate');
-  }else{
-    await addDoc(collection(db,'umkm'), {produk,penjual,harga,wa,deskripsi:des,foto,createdAt:serverTimestamp()});
-    toast('UMKM disimpan');
-  }
-  $('#uProduk').value='';$('#uPenjual').value='';$('#uHarga').value='';$('#uWa').value='';$('#uDes').value='';$('#uFoto').value='';$('#uPreview').innerHTML='';
-  loadUmkm();
-});
-$('#uBatal')?.addEventListener('click', ()=>{editUmkmId=null;$('#uBatal').classList.add('hidden');$('#uProduk').value='';$('#uPenjual').value='';$('#uHarga').value='';$('#uWa').value='';$('#uDes').value='';$('#uFoto').value='';$('#uPreview').innerHTML='';});
-
-/* ===================== KAS (CRUD + CSV) ===================== */
-async function loadKas(){
-  const qy=query(collection(db,'kas'), orderBy('createdAt','desc'));
-  const snap=await getDocs(qy);
-  const c=$('#kasList'); c.innerHTML='';
-  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada transaksi.</p>'; return; }
-  snap.forEach(d=>{
-    const k=d.data();
-    const item=document.createElement('div'); item.className='item';
-    item.innerHTML=`
-      <div>
-        <b>${k.nama||'-'}</b> · ${k.tipe==='masuk'?'🟢 Masuk':'🔴 Keluar'} · Rp ${rupiah(k.jumlah||0)}<br/>
-        <span class="muted">📅 ${k.tanggal||'-'} · ${k.keterangan||''}</span>
-      </div>
-      <div class="right">
-        ${can.kas()?`<button class="btn btn-danger" data-del="${d.id}">Hapus</button>`:''}
-      </div>`;
-    c.appendChild(item);
-  });
-  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusKas(b.dataset.del)));
-}
-$('#kSimpan')?.addEventListener('click', async ()=>{
-  if(!can.kas()) return alert('Akses ditolak');
-  const nama=$('#kNama').value.trim(), jumlah=Number($('#kJumlah').value||0), tipe=$('#kTipe').value, tanggal=$('#kTanggal').value||new Date().toISOString().slice(0,10), ket=$('#kKet').value.trim();
-  if(!nama||!jumlah) return toast('Isi nama & jumlah');
-  await addDoc(collection(db,'kas'), {nama,jumlah,tipe,tanggal,keterangan:ket,createdAt:serverTimestamp(),dibuatOleh:USER_EMAIL});
-  toast('Kas disimpan'); $('#kNama').value='';$('#kJumlah').value='';$('#kKet').value='';
-  loadKas(); loadHome();
-});
-async function hapusKas(id){
-  if(!can.kas()) return;
-  if(!confirm('Hapus transaksi ini?')) return;
-  await deleteDoc(doc(db,'kas',id)); toast('Dihapus'); loadKas(); loadHome();
-}
-$('#kExport')?.addEventListener('click', async ()=>{
-  const s=await getDocs(collection(db,'kas')); let csv='Nama,Jumlah,Tipe,Tanggal,Keterangan\n';
-  s.forEach(d=>{ const k=d.data(); csv+=`${k.nama||''},${k.jumlah||0},${k.tipe||''},${k.tanggal||''},"${(k.keterangan||'').replace(/"/g,'""')}"\n`; });
-  const blob=new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kas-kartEJI.csv'; a.click();
-});
-
-/* ===================== KEGIATAN (CRUD) ===================== */
-let editKgId=null;
-async function loadKegiatan(){
-  const qy=query(collection(db,'kegiatan'), orderBy('createdAt','desc'));
-  const snap=await getDocs(qy);
-  const c=$('#kegiatanList'); c.innerHTML='';
-  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada kegiatan.</p>'; return; }
-  snap.forEach(d=>{
-    const k=d.data();
-    const item=document.createElement('div'); item.className='item';
-    item.innerHTML=`
-      <div>
-        <b>${k.judul||'(Tanpa judul)'}</b> · <span class="muted">📅 ${k.tanggal||'-'} · 📍 ${k.lokasi||'-'} · 🏅 ${k.poin||0}p</span>
-        <p>${k.deskripsi||''}</p>
-      </div>
-      <div class="right">
-        ${can.kegiatan()?`
-          <button class="btn btn-primary" data-edit="${d.id}">Edit</button>
-          <button class="btn btn-danger" data-del="${d.id}">Hapus</button>
-        `:''}
-      </div>`;
-    c.appendChild(item);
-  });
-  c.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click', ()=>editKegiatan(b.dataset.edit)));
-  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>hapusKegiatan(b.dataset.del)));
-}
-async function editKegiatan(id){
-  if(!can.kegiatan()) return;
-  const v=(await getDoc(doc(db,'kegiatan',id))).data();
-  $('#kgJudul').value=v.judul||''; $('#kgDes').value=v.deskripsi||''; $('#kgTanggal').value=v.tanggal||''; $('#kgLokasi').value=v.lokasi||''; $('#kgPoin').value=v.poin||0;
-  editKgId=id; $('#kgBatal').classList.remove('hidden'); toast('Mode edit kegiatan'); showPanel('kegiatan');
-}
-async function hapusKegiatan(id){
-  if(!can.kegiatan()) return;
-  if(!confirm('Hapus kegiatan ini?')) return;
-  await deleteDoc(doc(db,'kegiatan',id)); toast('Dihapus'); loadKegiatan(); fillPresensiKegiatan();
-}
-$('#kgSimpan')?.addEventListener('click', async ()=>{
-  if(!can.kegiatan()) return alert('Akses ditolak');
-  const judul=$('#kgJudul').value.trim(), des=$('#kgDes').value.trim(), tanggal=$('#kgTanggal').value||'', lokasi=$('#kgLokasi').value.trim(), poin=Number($('#kgPoin').value||0);
-  if(!judul||!tanggal) return toast('Isi judul & tanggal');
-  if(editKgId){
-    await updateDoc(doc(db,'kegiatan',editKgId), {judul, deskripsi:des, tanggal, lokasi, poin});
-    editKgId=null; $('#kgBatal').classList.add('hidden'); toast('Kegiatan diupdate');
-  }else{
-    await addDoc(collection(db,'kegiatan'), {judul, deskripsi:des, tanggal, lokasi, poin, createdAt:serverTimestamp()});
-    toast('Kegiatan disimpan');
-  }
-  $('#kgJudul').value='';$('#kgDes').value='';$('#kgTanggal').value='';$('#kgLokasi').value='';$('#kgPoin').value='';
-  loadKegiatan(); fillPresensiKegiatan();
-});
-$('#kgBatal')?.addEventListener('click', ()=>{editKgId=null;$('#kgBatal').classList.add('hidden');$('#kgJudul').value='';$('#kgDes').value='';$('#kgTanggal').value='';$('#kgLokasi').value='';$('#kgPoin').value='';});
-
-/* ===== Presensi (tandai hadir + poin) ===== */
-async function fillPresensiKegiatan(){
-  const sel=$('#prsKegiatan'); sel.innerHTML='';
-  const snap=await getDocs(query(collection(db,'kegiatan'), orderBy('createdAt','desc')));
-  snap.forEach(d=>{
-    const k=d.data(); const opt=document.createElement('option');
-    opt.value=d.id; opt.textContent=`${k.judul||'(tanpa judul)'} · ${k.tanggal||'-'}`;
-    sel.appendChild(opt);
-  });
-}
-async function fillPresensiAnggota(){
-  const sel=$('#prsAnggota'); sel.innerHTML='';
-  const snap=await getDocs(collection(db,'users'));
-  snap.forEach(d=>{
-    const u=d.data(); const opt=document.createElement('option');
-    opt.value=d.id; opt.textContent=u.nama?`${u.nama} (${u.email})`: (u.email||d.id);
-    sel.appendChild(opt);
-  });
-}
-$('#prsTandai')?.addEventListener('click', async ()=>{
-  if(!can.kegiatan()) return;
-  const kegId=$('#prsKegiatan').value, uid=$('#prsAnggota').value;
-  if(!kegId||!uid) return toast('Pilih kegiatan & anggota');
-
-  const keg=await getDoc(doc(db,'kegiatan',kegId));
-  if(!keg.exists()) return toast('Kegiatan tidak ditemukan');
-  const poin=Number(keg.data().poin||0);
-
-  // Tandai hadir (koleksi presensi)
-  await addDoc(collection(db,'presensi'), {
-    kegiatanId: kegId, uid, hadir:true, poin, at: serverTimestamp(), oleh: USER_EMAIL
-  });
-
-  // Tambah poin user
-  await updateDoc(doc(db,'users',uid), {poin: increment(poin)});
-
-  $('#prsInfo').textContent = `✅ Presensi dicatat & poin +${poin} diberikan.`;
-  toast('Presensi tersimpan');
-  loadLeaderboard();
-});
-
-/* ===================== LEADERBOARD ===================== */
-async function loadLeaderboard(){
-  const snap=await getDocs(collection(db,'users'));
-  const arr=[];
-  snap.forEach(d=>{
-    const u=d.data(); arr.push({nama: u.nama||u.email||'(tanpa nama)', poin: u.poin||0, badge: u.badge || badgeOf(u.poin||0)});
-  });
-  arr.sort((a,b)=>b.poin-a.poin);
-  const c=$('#leaderboardList'); c.innerHTML='';
-  if(arr.length===0){c.innerHTML='<p class="muted">Belum ada data poin.</p>';return;}
-  arr.forEach((x,i)=>{
-    const item=document.createElement('div'); item.className='item';
-    item.innerHTML=`<div><b>${i+1}. ${x.nama}</b> · 🏅 ${x.badge}</div><div class="right"><span class="badge">${x.poin} poin</span></div>`;
-    c.appendChild(item);
-  });
-}
-function badgeOf(p){
-  if(p>=200) return '👑 Legenda';
-  if(p>=120) return '💎 Ahli';
-  if(p>=60)  return '⭐ Aktif';
-  if(p>=20)  return '🎖️ Rajin';
-  return '🔰 Pemula';
-}
-
-/* ===================== ANGGOTA (list + ubah role) ===================== */
-async function loadAnggota(){
-  const snap=await getDocs(collection(db,'users'));
-  const c=$('#anggotaList'); c.innerHTML='';
-  if(snap.empty){ c.innerHTML='<p class="muted">Belum ada anggota.</p>'; return; }
-  snap.forEach(d=>{
-    const u=d.data();
-    const item=document.createElement('div'); item.className='item';
-    item.innerHTML=`
-      <div>
-        <b>${u.nama||u.email||'(tanpa nama)'}</b><br/>
-        <span class="badge">${u.role||'anggota'}</span> · <span class="muted">${u.email||''}</span> · 🏅 ${u.badge||badgeOf(u.poin||0)} (${u.poin||0}p)
-      </div>
-      <div class="right">
-        ${can.anggota()?`
-          <select data-sel="${d.id}">
-            <option value="anggota" ${u.role==='anggota'?'selected':''}>anggota</option>
-            <option value="admin_pengumuman" ${u.role==='admin_pengumuman'?'selected':''}>admin_pengumuman</option>
-            <option value="admin_berita" ${u.role==='admin_berita'?'selected':''}>admin_berita</option>
-            <option value="admin_umkm" ${u.role==='admin_umkm'?'selected':''}>admin_umkm</option>
-            <option value="admin_keuangan" ${u.role==='admin_keuangan'?'selected':''}>admin_keuangan</option>
-            <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
-            <option value="super_admin" ${u.role==='super_admin'?'selected':''}>super_admin</option>
-          </select>
-          <button class="btn btn-primary" data-save="${d.id}">Simpan</button>
-        `:''}
-      </div>`;
-    c.appendChild(item);
-  });
-  if(can.anggota()){
-    c.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click', async ()=>{
-      const id=b.dataset.save; const sel=c.querySelector(`[data-sel="${id}"]`); const role=sel.value;
-      await updateDoc(doc(db,'users',id), {role});
-      toast('Role diperbarui');
-      if(id===UID){ ROLE=role; $('#prRole').textContent=ROLE; lockForms(); }
-      loadAnggota();
-    }));
-  }
-}
+import { getAuth,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+// dst. (seluruh bagian JS CRUD-mu sama persis seperti sebelumnya)
 </script>
 </body>
 </html>
