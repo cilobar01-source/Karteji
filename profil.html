@@ -3,93 +3,103 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Profil • KARTEJI</title>
+<title>Profil • KARTEJI v5.6</title>
 <link rel="icon" href="assets/logo.svg">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0e4c92">
+
 <style>
 :root{
-  --biru:#0e4c92;--emas:#f6c445;--bg:#f7f9fc;
-  --text:#111827;--muted:#6b7280;--card:#fff;--line:#e5e7eb;
+  --glass-bg:rgba(255,255,255,0.55);
+  --text:#111827;--muted:#555;
+  --accent:#0e4c92;--highlight:#f6c445;
+  --line:rgba(0,0,0,.1);--shadow:0 6px 24px rgba(0,0,0,.12);
 }
+@media(prefers-color-scheme:dark){
+  :root{
+    --glass-bg:rgba(25,25,35,0.45);
+    --text:#f1f5f9;--muted:#a8b1c0;
+    --line:rgba(255,255,255,.15);--shadow:0 10px 40px rgba(0,0,0,.5);
+  }
+}
+*{box-sizing:border-box;transition:.25s ease all}
 body{
   margin:0;font-family:'Poppins',system-ui;
-  background:var(--bg);color:var(--text);
-  display:flex;flex-direction:column;align-items:center;
-  min-height:100vh;overflow-x:hidden;
+  background:url('assets/bg/blur-home.jpg') center/cover fixed no-repeat;
+  color:var(--text);display:flex;flex-direction:column;align-items:center;
+  min-height:100vh;padding-bottom:2rem;
 }
 header{
-  position:relative;width:100%;height:280px;
-  background:linear-gradient(180deg,var(--biru),#1a6ac2);
-  border-radius:0 0 30px 30px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:#fff;text-align:center;
-  box-shadow:0 8px 32px rgba(0,0,0,.2);
+  margin-top:2rem;width:90%;max-width:460px;
+  backdrop-filter:blur(22px);background:var(--glass-bg);
+  border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);
+  padding:1.8rem 1.2rem;text-align:center;position:relative;
 }
 header img{
-  width:110px;height:110px;border-radius:50%;
-  border:4px solid rgba(255,255,255,.6);
-  object-fit:cover;margin-bottom:.6rem;
+  width:120px;height:120px;border-radius:50%;object-fit:cover;
+  border:4px solid var(--highlight);box-shadow:0 0 0 4px rgba(255,255,255,.3);
 }
-header h2{margin:0;font-size:1.4rem}
-header span{font-size:.9rem;opacity:.85}
-.edit-btn,.back-btn{
-  position:absolute;top:20px;border:none;border-radius:10px;padding:.4rem .8rem;
-  cursor:pointer;font-weight:600;
+header h2{margin:.6rem 0 .2rem;font-size:1.3rem}
+header span{font-size:.9rem;color:var(--muted)}
+header button{
+  position:absolute;top:14px;border:none;border-radius:10px;padding:.45rem .9rem;
+  background:rgba(255,255,255,.25);color:var(--text);cursor:pointer;font-weight:600;
 }
-.edit-btn{right:20px;background:rgba(255,255,255,.2);color:#fff;}
-.back-btn{left:20px;background:rgba(255,255,255,.2);color:#fff;}
+.back-btn{left:14px}
+.edit-btn{right:14px}
+
 main{
-  width:92%;max-width:420px;margin-top:-60px;
-  background:var(--card);border-radius:24px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);padding:1.5rem 1.2rem;
+  width:90%;max-width:460px;margin-top:1.5rem;
+  backdrop-filter:blur(22px);background:var(--glass-bg);
+  border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);
+  padding:1.5rem 1.2rem;
 }
 .section{margin-bottom:1.8rem}
-.section h3{font-size:1rem;color:var(--biru);margin-bottom:.6rem;border-left:4px solid var(--emas);padding-left:.5rem}
+.section h3{font-size:1rem;color:var(--accent);margin-bottom:.6rem;border-left:4px solid var(--highlight);padding-left:.5rem}
 .info-list{list-style:none;margin:0;padding:0}
 .info-list li{padding:.5rem 0;border-bottom:1px solid var(--line);font-size:.92rem;display:flex;justify-content:space-between;color:var(--text)}
 .info-list li span{color:var(--muted)}
 .stats{display:flex;justify-content:space-between;text-align:center;margin-top:.6rem}
-.stats div{flex:1;padding:.8rem}
-.stats b{display:block;font-size:1.2rem;color:var(--biru)}
-.actions{display:flex;flex-direction:column;gap:.8rem;margin-top:.5rem}
+.stats div{flex:1;padding:.6rem}
+.stats b{display:block;font-size:1.2rem;color:var(--accent)}
+.actions{display:flex;flex-direction:column;gap:.8rem;margin-top:.8rem}
 .actions button{
   padding:.7rem 1rem;border:none;border-radius:12px;cursor:pointer;
-  font-weight:600;font-size:.95rem;background:var(--biru);color:#fff;
-  box-shadow:0 4px 12px rgba(14,76,146,.3);transition:.2s;
+  font-weight:600;font-size:.95rem;background:var(--accent);color:#fff;
+  box-shadow:0 4px 12px rgba(14,76,146,.3);
 }
 .actions button.outline{
-  background:transparent;color:var(--biru);border:1px solid var(--biru);
-  box-shadow:none;
+  background:transparent;color:var(--accent);border:1px solid var(--accent);
 }
-.actions button:hover{transform:translateY(-2px)}
 footer{text-align:center;font-size:.85rem;color:var(--muted);padding:1.5rem 0;}
 .hidden{display:none}
 
 /* === Modal === */
 .modal{
   position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,.5);backdrop-filter:blur(3px);
+  background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
   display:flex;align-items:center;justify-content:center;z-index:99;
 }
 .modal-content{
-  background:var(--card);padding:1.5rem;border-radius:18px;
-  width:90%;max-width:400px;box-shadow:0 10px 30px rgba(0,0,0,.3);
+  background:var(--glass-bg);backdrop-filter:blur(25px);
+  padding:1.5rem;border-radius:18px;width:90%;max-width:400px;
+  box-shadow:var(--shadow);border:1px solid var(--line);
 }
-.modal-content h3{text-align:center;margin-top:0;color:var(--biru);}
+.modal-content h3{text-align:center;margin-top:0;color:var(--accent);}
 .modal-content input, .modal-content textarea, .modal-content select{
   width:100%;padding:.6rem;margin:.4rem 0;
-  border:1px solid var(--line);border-radius:10px;font-family:inherit;
+  border:1px solid var(--line);border-radius:10px;font-family:inherit;background:transparent;color:var(--text)
 }
 .modal-content button{
   width:100%;padding:.7rem;border:none;border-radius:12px;
   font-weight:600;margin-top:.6rem;cursor:pointer;
 }
-.save-btn{background:var(--biru);color:#fff}
+.save-btn{background:var(--accent);color:#fff}
 .close-btn{background:#ccc}
 </style>
 </head>
 <body>
+
 <header>
   <button class="back-btn" onclick="location.href='dashboard.html'">⬅️</button>
   <button class="edit-btn" id="editBtn">✏️</button>
@@ -270,13 +280,6 @@ saveEdit.onclick=async()=>{
   location.reload();
 };
 logoutBtn.onclick=()=>signOut(auth).then(()=>location.href="index.html");
-
-// === Register Service Worker ===
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("service-worker.js")
-  .then(()=>console.log("✅ Service Worker aktif"))
-  .catch(err=>console.log("SW gagal:",err));
-}
 </script>
 </body>
 </html>
