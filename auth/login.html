@@ -3,139 +3,175 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Portal Karang Taruna • Auth</title>
+<title>Login • Portal Karang Taruna</title>
 <link rel="stylesheet" href="../css/style.css">
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<style>
+  .loader-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;z-index:9999}
+  .loader-spinner{width:56px;height:56px;border:4px solid rgba(255,255,255,.3);border-top:4px solid #f6c445;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  body{opacity:0;transition:opacity .6s ease} body.loaded{opacity:1}
+</style>
 </head>
 <body>
 <header class="header-glass">
   <div class="header-title">
-    <img src="../assets/icons/kt.svg" width="36" height="36">
+    <img src="../assets/icons/kt.svg" width="36" height="36" class="logo-glow">
     <div>Portal Karang Taruna</div>
   </div>
 </header>
 
+<!-- LOADER -->
+<div id="loader" class="loader-overlay" style="display:none;">
+  <div class="loader-spinner"></div>
+  <p id="loaderText">Memproses…</p>
+</div>
+
 <main class="container" style="max-width:540px;">
   <div class="card-glass">
+    <!-- Tombol Tamu -->
+    <div style="display:flex;justify-content:center;margin-bottom:12px;">
+      <a href="./index.html" class="btn-glass">👀 Masuk sebagai Tamu</a>
+    </div>
+
+    <!-- TAB -->
     <div style="display:flex;gap:6px;margin-bottom:10px;">
       <button class="btn-glass" id="tabKatar" style="flex:1;background:rgba(255,255,255,.15)">Karang Taruna</button>
       <button class="btn-glass" id="tabAnggota" style="flex:1;">Anggota</button>
     </div>
 
-    <!-- === KARANG TARUNA FORM === -->
+    <!-- KARANG TARUNA -->
     <div id="formKatar">
       <h3>Masuk / Daftar Karang Taruna</h3>
-      <div class="input-wrap"><label>Email</label><input id="katarEmail" type="email"></div>
-      <div class="input-wrap"><label>Password</label><input id="katarPass" type="password"></div>
+      <div class="input-wrap"><label>Email</label><input id="katarEmail" type="email" placeholder="ketua@contoh.com"></div>
+      <div class="input-wrap"><label>Password</label><input id="katarPass" type="password" placeholder="••••••••"></div>
       <div style="margin-top:10px;display:flex;gap:6px;">
         <button id="btnKatarLogin" class="btn-glass" style="flex:1;">Masuk</button>
         <button id="btnKatarReg" class="btn-glass" style="flex:1;">Daftar</button>
       </div>
-      <a href="#" id="forgotKatar" class="info-chip">Lupa Password?</a>
+      <a href="#" id="forgotKatar" class="info-chip" style="display:block;text-align:center;margin-top:6px;">Lupa Password?</a>
 
       <div id="regKatar" style="display:none;margin-top:16px;">
-        <div class="input-wrap"><label>Nama Karang Taruna</label><input id="namaKatar" type="text"></div>
-        <div class="input-wrap"><label>ID Unik</label><input id="idKatar" type="text" placeholder="contoh: cilosari_barat"></div>
-        <button id="btnKatarSubmit" class="btn-glass">Buat Karang Taruna</button>
+        <div class="input-wrap"><label>Nama Karang Taruna</label><input id="namaKatar" type="text" placeholder="Karang Taruna Cilosari Barat"></div>
+        <div class="input-wrap"><label>ID Unik</label><input id="idKatar" type="text" placeholder="cilosari_barat"></div>
+        <button id="btnKatarSubmit" class="btn-glass" style="margin-top:8px;">Buat Karang Taruna</button>
       </div>
     </div>
 
-    <!-- === ANGGOTA FORM === -->
+    <!-- ANGGOTA -->
     <div id="formAnggota" style="display:none;">
       <h3>Masuk / Daftar Anggota</h3>
-      <div class="input-wrap"><label>Email</label><input id="angEmail" type="email"></div>
-      <div class="input-wrap"><label>Password</label><input id="angPass" type="password"></div>
+      <div class="input-wrap"><label>Email</label><input id="angEmail" type="email" placeholder="nama@contoh.com"></div>
+      <div class="input-wrap"><label>Password</label><input id="angPass" type="password" placeholder="••••••••"></div>
       <div style="margin-top:10px;display:flex;gap:6px;">
         <button id="btnAngLogin" class="btn-glass" style="flex:1;">Masuk</button>
         <button id="btnAngReg" class="btn-glass" style="flex:1;">Daftar</button>
       </div>
-      <a href="#" id="forgotAng" class="info-chip">Lupa Password?</a>
+      <a href="#" id="forgotAng" class="info-chip" style="display:block;text-align:center;margin-top:6px;">Lupa Password?</a>
 
       <div id="regAng" style="display:none;margin-top:16px;">
-        <div class="input-wrap"><label>Nama</label><input id="namaAng" type="text"></div>
+        <div class="input-wrap"><label>Nama</label><input id="namaAng" type="text" placeholder="Nama lengkap"></div>
         <div class="input-wrap"><label>Pilih Karang Taruna</label><select id="unitList"></select></div>
-        <button id="btnAngSubmit" class="btn-glass">Daftar Anggota</button>
+        <button id="btnAngSubmit" class="btn-glass" style="margin-top:8px;">Daftar Anggota</button>
       </div>
     </div>
   </div>
 
-  <p class="footer-note">v7.7 • Unified Auth + Verification System</p>
+  <p class="footer-note">v7.7.2 • One Auth + Verified + Smart Loading</p>
 </main>
 
 <script type="module">
 import { auth, db } from "../js/firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { doc, setDoc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const $=(id)=>document.getElementById(id);
+function showLoader(msg="Memproses…"){ $("loaderText").innerText=msg; $("loader").style.display="flex"; }
+function hideLoader(){ $("loader").style.display="none"; }
+window.addEventListener('load',()=>document.body.classList.add('loaded'));
+
+// TAB
 $("tabKatar").onclick=()=>{ $("formKatar").style.display="block"; $("formAnggota").style.display="none"; $("tabKatar").style.background="rgba(255,255,255,.15)"; $("tabAnggota").style.background="transparent"; };
 $("tabAnggota").onclick=()=>{ $("formKatar").style.display="none"; $("formAnggota").style.display="block"; $("tabKatar").style.background="transparent"; $("tabAnggota").style.background="rgba(255,255,255,.15)"; };
 
 // === LOGIN KARANG TARUNA ===
 $("btnKatarLogin").onclick=async()=>{
+  showLoader("🔐 Sedang masuk…");
   try{
-    const c=await signInWithEmailAndPassword(auth,$("katarEmail").value,$("katarPass").value);
-    alert("✅ Login berhasil!");
-    location.href="/index.html";
-  }catch(e){alert("❌ "+e.message);}
+    const cred=await signInWithEmailAndPassword(auth,$("katarEmail").value,$("katarPass").value);
+    const snap=await getDoc(doc(db,"users",cred.user.uid));
+    const profile=snap.exists()?snap.data():null;
+    if(!profile){ throw new Error("Profil tidak ditemukan."); }
+    if(profile.role==="super_admin"){ hideLoader(); location.href="/dashboard/super_admin.html"; return; }
+    if(profile.role==="admin"){ hideLoader(); location.href="/dashboard/admin.html"; return; }
+    // jika ternyata anggota
+    if(profile.role==="anggota"){
+      if(profile.status!=="approved"){ await signOut(auth); hideLoader(); return alert("🚫 Akun belum diverifikasi pengurus."); }
+      hideLoader(); location.href="/dashboard/anggota.html"; return;
+    }
+    hideLoader(); alert("Peran tidak dikenali.");
+  }catch(e){ hideLoader(); alert("❌ "+e.message); }
 };
 
 // === REGISTER KARANG TARUNA BARU ===
 $("btnKatarReg").onclick=()=>{$("regKatar").style.display=$("regKatar").style.display=="none"?"block":"none";}
 $("btnKatarSubmit").onclick=async()=>{
+  showLoader("🧩 Membuat Karang Taruna…");
   try{
-    const email=$("katarEmail").value, pass=$("katarPass").value, nama=$("namaKatar").value, id=$("idKatar").value.toLowerCase();
+    const email=$("katarEmail").value.trim(), pass=$("katarPass").value.trim(), nama=$("namaKatar").value.trim(), id=$("idKatar").value.trim().toLowerCase();
+    if(!email||!pass||!nama||!id) throw new Error("Lengkapi semua data.");
     const u=await createUserWithEmailAndPassword(auth,email,pass);
-    await setDoc(doc(db,"users",u.user.uid),{email,nama:"Ketua",role:"super_admin",id_katar:id,status:"approved",dibuat:Date.now()});
-    await setDoc(doc(db,"karangtaruna",id),{nama,dibuat:Date.now()});
-    alert("🎉 Karang Taruna dibuat!");
-    location.href="/index.html";
-  }catch(e){alert("❌ "+e.message);}
+    await setDoc(doc(db,"users",u.user.uid),{nama:"Ketua Karang Taruna",email,role:"super_admin",id_katar:id,status:"approved",dibuat:Date.now()});
+    await setDoc(doc(db,"karangtaruna",id),{nama,logo:"",dibuat:Date.now()});
+    hideLoader(); alert("🎉 Karang Taruna berhasil dibuat!");
+    location.href="/dashboard/super_admin.html";
+  }catch(e){ hideLoader(); alert("❌ "+e.message); }
 };
 
 // === LUPA PASSWORD KARANG TARUNA ===
 $("forgotKatar").onclick=async()=>{
-  const email=prompt("Masukkan email Karang Taruna:");
-  if(!email)return;
-  await sendPasswordResetEmail(auth,email);
-  alert("📩 Email reset terkirim!");
+  const email=prompt("Masukkan email Ketua/Pengurus:"); if(!email) return;
+  showLoader("📩 Mengirim email reset…"); await sendPasswordResetEmail(auth,email);
+  hideLoader(); alert("📩 Email reset telah dikirim.");
 };
 
 // === LOGIN ANGGOTA ===
 $("btnAngLogin").onclick=async()=>{
+  showLoader("🔐 Masuk sebagai anggota…");
   try{
-    const c=await signInWithEmailAndPassword(auth,$("angEmail").value,$("angPass").value);
-    const snap=await (await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js")).getDoc(doc(db,"users",c.user.uid));
-    if(snap.exists() && snap.data().status!=="approved"){
-      alert("🚫 Akun Anda belum diverifikasi pengurus.");
-      await auth.signOut();
-      return;
-    }
-    alert("✅ Login berhasil!");
-    location.href="/anggota/index.html";
-  }catch(e){alert("❌ "+e.message);}
+    const cred=await signInWithEmailAndPassword(auth,$("angEmail").value,$("angPass").value);
+    const snap=await getDoc(doc(db,"users",cred.user.uid));
+    const p=snap.data();
+    if(!p){ throw new Error("Profil tidak ditemukan."); }
+    if(p.role!=="anggota"){ hideLoader(); return alert("Akun ini bukan akun anggota."); }
+    if(p.status!=="approved"){ await signOut(auth); hideLoader(); return alert("🚫 Akun belum diverifikasi pengurus."); }
+    hideLoader(); location.href="/dashboard/anggota.html";
+  }catch(e){ hideLoader(); alert("❌ "+e.message); }
 };
 
 // === REGISTER ANGGOTA BARU ===
 $("btnAngReg").onclick=()=>{$("regAng").style.display=$("regAng").style.display=="none"?"block":"none";}
 $("btnAngSubmit").onclick=async()=>{
+  showLoader("👤 Mendaftarkan anggota…");
   try{
-    const nama=$("namaAng").value,email=$("angEmail").value,pass=$("angPass").value,id_katar=$("unitList").value;
+    const nama=$("namaAng").value.trim(), email=$("angEmail").value.trim(), pass=$("angPass").value.trim(), id_katar=$("unitList").value;
+    if(!nama||!email||!pass||!id_katar) throw new Error("Lengkapi semua data.");
     const u=await createUserWithEmailAndPassword(auth,email,pass);
     await setDoc(doc(db,"users",u.user.uid),{nama,email,role:"anggota",id_katar,status:"pending",dibuat:Date.now()});
-    alert("📨 Terdaftar! Tunggu verifikasi pengurus.");
+    hideLoader(); alert("📨 Terdaftar! Tunggu verifikasi pengurus.");
     location.href="/auth/index.html";
-  }catch(e){alert("❌ "+e.message);}
+  }catch(e){ hideLoader(); alert("❌ "+e.message); }
 };
 
 // === LUPA PASSWORD ANGGOTA ===
 $("forgotAng").onclick=async()=>{
-  const email=prompt("Masukkan email Anda:");
-  if(!email)return;
-  await sendPasswordResetEmail(auth,email);
-  alert("📩 Email reset terkirim!");
+  const email=prompt("Masukkan email Anda:"); if(!email) return;
+  showLoader("📩 Mengirim email reset…"); await sendPasswordResetEmail(auth,email);
+  hideLoader(); alert("📩 Email reset telah dikirim.");
 };
 
-// === AMBIL DAFTAR UNIT ===
+// === DAFTAR UNIT ===
 (async()=>{
   const q=await getDocs(collection(db,"karangtaruna"));
   $("unitList").innerHTML=q.docs.map(d=>`<option value="${d.id}">${d.data().nama}</option>`).join("");
