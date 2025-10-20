@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Profil • KARTEJI</title>
+<link rel="icon" href="assets/logo.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e4c92">
+<style>
+:root{
+  --biru:#0e4c92;--emas:#f6c445;--bg:#f7f9fc;
+  --text:#111827;--muted:#6b7280;--card:#fff;--line:#e5e7eb;
+}
+body{
+  margin:0;font-family:'Poppins',system-ui;
+  background:var(--bg);color:var(--text);
+  display:flex;flex-direction:column;align-items:center;
+  min-height:100vh;overflow-x:hidden;
+}
+header{
+  position:relative;width:100%;height:280px;
+  background:linear-gradient(180deg,var(--biru),#1a6ac2);
+  border-radius:0 0 30px 30px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#fff;text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
+}
+header img{
+  width:110px;height:110px;border-radius:50%;
+  border:4px solid rgba(255,255,255,.6);
+  object-fit:cover;margin-bottom:.6rem;
+}
+header h2{margin:0;font-size:1.4rem}
+header span{font-size:.9rem;opacity:.85}
+.edit-btn,.back-btn{
+  position:absolute;top:20px;border:none;border-radius:10px;padding:.4rem .8rem;
+  cursor:pointer;font-weight:600;
+}
+.edit-btn{right:20px;background:rgba(255,255,255,.2);color:#fff;}
+.back-btn{left:20px;background:rgba(255,255,255,.2);color:#fff;}
+main{
+  width:92%;max-width:420px;margin-top:-60px;
+  background:var(--card);border-radius:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);padding:1.5rem 1.2rem;
+}
+.section{margin-bottom:1.8rem}
+.section h3{font-size:1rem;color:var(--biru);margin-bottom:.6rem;border-left:4px solid var(--emas);padding-left:.5rem}
+.info-list{list-style:none;margin:0;padding:0}
+.info-list li{padding:.5rem 0;border-bottom:1px solid var(--line);font-size:.92rem;display:flex;justify-content:space-between;color:var(--text)}
+.info-list li span{color:var(--muted)}
+.stats{display:flex;justify-content:space-between;text-align:center;margin-top:.6rem}
+.stats div{flex:1;padding:.8rem}
+.stats b{display:block;font-size:1.2rem;color:var(--biru)}
+.actions{display:flex;flex-direction:column;gap:.8rem;margin-top:.5rem}
+.actions button{
+  padding:.7rem 1rem;border:none;border-radius:12px;cursor:pointer;
+  font-weight:600;font-size:.95rem;background:var(--biru);color:#fff;
+  box-shadow:0 4px 12px rgba(14,76,146,.3);transition:.2s;
+}
+.actions button.outline{
+  background:transparent;color:var(--biru);border:1px solid var(--biru);
+  box-shadow:none;
+}
+.actions button:hover{transform:translateY(-2px)}
+footer{text-align:center;font-size:.85rem;color:var(--muted);padding:1.5rem 0;}
+.hidden{display:none}
+
+/* === Modal === */
+.modal{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;z-index:99;
+}
+.modal-content{
+  background:var(--card);padding:1.5rem;border-radius:18px;
+  width:90%;max-width:400px;box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+.modal-content h3{text-align:center;margin-top:0;color:var(--biru);}
+.modal-content input, .modal-content textarea, .modal-content select{
+  width:100%;padding:.6rem;margin:.4rem 0;
+  border:1px solid var(--line);border-radius:10px;font-family:inherit;
+}
+.modal-content button{
+  width:100%;padding:.7rem;border:none;border-radius:12px;
+  font-weight:600;margin-top:.6rem;cursor:pointer;
+}
+.save-btn{background:var(--biru);color:#fff}
+.close-btn{background:#ccc}
+</style>
+</head>
+<body>
+<header>
+  <button class="back-btn" onclick="location.href='dashboard.html'">⬅️</button>
+  <button class="edit-btn" id="editBtn">✏️</button>
+  <img id="profilePic" src="assets/default-avatar.png" alt="Foto Profil">
+  <h2 id="profileName">Memuat...</h2>
+  <span id="profileRole">-</span>
+</header>
+
+<main id="profileCard" class="hidden">
+  <section class="section">
+    <h3>📋 Identitas Diri</h3>
+    <p id="profileBio" style="color:var(--muted);font-size:.9rem">Bio tidak tersedia.</p>
+  </section>
+
+  <section class="section">
+    <h3>⚙️ Informasi Pribadi</h3>
+    <ul class="info-list">
+      <li><b>Email</b><span id="infoEmail">-</span></li>
+      <li><b>Telepon</b><span id="infoPhone">-</span></li>
+      <li><b>Alamat</b><span id="infoAddress">-</span></li>
+      <li><b>Tanggal Lahir</b><span id="infoBirth">-</span></li>
+      <li><b>Jenis Kelamin</b><span id="infoGender">-</span></li>
+      <li><b>ID Anggota</b><span id="infoID">-</span></li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h3>💰 Aktivitas & Statistik</h3>
+    <div class="stats">
+      <div><b id="statPoin">0</b><span>Poin</span></div>
+      <div><b id="statKegiatan">0</b><span>Kegiatan</span></div>
+      <div><b id="statIuran">Rp 0</b><span>Iuran Dibayar</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3>📄 Menu Aksi</h3>
+    <div class="actions">
+      <button id="editProfileBtn">✏️ Edit Profil</button>
+      <button class="outline" onclick="location.href='pengaturan.html'">⚙️ Pengaturan Akun</button>
+      <button class="outline" onclick="location.href='riwayat.html'">🧾 Riwayat Aktivitas</button>
+      <button class="outline" onclick="location.href='keamanan.html'">🔒 Keamanan</button>
+      <button id="logoutBtn" style="background:#ef4444;">🚪 Keluar</button>
+    </div>
+  </section>
+</main>
+
+<footer>© 2025 KARTEJI Portal • Semarang</footer>
+
+<!-- Modal Edit -->
+<div id="editModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Edit Profil</h3>
+    <input type="text" id="editNama" placeholder="Nama Lengkap">
+    <textarea id="editBio" rows="3" placeholder="Bio singkat..."></textarea>
+    <input type="text" id="editTelepon" placeholder="Nomor Telepon">
+    <input type="text" id="editAlamat" placeholder="Alamat">
+    <input type="date" id="editTanggal">
+    <select id="editGender">
+      <option value="">Pilih Jenis Kelamin</option>
+      <option value="Laki-laki">Laki-laki</option>
+      <option value="Perempuan">Perempuan</option>
+    </select>
+    <input type="file" id="editFoto" accept="image/*">
+    <button class="save-btn" id="saveEdit">💾 Simpan</button>
+    <button class="close-btn" id="cancelEdit">Batal</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCgJC8OQBG_wQt57tZHfNuVKPb2VVlAalI",
+  authDomain: "karang-taruna-aadaf.firebaseapp.com",
+  projectId: "karang-taruna-aadaf",
+  storageBucket: "karang-taruna-aadaf.appspot.com",
+  messagingSenderId: "367208001887",
+  appId: "1:367208001887:web:bce5982d99edefb7e746ea"
+};
+const CLOUD_NAME = "dxdmjdcz3";
+const UPLOAD_PRESET = "karteji_upload";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const modal=document.getElementById("editModal");
+const profilePic=document.getElementById("profilePic");
+const profileName=document.getElementById("profileName");
+const profileRole=document.getElementById("profileRole");
+const profileBio=document.getElementById("profileBio");
+const card=document.getElementById("profileCard");
+
+const infoEmail=document.getElementById("infoEmail");
+const infoPhone=document.getElementById("infoPhone");
+const infoAddress=document.getElementById("infoAddress");
+const infoBirth=document.getElementById("infoBirth");
+const infoGender=document.getElementById("infoGender");
+const infoID=document.getElementById("infoID");
+
+const statPoin=document.getElementById("statPoin");
+const statKegiatan=document.getElementById("statKegiatan");
+const statIuran=document.getElementById("statIuran");
+
+const logoutBtn=document.getElementById("logoutBtn");
+const editBtn=document.getElementById("editBtn");
+const editProfileBtn=document.getElementById("editProfileBtn");
+const saveEdit=document.getElementById("saveEdit");
+const cancelEdit=document.getElementById("cancelEdit");
+
+let currentUID=null;
+
+async function uploadCloudinary(file){
+  const form=new FormData();
+  form.append("file",file);
+  form.append("upload_preset",UPLOAD_PRESET);
+  const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`,{method:"POST",body:form});
+  const data=await res.json();
+  return data.secure_url;
+}
+
+onAuthStateChanged(auth, async (user)=>{
+  if(!user){location.href="auth.html";return;}
+  currentUID=user.uid;
+  const ref=doc(db,"users",currentUID);
+  const snap=await getDoc(ref);
+  if(snap.exists()){
+    const u=snap.data();
+    profilePic.src=u.foto||"assets/default-avatar.png";
+    profileName.textContent=u.nama||"Pengguna";
+    profileRole.textContent=u.role||"Anggota";
+    profileBio.textContent=u.bio||"Belum ada bio.";
+    infoEmail.textContent=u.email||user.email;
+    infoPhone.textContent=u.telepon||"-";
+    infoAddress.textContent=u.alamat||"-";
+    infoBirth.textContent=u.tanggalLahir||"-";
+    infoGender.textContent=u.gender||"-";
+    infoID.textContent=u.idAnggota||currentUID.slice(0,8).toUpperCase();
+    statPoin.textContent=u.poin||0;
+    statKegiatan.textContent=u.kegiatan||0;
+    statIuran.textContent=`Rp ${(u.iuran||0).toLocaleString("id-ID")}`;
+  }else{
+    profileName.textContent=user.displayName||"Pengguna Baru";
+    infoEmail.textContent=user.email;
+  }
+  card.classList.remove("hidden");
+});
+
+function openModal(){modal.classList.remove("hidden")}
+function closeModal(){modal.classList.add("hidden")}
+editBtn.onclick=openModal;
+editProfileBtn.onclick=openModal;
+cancelEdit.onclick=closeModal;
+
+saveEdit.onclick=async()=>{
+  const nama=document.getElementById("editNama").value.trim();
+  const bio=document.getElementById("editBio").value.trim();
+  const tel=document.getElementById("editTelepon").value.trim();
+  const almt=document.getElementById("editAlamat").value.trim();
+  const tgl=document.getElementById("editTanggal").value;
+  const gen=document.getElementById("editGender").value;
+  const foto=document.getElementById("editFoto").files[0];
+  let fotoUrl=null;
+  if(foto){fotoUrl=await uploadCloudinary(foto);}
+  const updateData={};
+  if(nama)updateData.nama=nama;
+  if(bio)updateData.bio=bio;
+  if(tel)updateData.telepon=tel;
+  if(almt)updateData.alamat=almt;
+  if(tgl)updateData.tanggalLahir=tgl;
+  if(gen)updateData.gender=gen;
+  if(fotoUrl)updateData.foto=fotoUrl;
+  await updateDoc(doc(db,"users",currentUID),updateData);
+  alert("Profil diperbarui!");
+  location.reload();
+};
+logoutBtn.onclick=()=>signOut(auth).then(()=>location.href="index.html");
+
+// === Register Service Worker ===
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js")
+  .then(()=>console.log("✅ Service Worker aktif"))
+  .catch(err=>console.log("SW gagal:",err));
+}
+</script>
+</body>
+</html>
