@@ -1,101 +1,29 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // ==========
-    //  USERS
-    // ==========
-    match /users/{userId} {
-      // siapa pun boleh membuat dokumen user untuk dirinya sendiri saat register
-      allow create: if request.auth != null && request.auth.uid == userId;
-      // baca, ubah, hapus profil sendiri
-      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // ==========
-    //  FUNGSI PEMBANTU
-    // ==========
     function userData() {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
+    function userUnit() { return userData().id_katar; }
+    function userRole() { return userData().role; }
 
-    function userUnit() {
-      return userData().id_katar;
+    match /users/{uid} {
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow read, update: if request.auth != null && request.auth.uid == uid;
     }
 
-    function userRole() {
-      return userData().role;
-    }
-
-    // ==========
-    //  KARANG TARUNA (UNIT)
-    // ==========
-    match /karangtaruna/{unitId} {
-      // siapapun user yang login boleh membuat unit baru (pendaftaran pertama)
+    match /karangtaruna/{id} {
+      allow read: if true;
       allow create: if request.auth != null;
-      // semua orang boleh membaca daftar unit
-      allow read: if true;
-      // hanya super_admin dari unit tsb yang boleh ubah atau hapus
-      allow update, delete: if request.auth != null &&
-        userUnit() == unitId &&
-        userRole() == "super_admin";
+      allow update, delete: if request.auth != null && userRole() == "super_admin" && userUnit() == id;
     }
 
-    // ==========
-    //  SISTEM BRANDING / PENGATURAN
-    // ==========
-    match /sistem/{docId} {
-      // branding portal bisa dibaca publik
-      allow read: if true;
-      // super_admin boleh membuat atau memperbarui branding unitnya
-      allow create, update, delete: if request.auth != null &&
-        request.resource.data.id_katar == userUnit() &&
-        userRole() == "super_admin";
-    }
-
-    // ==========
-    //  KOLEKSI UMUM (kas, kegiatan, forum, academy, sertifikat, anggota, umkm, laporan)
-    //  semua data harus punya id_katar
-    // ==========
     match /{collection}/{docId} {
-
-      // Membaca data diizinkan untuk semua anggota dalam unit yang sama
-      allow read: if request.auth != null &&
-        resource.data.id_katar == userUnit();
-
-      // Tambah data
-      allow create: if request.auth != null &&
-        request.resource.data.id_katar == userUnit() &&
-        (
-          // super_admin dan admin penuh
-          userRole() in ["super_admin","admin"] ||
-          // admin_keuangan hanya boleh tambah di "kas"
-          (userRole() == "admin_keuangan" && collection == "kas") ||
-          // admin_berita hanya boleh tambah di "forum" atau "kegiatan"
-          (userRole() == "admin_berita" && collection in ["forum","kegiatan"]) ||
-          // admin_umkm hanya boleh tambah di "umkm"
-          (userRole() == "admin_umkm" && collection == "umkm")
-        );
-
-      // Update data
-      allow update: if request.auth != null &&
+      allow read: if request.auth != null && resource.data.id_katar == userUnit();
+      allow create, update, delete: if request.auth != null &&
+        userData().status == "approved" &&
         resource.data.id_katar == userUnit() &&
-        request.resource.data.id_katar == userUnit() &&
-        (
-          userRole() in ["super_admin","admin"] ||
-          (userRole() == "admin_keuangan" && collection == "kas") ||
-          (userRole() == "admin_berita" && collection in ["forum","kegiatan"]) ||
-          (userRole() == "admin_umkm" && collection == "umkm")
-        );
-
-      // Hapus data
-      allow delete: if request.auth != null &&
-        resource.data.id_katar == userUnit() &&
-        (
-          userRole() in ["super_admin","admin"] ||
-          (userRole() == "admin_keuangan" && collection == "kas") ||
-          (userRole() == "admin_umkm" && collection == "umkm")
-        );
+        userRole() in ["super_admin","admin","admin_keuangan","admin_berita","admin_umkm"];
     }
   }
 }
