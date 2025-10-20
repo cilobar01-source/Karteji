@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lupa Password • Karang Taruna</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/auth-anim.css">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+</head>
+<body>
+  <header class="header-glass">
+    <div class="header-title">
+      <img src="../assets/icons/kt.svg" class="logo-glow" style="width:32px;height:32px">
+      <div>Reset Password</div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:540px">
+    <div class="card-glass fade-in">
+      <div class="input-wrap">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="nama@email.com">
+        <div id="eErr" class="err">Masukkan email yang valid</div>
+      </div>
+      <button id="btn" class="btn-glass" style="width:100%;margin-top:12px">Kirim Link Reset</button>
+      <div class="switcher"><a class="tab" href="./login.html">Kembali ke Login</a></div>
+    </div>
+    <p class="footer-note">v7.2 • Multi-page Auth</p>
+  </main>
+
+  <script type="module">
+    import { auth } from "../js/firebase.js";
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    const email = document.getElementById('email');
+    const eErr = document.getElementById('eErr');
+    const btn = document.getElementById('btn');
+    function v(){ const ok=/.+@.+/.test(email.value); eErr.style.display= ok?'none':'block'; email.classList.toggle('erron', !ok); return ok; }
+    email.addEventListener('input', v);
+    btn.addEventListener('click', async ()=>{
+      if(!v()) return;
+      try{
+        btn.classList.add('loading'); btn.textContent='Mengirim...';
+        await sendPasswordResetEmail(auth, email.value.trim());
+        alert("Email reset terkirim. Cek kotak masuk Anda.");
+        location.href="./login.html";
+      }catch(err){ alert(err.message); }
+      finally{ btn.classList.remove('loading'); btn.textContent='Kirim Link Reset'; }
+    });
+  </script>
+
+  <script> if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js'); </script>
+</body>
+</html>

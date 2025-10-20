@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daftar • Karang Taruna</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/auth-anim.css">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+</head>
+<body>
+  <header class="header-glass">
+    <div class="header-title">
+      <img src="../assets/icons/kt.svg" class="logo-glow" style="width:32px;height:32px">
+      <div>Daftar Akun</div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:560px">
+    <div class="card-glass fade-in">
+      <div class="switcher" style="margin-bottom:8px">
+        <button id="tabKT" class="tab active">Karang Taruna</button>
+        <button id="tabAng" class="tab">Anggota</button>
+      </div>
+
+      <div class="input-wrap">
+        <label>Nama Anda</label>
+        <input id="nama" type="text" placeholder="Nama Lengkap">
+        <div id="nErr" class="err">Nama wajib diisi</div>
+      </div>
+      <div class="input-wrap">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="nama@email.com">
+        <div id="eErr" class="err">Email tidak valid</div>
+      </div>
+      <div class="input-wrap">
+        <label>Password</label>
+        <input id="password" type="password" placeholder="••••••••">
+        <div id="pErr" class="err">Password minimal 6 karakter</div>
+      </div>
+
+      <!-- Karang Taruna (Super Admin) -->
+      <div id="ktWrap">
+        <div class="input-wrap">
+          <label>Nama Karang Taruna</label>
+          <input id="namaKatar" type="text" placeholder="Contoh: Cilosari Barat">
+          <div id="nkErr" class="err">Nama Karang Taruna wajib</div>
+        </div>
+        <p class="help">Akun ini akan menjadi <b>Super Admin</b>. Sistem akan membuat <code>id_katar</code> otomatis dari Nama Karang Taruna.</p>
+      </div>
+
+      <!-- Anggota -->
+      <div id="angWrap" style="display:none">
+        <div class="input-wrap">
+          <label>ID Karang Taruna</label>
+          <input id="idKatar" type="text" placeholder="contoh: karangtaruna_cilosaribarat">
+          <div id="ikErr" class="err">ID Karang Taruna wajib</div>
+        </div>
+        <p class="help">Minta <b>ID Karang Taruna</b> kepada pengurus.</p>
+      </div>
+
+      <button id="btnReg" class="btn-glass" style="width:100%;margin-top:12px">Daftar</button>
+      <div class="switcher"><a class="tab" href="./login.html">Sudah punya akun? Masuk</a></div>
+    </div>
+    <p class="footer-note">v7.2 • Multi-page Auth</p>
+  </main>
+
+  <script type="module">
+    import { register } from "../js/auth.js";
+    const tabKT = document.getElementById('tabKT');
+    const tabAng = document.getElementById('tabAng');
+    const ktWrap = document.getElementById('ktWrap');
+    const angWrap = document.getElementById('angWrap');
+    const btn = document.getElementById('btnReg');
+
+    function setMode(m){
+      const isKT = m==='kt';
+      tabKT.classList.toggle('active', isKT);
+      tabAng.classList.toggle('active', !isKT);
+      ktWrap.style.display = isKT? 'block':'none';
+      angWrap.style.display = isKT? 'none':'block';
+      btn.dataset.mode = isKT? 'kt':'ang';
+    }
+    tabKT.onclick = ()=> setMode('kt');
+    tabAng.onclick = ()=> setMode('ang');
+    setMode('kt');
+
+    const nama = document.getElementById('nama');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const namaKatar = document.getElementById('namaKatar');
+    const idKatar = document.getElementById('idKatar');
+
+    const nErr = document.getElementById('nErr');
+    const eErr = document.getElementById('eErr');
+    const pErr = document.getElementById('pErr');
+    const nkErr = document.getElementById('nkErr');
+    const ikErr = document.getElementById('ikErr');
+
+    function v(){ // validate
+      let ok=true;
+      nErr.style.display = nama.value.trim()? 'none':'block'; nama.classList.toggle('erron', !nama.value.trim()); if(!nama.value.trim()) ok=false;
+      eErr.style.display = /.+@.+/.test(email.value)? 'none':'block'; email.classList.toggle('erron', !/.+@.+/.test(email.value)); if(!/.+@.+/.test(email.value)) ok=false;
+      pErr.style.display = password.value.length>=6? 'none':'block'; password.classList.toggle('erron', password.value.length<6); if(password.value.length<6) ok=false;
+      if(btn.dataset.mode==='kt'){
+        nkErr.style.display = namaKatar.value.trim()? 'none':'block'; namaKatar.classList.toggle('erron', !namaKatar.value.trim()); if(!namaKatar.value.trim()) ok=false;
+      }else{
+        ikErr.style.display = idKatar.value.trim()? 'none':'block'; idKatar.classList.toggle('erron', !idKatar.value.trim()); if(!idKatar.value.trim()) ok=false;
+      }
+      return ok;
+    }
+    [nama,email,password,namaKatar,idKatar].forEach(i=> i&&i.addEventListener('input', v));
+
+    btn.addEventListener('click', async ()=>{
+      if(!v()) return;
+      try{
+        btn.classList.add('loading'); btn.textContent='Memproses...';
+        if(btn.dataset.mode==='kt'){
+          await register({ nama:nama.value.trim(), email:email.value.trim(), password:password.value.trim(), role:"super_admin", id_katar:null, nama_katar:namaKatar.value.trim() });
+        }else{
+          await register({ nama:nama.value.trim(), email:email.value.trim(), password:password.value.trim(), role:"anggota", id_katar:idKatar.value.trim() });
+        }
+        alert("Pendaftaran berhasil! Silakan login.");
+        location.href = "./login.html";
+      }catch(err){
+        alert(err.message);
+      }finally{ btn.classList.remove('loading'); btn.textContent='Daftar'; }
+    });
+  </script>
+
+  <script> if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js'); </script>
+</body>
+</html>
