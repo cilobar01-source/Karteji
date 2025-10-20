@@ -42,7 +42,7 @@ qs("#save").addEventListener("click", async ()=>{
   if(file) logoUrl = await uploadToCloudinary(file, "logo");
   const payload = { nama_portal:nama };
   if(logoUrl) payload.logo = logoUrl;
-  await updateDoc(ref, payload);
+  payload.id_katar = "cilosari_barat"; await updateDoc(ref, payload);
   toast("Pengaturan disimpan");
   loadBranding();
 });

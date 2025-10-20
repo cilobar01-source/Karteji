@@ -43,7 +43,8 @@ qs("#add").addEventListener("click", async ()=>{
   if(!nama) return toast("Nama UMKM wajib");
   let url = "";
   if(file) url = await uploadToCloudinary(file, "umkm");
-  await tambahData("umkm", { nama, deskripsi, foto:url, dibuat: Date.now() });
+      await tambahData("umkm", { nama, deskripsi, foto:url, dibuat: Date.now(), id_katar: "cilosari_barat" });"umkm", { nama, deskripsi, foto:url, dibuat: Date.now() });
   toast("UMKM ditambahkan");
   render();
 });
+

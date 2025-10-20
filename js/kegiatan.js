@@ -34,7 +34,8 @@ qs("#add").addEventListener("click", async ()=>{
   const tgl = qs("#tgl").value;
   const deskripsi = qs("#desk").value.trim();
   if(!judul || !tgl) return toast("Lengkapi judul & tanggal");
-  await tambahData("kegiatan", { judul, tanggal: new Date(tgl).getTime(), deskripsi });
+      await tambahData("kegiatan", { judul, tanggal: new Date(tgl).getTime(), deskripsi, id_katar: "cilosari_barat" });"kegiatan", { judul, tanggal: new Date(tgl).getTime(), deskripsi });
   toast("Agenda dibuat");
   render();
 });
+

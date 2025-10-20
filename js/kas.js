@@ -33,7 +33,8 @@ qs("#add").addEventListener("click", async ()=>{
   const nominal = Number(qs("#nominal").value||0);
   const ket = qs("#ket").value||"";
   if(!nominal) return toast("Nominal tidak boleh kosong");
-  await tambahData("kas", { nominal, ket, tanggal: Date.now() });
+      await tambahData("kas", { nominal, ket, tanggal: Date.now(), id_katar: "cilosari_barat" });"kas", { nominal, ket, tanggal: Date.now() });
   toast("Transaksi disimpan");
   render();
 });
+

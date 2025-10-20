@@ -37,7 +37,8 @@ qs("#add").addEventListener("click", async ()=>{
   if(!nama) return toast("Nama wajib");
   let fotoURL = "";
   if(file){ fotoURL = await uploadToCloudinary(file, "profil"); }
-  await tambahData("anggota", { nama, email, foto: fotoURL, dibuat: Date.now() });
+      await tambahData("anggota", { nama, email, foto: fotoURL, dibuat: Date.now(), id_katar: "cilosari_barat" });"anggota", { nama, email, foto: fotoURL, dibuat: Date.now() });
   toast("Anggota ditambahkan");
   render();
 });
+
