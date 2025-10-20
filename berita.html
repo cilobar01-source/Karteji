@@ -9,29 +9,78 @@
 <meta property="og:description" id="ogDesc" content="Portal Karang Taruna Cilosari Barat">
 <meta property="og:image" id="ogImage" content="assets/logo.svg">
 <link rel="icon" href="assets/logo.svg" />
+
 <style>
 :root{
-  --biru:#0e4c92;--emas:#f6c445;--bg:#0b132b;--text:#f5f7fa;--card:#111928;
+  --glass-bg:rgba(255,255,255,0.55);
+  --text:#111827;--muted:#555;
+  --accent:#0e4c92;--highlight:#f6c445;
+  --line:rgba(0,0,0,.1);--shadow:0 6px 24px rgba(0,0,0,.15);
 }
-body.light{--bg:#f5f7fa;--text:#1e293b;--card:#fff;}
-*{box-sizing:border-box;}
-body{margin:0;font-family:'Poppins',system-ui;background:var(--bg);color:var(--text);}
-a{text-decoration:none;color:inherit;}
-header{display:flex;justify-content:space-between;align-items:center;padding:.9rem 1.2rem;background:var(--card);
-  border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:10;}
-.container{max-width:800px;margin:auto;padding:1.2rem;}
-h1{color:var(--emas);}
-img{max-width:100%;border-radius:10px;margin:.6rem 0;}
-.meta{color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:1rem;}
-.comment{border-top:1px solid rgba(255,255,255,.1);padding-top:.6rem;margin-top:1rem;}
-.comment b{color:var(--emas);}
-input,textarea{width:100%;padding:.6rem;margin-top:.4rem;border-radius:8px;border:none;background:var(--card);color:var(--text);}
-button{background:var(--emas);border:none;padding:.5rem 1rem;border-radius:8px;font-weight:700;margin-top:.6rem;cursor:pointer;}
-footer{text-align:center;padding:2rem 1rem;border-top:1px solid rgba(255,255,255,.1);margin-top:2rem;}
-.nav-nextprev{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;}
-.nav-nextprev a{flex:1;text-align:center;padding:.8rem;border-radius:8px;background:var(--card);border:1px solid rgba(255,255,255,.1);}
-.nav-nextprev a:hover{background:var(--emas);color:#0b132b;}
-.hidden{display:none;}
+@media(prefers-color-scheme:dark){
+  :root{
+    --glass-bg:rgba(25,25,35,0.45);
+    --text:#f1f5f9;--muted:#a8b1c0;
+    --line:rgba(255,255,255,.15);--shadow:0 10px 40px rgba(0,0,0,.5);
+  }
+}
+*{box-sizing:border-box;transition:.25s ease all}
+body{
+  margin:0;font-family:'Poppins',system-ui;
+  background:url('assets/bg/blur-home.jpg') center/cover fixed no-repeat;
+  color:var(--text);min-height:100vh;
+}
+a{text-decoration:none;color:inherit}
+header{
+  backdrop-filter:blur(18px);background:var(--glass-bg);
+  border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.9rem 1.2rem;position:sticky;top:0;z-index:10;
+  box-shadow:var(--shadow);
+}
+header b{color:var(--accent)}
+header button{
+  background:transparent;border:none;color:var(--text);
+  cursor:pointer;font-size:1.1rem;margin-right:.6rem;
+}
+header a{
+  background:var(--accent);color:#fff;padding:.45rem .9rem;border-radius:10px;
+  font-weight:600;box-shadow:0 4px 12px rgba(14,76,146,.3);
+}
+.container{
+  max-width:840px;margin:auto;padding:1.2rem;
+  backdrop-filter:blur(20px);background:var(--glass-bg);
+  border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);
+  margin-top:1.5rem;margin-bottom:2rem;
+}
+h1{color:var(--accent);margin-bottom:.4rem}
+img{max-width:100%;border-radius:12px;margin:.8rem 0;box-shadow:var(--shadow);}
+.meta{color:var(--muted);font-size:.9rem;margin-bottom:1rem;}
+article{line-height:1.7;font-size:1.05rem}
+.comment{border-top:1px solid var(--line);padding-top:.6rem;margin-top:1rem;}
+.comment b{color:var(--accent);}
+input,textarea{
+  width:100%;padding:.6rem;margin-top:.4rem;border-radius:10px;
+  border:1px solid var(--line);background:transparent;color:var(--text);
+}
+button.primary{
+  background:var(--highlight);border:none;padding:.55rem 1rem;
+  border-radius:10px;font-weight:700;margin-top:.6rem;cursor:pointer;
+  color:#0b132b;
+}
+footer{
+  text-align:center;padding:2rem 1rem;color:var(--muted);
+}
+.nav-nextprev{
+  display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;
+}
+.nav-nextprev a{
+  flex:1;text-align:center;padding:.8rem;border-radius:10px;
+  backdrop-filter:blur(20px);background:var(--glass-bg);
+  border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.nav-nextprev a:hover{background:var(--highlight);color:#0b132b;}
+.hidden{display:none}
 </style>
 </head>
 <body>
@@ -54,20 +103,18 @@ footer{text-align:center;padding:2rem 1rem;border-top:1px solid rgba(255,255,255
     <a id="nextLink">Berita Selanjutnya ➡️</a>
   </div>
 
-  <section id="komentarSection">
-    <h3 style="color:var(--emas)">💬 Komentar</h3>
+  <section id="komentarSection" style="margin-top:2rem">
+    <h3 style="color:var(--highlight)">💬 Komentar</h3>
     <div id="daftarKomentar" class="muted"></div>
     <div id="formKomentar" class="hidden">
-      <textarea id="teksKomentar" placeholder="Tulis komentar kamu..."></textarea>
-      <button id="kirimKomentar">Kirim</button>
+      <textarea id="teksKomentar" placeholder="Tulis komentar kamu..." rows="3"></textarea>
+      <button id="kirimKomentar" class="primary">Kirim</button>
     </div>
     <p id="loginMsg" class="muted"></p>
   </section>
 </div>
 
-<footer>
-  <p>© 2025 KARTEJI Cilosari Barat</p>
-</footer>
+<footer>© 2025 KARTEJI Cilosari Barat</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -120,7 +167,7 @@ function loadBeritaDetail(b) {
     });
   }
 
-  // SEO meta
+  // SEO meta update
   $('#titleTag').textContent = `${b.judul} • KARTEJI`;
   $('#metaDesc').content = (b.isi || '').slice(0, 150);
   $('#ogTitle').content = b.judul;
@@ -129,7 +176,7 @@ function loadBeritaDetail(b) {
   loadKomentar();
 }
 
-// 🔹 Setup tombol navigasi prev / next
+// 🔹 Navigasi prev / next
 function setupNavigation() {
   if (beritaList.length <= 1) return;
   const prev = beritaList[currentIndex + 1];
@@ -138,11 +185,11 @@ function setupNavigation() {
   nav.classList.remove('hidden');
   if (prev) {
     $('#prevLink').href = `berita.html?id=${prev.id}`;
-    $('#prevLink').textContent = `⬅️ ${prev.judul.slice(0, 20)}`;
+    $('#prevLink').textContent = `⬅️ ${prev.judul.slice(0, 24)}`;
   } else $('#prevLink').classList.add('hidden');
   if (next) {
     $('#nextLink').href = `berita.html?id=${next.id}`;
-    $('#nextLink').textContent = `${next.judul.slice(0, 20)} ➡️`;
+    $('#nextLink').textContent = `${next.judul.slice(0, 24)} ➡️`;
   } else $('#nextLink').classList.add('hidden');
 }
 
