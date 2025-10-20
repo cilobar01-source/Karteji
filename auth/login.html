@@ -1,211 +1,60 @@
+
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Masuk / Daftar • Portal Karang Taruna</title>
-<link rel="manifest" href="../manifest.webmanifest">
-<meta name="theme-color" content="#ffffff">
-<style>
-:root{
-  --accent:#f6c445;
-  --glass:rgba(255,255,255,0.6);
-  --border:rgba(0,0,0,0.1);
-  --text:#111827;
-}
-*{box-sizing:border-box;}
-body{
-  margin:0;padding:0;
-  font-family:'Inter',system-ui,Arial;
-  background:linear-gradient(160deg,#f8f9fb,#e8edf3);
-  color:var(--text);
-  opacity:0;transition:opacity .6s ease;
-}
-body.loaded{opacity:1;}
-header{
-  backdrop-filter:blur(16px);
-  background:var(--glass);
-  border-bottom:1px solid var(--border);
-  padding:1rem;text-align:center;
-  font-weight:700;
-  color:var(--text);
-  text-shadow:0 1px 2px rgba(255,255,255,.5);
-}
-.card{
-  backdrop-filter:blur(14px);
-  background:var(--glass);
-  border-radius:16px;
-  box-shadow:0 4px 24px rgba(0,0,0,.08);
-  padding:1.5rem;
-  margin:1rem auto;
-  width:min(92%,520px);
-}
-.btn{
-  border:none;padding:.7rem .8rem;border-radius:8px;
-  font-weight:600;cursor:pointer;
-  color:#111;background:var(--accent);
-  transition:.2s;flex:1;
-}
-.btn:hover{opacity:.85;}
-input,select{
-  width:100%;padding:10px;border:none;
-  border-radius:8px;margin-top:4px;
-  background:rgba(255,255,255,0.9);
-  color:#111;font-weight:500;
-  box-shadow:inset 0 0 3px rgba(0,0,0,.1);
-}
-input::placeholder{color:#555;}
-label{font-weight:600;color:#222;text-shadow:0 1px 1px rgba(255,255,255,.7);}
-.info{display:inline-block;margin-top:8px;font-size:.85rem;cursor:pointer;color:#333;}
-.tabs{display:flex;gap:8px;margin-bottom:10px;}
-.tabs button{
-  flex:1;border:none;border-radius:8px;padding:.7rem;
-  background:rgba(255,255,255,.5);
-  cursor:pointer;font-weight:600;color:#111;
-  box-shadow:inset 0 1px 2px rgba(255,255,255,.4);
-}
-.tabs .active{background:var(--accent);color:#000;}
-.loader{
-  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.7);backdrop-filter:blur(8px);flex-direction:column;z-index:9999;color:#000;
-}
-.loader div{width:50px;height:50px;border:4px solid rgba(0,0,0,.2);border-top:4px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masuk • Karang Taruna</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
 </head>
-
 <body>
-<header>Portal Karang Taruna</header>
-
-<div class="loader" id="loader">
-  <div></div><p id="loaderText" style="margin-top:10px;font-weight:600;">Memproses...</p>
-</div>
-
-<main class="card">
-  <div style="text-align:center;margin-bottom:12px;">
-    <a href="./index.html" class="info">👀 Kembali ke Halaman Publik</a>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <button id="tabKatar" class="active">Karang Taruna</button>
-    <button id="tabAnggota">Anggota</button>
-  </div>
-
-  <!-- Form Karang Taruna -->
-  <div id="formKatar">
-    <label>Email</label>
-    <input id="katarEmail" type="email" placeholder="nama@email.com">
-    <label>Password</label>
-    <input id="katarPass" type="password" placeholder="••••••••">
-    <div style="display:flex;gap:8px;margin-top:10px;">
-      <button id="btnKatarLogin" class="btn">Masuk</button>
-      <button id="btnKatarReg" class="btn">Daftar</button>
+  <header class="header-glass">
+    <div class="header-title">
+      <div class="logo-glow"></div>
+      <div>Masuk Portal Karang Taruna</div>
     </div>
-    <p id="forgotKatar" class="info">Lupa Password?</p>
-    <div id="regKatar" style="display:none;margin-top:16px;">
-      <label>Nama Karang Taruna</label><input id="namaKatar" type="text">
-      <label>ID Unik</label><input id="idKatar" type="text" placeholder="contoh: cilosari_barat">
-      <button id="btnKatarSubmit" class="btn" style="margin-top:10px;">Buat Karang Taruna</button>
+  </header>
+
+  <main class="container" style="max-width:520px">
+    <div class="card-glass">
+      <div class="input-wrap">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="nama@email.com">
+      </div>
+      <div class="input-wrap" style="margin-top:10px">
+        <label>Password</label>
+        <input id="password" type="password" placeholder="••••••••">
+      </div>
+      <div style="display:flex; gap:10px; margin-top:14px">
+        <button id="btnLogin" class="btn-glass">Masuk</button>
+        <a href="#" class="info-chip" onclick="alert('Register dibuat terpisah sesuai kebijakan unit.')">Daftar</a>
+      </div>
     </div>
-  </div>
+    <p class="footer-note">v6.8 • Transparent Spatial UI • Firebase Auth</p>
+  </main>
 
-  <!-- Form Anggota -->
-  <div id="formAnggota" style="display:none;">
-    <label>Email</label>
-    <input id="angEmail" type="email">
-    <label>Password</label>
-    <input id="angPass" type="password">
-    <div style="display:flex;gap:8px;margin-top:10px;">
-      <button id="btnAngLogin" class="btn">Masuk</button>
-      <button id="btnAngReg" class="btn">Daftar</button>
-    </div>
-    <p id="forgotAng" class="info">Lupa Password?</p>
-    <div id="regAng" style="display:none;margin-top:16px;">
-      <label>Nama</label><input id="namaAng" type="text">
-      <label>Pilih Karang Taruna</label><select id="unitList"></select>
-      <button id="btnAngSubmit" class="btn" style="margin-top:10px;">Daftar Anggota</button>
-    </div>
-  </div>
-</main>
+  <script type="module">
+    import { login } from "../js/auth.js";
+    document.getElementById('btnLogin').addEventListener('click', async ()=>{
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try{
+        await login(email, password);
+        location.href = "/index.html";
+      }catch(err){
+        alert(err.message);
+      }
+    });
+  </script>
 
-<script type="module">
-import { auth, db } from "../js/firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { doc, setDoc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-const $=id=>document.getElementById(id);
-window.addEventListener("load",()=>document.body.classList.add("loaded"));
-
-function showLoader(msg="Memproses..."){$("loaderText").innerText=msg;$("loader").style.display="flex";}
-function hideLoader(){$("loader").style.display="none";}
-
-// tab switch
-$("tabKatar").onclick=()=>{ $("formKatar").style.display="block"; $("formAnggota").style.display="none"; $("tabKatar").classList.add("active"); $("tabAnggota").classList.remove("active"); };
-$("tabAnggota").onclick=()=>{ $("formKatar").style.display="none"; $("formAnggota").style.display="block"; $("tabKatar").classList.remove("active"); $("tabAnggota").classList.add("active"); };
-
-// LOGIN Katar
-$("btnKatarLogin").onclick=async()=>{
-  showLoader("🔐 Masuk...");
-  try{
-    const c=await signInWithEmailAndPassword(auth,$("katarEmail").value,$("katarPass").value);
-    const s=await getDoc(doc(db,"users",c.user.uid));
-    const p=s.data();
-    hideLoader();
-    if(p.role==="super_admin") location.href="/dashboard/super_admin.html";
-    else if(p.role==="admin") location.href="/dashboard/admin.html";
-    else location.href="/dashboard/anggota.html";
-  }catch(e){hideLoader();alert("❌ "+e.message);}
-};
-
-// Register Katar
-$("btnKatarReg").onclick=()=>{$("regKatar").style.display=$("regKatar").style.display=="none"?"block":"none";}
-$("btnKatarSubmit").onclick=async()=>{
-  showLoader("🧩 Membuat Karang Taruna...");
-  try{
-    const email=$("katarEmail").value,pass=$("katarPass").value,nama=$("namaKatar").value,id=$("idKatar").value.toLowerCase();
-    const u=await createUserWithEmailAndPassword(auth,email,pass);
-    await setDoc(doc(db,"users",u.user.uid),{email,nama:"Ketua",role:"super_admin",id_katar:id,status:"approved",dibuat:Date.now()});
-    await setDoc(doc(db,"karangtaruna",id),{nama,dibuat:Date.now()});
-    hideLoader();location.href="/dashboard/super_admin.html";
-  }catch(e){hideLoader();alert("❌ "+e.message);}
-};
-
-// Lupa Password
-$("forgotKatar").onclick=async()=>{const e=prompt("Masukkan email Karang Taruna:");if(e)await sendPasswordResetEmail(auth,e);alert("📩 Email reset dikirim!");};
-
-// LOGIN Anggota
-$("btnAngLogin").onclick=async()=>{
-  showLoader("🔐 Masuk sebagai anggota...");
-  try{
-    const c=await signInWithEmailAndPassword(auth,$("angEmail").value,$("angPass").value);
-    const s=await getDoc(doc(db,"users",c.user.uid));const p=s.data();
-    hideLoader();
-    if(p.status!=="approved"){await signOut(auth);alert("🚫 Belum diverifikasi pengurus.");}
-    else location.href="/dashboard/anggota.html";
-  }catch(e){hideLoader();alert("❌ "+e.message);}
-};
-
-// Register Anggota
-$("btnAngReg").onclick=()=>{$("regAng").style.display=$("regAng").style.display=="none"?"block":"none";}
-$("btnAngSubmit").onclick=async()=>{
-  showLoader("👤 Mendaftarkan anggota...");
-  try{
-    const nama=$("namaAng").value,email=$("angEmail").value,pass=$("angPass").value,id_katar=$("unitList").value;
-    const u=await createUserWithEmailAndPassword(auth,email,pass);
-    await setDoc(doc(db,"users",u.user.uid),{nama,email,role:"anggota",id_katar,status:"pending",dibuat:Date.now()});
-    hideLoader();alert("📨 Terdaftar! Tunggu verifikasi.");location.href="/auth/index.html";
-  }catch(e){hideLoader();alert("❌ "+e.message);}
-};
-
-// Lupa Password anggota
-$("forgotAng").onclick=async()=>{const e=prompt("Masukkan email Anda:");if(e)await sendPasswordResetEmail(auth,e);alert("📩 Email reset dikirim!");};
-
-// Daftar unit
-(async()=>{
-  const q=await getDocs(collection(db,"karangtaruna"));
-  $("unitList").innerHTML=q.docs.map(d=>`<option value="${d.id}">${d.data().nama}</option>`).join("");
-})();
-</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js');
+    }
+  </script>
 </body>
 </html>
