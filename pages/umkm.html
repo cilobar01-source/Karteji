@@ -31,10 +31,17 @@
 
   <script>setInterval(()=>{const el=document.getElementById('clock'); if(el) el.textContent=new Date().toLocaleTimeString('id-ID', {hour12:false})},1000);</script>
   <script type="module" src="../js/firebase.js"></script>
+  <script type="module" src="../js/config.js"></script>
+  <script type="module" src="../js/guard.js"></script>
   <script type="module" src="../js/motion.js"></script>
   <script type="module" src="../js/ui.js"></script>
   <script type="module" src="../js/data.js"></script>
   <script type="module" src="../js/cloudinary.js"></script>
   <script type="module" src="../js/umkm.js"></script>
+
+  <script type="module">
+    import { onReady } from "../js/guard.js";
+    onReady(()=>{});
+  </script>
 </body>
 </html>
