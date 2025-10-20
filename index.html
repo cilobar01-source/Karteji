@@ -3,82 +3,135 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Portal KARTEJI • Cilosari Barat</title>
+<title>KARTEJI Portal • Cilosari Barat</title>
 <link rel="icon" href="assets/logo.svg" />
 <style>
 :root{
-  --biru:#0e4c92;--biru2:#1a6ac2;--emas:#f6c445;
-  --bg:#0b132b;--text:#f5f7fa;--card:#111928;--line:rgba(255,255,255,.12);
-  --muted:#a8b3c7;--shadow:0 8px 32px rgba(0,0,0,.25);
+  --primary:#0e4c92;
+  --accent:#f6c445;
+  --text:#f5f5f7;
+  --muted:#c9c9c9;
+  --card:rgba(255,255,255,0.08);
+  --line:rgba(255,255,255,0.15);
+  --blur:20px;
+  --shadow:0 8px 40px rgba(0,0,0,0.3);
 }
-body.light{
-  --bg:#f7f9fc;--text:#1e293b;--card:#ffffff;
-  --line:rgba(0,0,0,.08);--muted:#475569;--shadow:0 4px 18px rgba(0,0,0,.08);
+*{box-sizing:border-box;transition:.3s ease all}
+body{
+  margin:0;font-family:'Poppins',system-ui,Arial;
+  color:var(--text);
+  background-size:cover;background-position:center;
+  backdrop-filter:blur(12px);
+  min-height:100vh;
 }
-*{box-sizing:border-box;transition:.25s ease all}
-body{margin:0;font-family:'Poppins',system-ui,Arial;background:var(--bg);color:var(--text);}
 a{text-decoration:none;color:inherit}
 
 /* === HEADER === */
 header{
+  position:sticky;top:0;z-index:40;
   display:flex;align-items:center;justify-content:space-between;
-  padding:.9rem 1.2rem;position:sticky;top:0;z-index:40;
-  background:rgba(17,25,40,0.75);backdrop-filter:blur(12px);
+  padding:1rem 1.5rem;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(var(--blur));
   border-bottom:1px solid var(--line);
+  box-shadow:var(--shadow);
 }
-body.light header{background:rgba(255,255,255,0.7)}
-.brand{display:flex;align-items:center;gap:.6rem;font-weight:700}
-.brand img{width:40px;height:40px;border-radius:8px}
-nav{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap}
-.btn{padding:.55rem 1rem;border-radius:12px;font-weight:700;cursor:pointer;border:none}
-.btn-primary{background:var(--emas);color:#0b132b}
-.btn-outline{background:transparent;border:1px solid var(--emas);color:var(--emas)}
-#themeBtn{background:transparent;border:none;font-size:1rem;cursor:pointer}
-.poinBox{background:rgba(255,255,255,.08);padding:.35rem .8rem;border-radius:12px;font-size:.9rem;border:1px solid var(--line)}
-body.light .poinBox{background:#f2f2f7}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.1rem}
+.brand img{width:40px;height:40px;border-radius:10px}
+nav{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.btn{
+  padding:.6rem 1rem;border-radius:12px;font-weight:600;cursor:pointer;
+  border:none;backdrop-filter:blur(10px);
+}
+.btn-primary{background:var(--accent);color:#0b132b;}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent);}
+.btn-outline:hover{background:var(--accent);color:#0b132b}
+#themeBtn{background:transparent;border:none;color:var(--text);cursor:pointer}
+.profile-pic{
+  width:42px;height:42px;border-radius:50%;
+  object-fit:cover;border:2px solid rgba(255,255,255,0.6);
+  cursor:pointer;transition:.3s;
+}
+.profile-pic:hover{transform:scale(1.05);}
 
 /* === HERO === */
-.hero{padding:4rem 1rem;text-align:center;max-width:760px;margin:auto}
-.hero h1{font-size:2.2rem;background:linear-gradient(90deg,var(--emas),#ffd55f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:1.05rem;line-height:1.65;color:var(--muted);margin-bottom:2rem}
-
-/* === SECTION UMUM === */
-.section{padding:2.2rem 1rem;max-width:1100px;margin:auto}
-.section h2{text-align:center;font-size:1.4rem;color:var(--emas);margin-bottom:1.2rem}
-
-/* === UMKM horizontal === */
-.umkm-scroll{display:flex;overflow-x:auto;gap:1rem;scroll-snap-type:x mandatory;padding-bottom:1rem}
-.umkm-card{
-  flex:0 0 180px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);
-  border-radius:14px;box-shadow:var(--shadow);padding:.8rem;cursor:pointer;text-align:center;
+.hero{
+  text-align:center;
+  max-width:760px;margin:5rem auto 3rem;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:2.5rem 1.5rem;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(var(--blur));
+  animation:fadeIn 1.2s ease forwards;
 }
-.umkm-card img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:.4rem}
-.umkm-card b{font-size:.95rem;display:block}
-.umkm-card span{color:var(--emas);font-weight:700;font-size:.9rem}
+.hero h1{
+  font-size:2.4rem;
+  background:linear-gradient(90deg,var(--accent),#ffe89b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:.6rem;
+}
+.hero p{color:var(--muted);line-height:1.6;margin-bottom:2rem;}
+.hero .btn-primary{font-size:1.05rem;padding:.8rem 1.8rem;border-radius:14px;}
 
-/* === BERITA CARD GRID === */
-.berita-grid{display:grid;gap:1.2rem}
+/* === SECTION === */
+.section{max-width:1100px;margin:auto;padding:2rem 1rem;}
+.section h2{text-align:center;color:var(--accent);margin-bottom:1.4rem;}
+
+/* === UMKM HORIZONTAL === */
+.umkm-scroll{
+  display:flex;overflow-x:auto;gap:1rem;
+  scroll-snap-type:x mandatory;padding-bottom:1rem;
+}
+.umkm-card{
+  flex:0 0 200px;scroll-snap-align:start;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;box-shadow:var(--shadow);
+  text-align:center;padding:1rem;
+  cursor:pointer;
+  backdrop-filter:blur(var(--blur));
+  transform:translateY(0);
+}
+.umkm-card:hover{transform:translateY(-5px);}
+.umkm-card img{width:100%;height:150px;object-fit:cover;border-radius:12px;margin-bottom:.6rem;}
+.umkm-card b{display:block;font-size:.95rem;margin-bottom:.3rem;}
+.umkm-card span{color:var(--accent);font-weight:600;font-size:.9rem;}
+
+/* === BERITA GRID === */
+.berita-grid{display:grid;gap:1.2rem;}
 @media(min-width:700px){.berita-grid{grid-template-columns:repeat(3,1fr)}}
 .berita-card{
-  background:var(--card);border:1px solid var(--line);border-radius:14px;
-  box-shadow:var(--shadow);overflow:hidden;cursor:pointer;
-  transition:transform .25s ease, box-shadow .25s ease;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  backdrop-filter:blur(var(--blur));
+  cursor:pointer;
+  animation:fadeInUp .8s ease both;
 }
-.berita-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,.3)}
-.berita-card img{width:100%;height:160px;object-fit:cover}
-.berita-card .isi{padding:.8rem 1rem}
-.berita-card b{font-size:1rem;display:block;margin-bottom:.4rem}
-.berita-card p{color:var(--muted);font-size:.9rem;line-height:1.4}
+.berita-card img{width:100%;height:160px;object-fit:cover;}
+.berita-card .isi{padding:1rem;}
+.berita-card b{font-size:1.05rem;color:#fff;margin-bottom:.4rem;display:block;}
+.berita-card p{color:var(--muted);font-size:.9rem;}
 
-/* === Footer === */
-footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);border-top:1px solid var(--line);margin-top:3rem}
-.muted{color:var(--muted)}
-.hidden{display:none}
+/* === FOOTER === */
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);margin-top:3rem;backdrop-filter:blur(var(--blur));}
+
+/* === ANIMASI === */
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.hidden{display:none;}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand"><img src="assets/logo.svg"/><span>KARTEJI Portal</span></div>
+  <div class="brand">
+    <img src="assets/logo.svg" alt="Logo">
+    <span>KARTEJI Portal</span>
+  </div>
   <nav>
     <a href="#kegiatan">Kegiatan</a>
     <a href="#berita">Berita</a>
@@ -87,6 +140,7 @@ footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);border-top:1px s
     <button id="themeBtn">🌓</button>
     <span id="userName" class="hidden"></span>
     <span id="poinUser" class="poinBox hidden">🏅 0 pts</span>
+    <img id="userPhoto" class="profile-pic hidden" src="assets/default-avatar.png" alt="Profil">
     <a id="loginBtn" href="auth.html" class="btn btn-primary">Masuk / Daftar</a>
     <a id="dashBtn" href="dashboard.html" class="btn btn-outline hidden">Dashboard</a>
     <button id="logoutBtn" class="btn btn-outline hidden">Keluar</button>
@@ -114,7 +168,7 @@ footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);border-top:1px s
   <div id="pengumumanList"></div>
 </section>
 
-<footer><p>© 2025 KARTEJI Cilosari Barat · 💙 Semarang</p></footer>
+<footer><p>© 2025 KARTEJI Cilosari Barat · Dibuat dengan 💙 di Semarang</p></footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -133,8 +187,22 @@ const logoutBtn=document.getElementById('logoutBtn');
 const ctaBtn=document.getElementById('ctaBtn');
 const userName=document.getElementById('userName');
 const poinUser=document.getElementById('poinUser');
+const userPhoto=document.getElementById('userPhoto');
 
 themeBtn.onclick=()=>document.body.classList.toggle('light');
+
+/* === BACKGROUND FIRESTORE (hanya super admin ubah) === */
+async function loadBackground(){
+  try{
+    const snap=await getDoc(doc(db,"settings","background"));
+    if(snap.exists()){
+      const data=snap.data();
+      if(data.url) document.body.style.backgroundImage=`url('${data.url}')`;
+    }else{
+      document.body.style.background=`linear-gradient(120deg,#bcbfc4,#d4d7da)`;
+    }
+  }catch(e){console.warn("BG error:",e);}
+}
 
 /* === LOAD DATA === */
 async function loadUmkm(){
@@ -163,22 +231,15 @@ async function loadBerita(){
     const f=Array.isArray(b.foto)?b.foto[0]:b.foto;
     const el=document.createElement('div');
     el.className='berita-card';
-    el.innerHTML=`
-      <a href="berita.html?id=${id}">
-        ${f?`<img src="${f}" alt="">`:''}
-        <div class="isi">
-          <b>${b.judul||'(Tanpa judul)'}</b>
-          <p>${(b.isi||'').slice(0,120)}${b.isi&&b.isi.length>120?'…':''}</p>
-        </div>
-      </a>`;
+    el.innerHTML=`<a href="berita.html?id=${id}">${f?`<img src="${f}" alt="">`:''}<div class="isi"><b>${b.judul||'(Tanpa judul)'}</b><p>${(b.isi||'').slice(0,120)}${b.isi&&b.isi.length>120?'…':''}</p></div></a>`;
     c.appendChild(el);
   });
 }
 
 async function loadPengumuman(){
   const snap=await getDocs(query(collection(db,'pengumuman'),orderBy('createdAt','desc')));
-  const c=document.getElementById('pengumumanList');
-  c.innerHTML='';
+  const c=document.getElementById('pengumumanList');c.innerHTML='';
+  if(snap.empty){c.innerHTML='<p class="muted">Belum ada pengumuman.</p>';return;}
   snap.forEach(d=>{
     const p=d.data();
     const el=document.createElement('div');
@@ -198,14 +259,15 @@ onAuthStateChanged(auth, async (user)=>{
     loginBtn.classList.add('hidden');
     logoutBtn.classList.remove('hidden');
     dashBtn.classList.remove('hidden');
+    userPhoto.classList.remove('hidden');
     ctaBtn.textContent="🏠 Buka Dashboard";
     ctaBtn.href="dashboard.html";
 
-    // ambil poin
     const snap=await getDoc(doc(db,'users',user.uid));
     if(snap.exists()){
       const data=snap.data();
       poinUser.textContent=`🏅 ${data.poin||0} pts`;
+      userPhoto.src=data.foto||"assets/default-avatar.png";
     }
   }else{
     userName.classList.add('hidden');
@@ -213,9 +275,11 @@ onAuthStateChanged(auth, async (user)=>{
     loginBtn.classList.remove('hidden');
     logoutBtn.classList.add('hidden');
     dashBtn.classList.add('hidden');
+    userPhoto.classList.add('hidden');
     ctaBtn.textContent="🚀 Mulai Sekarang";
     ctaBtn.href="auth.html";
   }
+  await loadBackground();
   loadUmkm();loadBerita();loadPengumuman();
 });
 
