@@ -3,12 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Masuk • Karang Taruna</title>
+  <title>Masuk • Portal Karang Taruna</title>
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/auth-anim.css">
   <link rel="manifest" href="../manifest.webmanifest">
   <meta name="theme-color" content="#000000">
-  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
 </head>
 <body>
   <header class="header-glass">
@@ -18,62 +16,54 @@
     </div>
   </header>
 
-  <main class="container" style="max-width:540px">
+  <main class="container" style="max-width:520px">
     <div class="card-glass fade-in">
       <div class="input-wrap">
         <label>Email</label>
         <input id="email" type="email" placeholder="nama@email.com">
-        <div id="eErr" class="err">Masukkan email yang valid</div>
       </div>
       <div class="input-wrap" style="margin-top:10px">
         <label>Password</label>
         <input id="password" type="password" placeholder="••••••••">
-        <div id="pErr" class="err">Password wajib diisi</div>
       </div>
-      <div style="display:flex; gap:10px; margin-top:14px">
-        <button id="btnLogin" class="btn-glass" style="width:100%">Masuk</button>
+      <button id="btnLogin" class="btn-glass" style="margin-top:14px;width:100%">Masuk</button>
+
+      <div class="switcher" style="margin-top:12px">
+        <a class="tab" href="./forgot.html">Lupa Password?</a>
       </div>
-      <div class="switcher">
-        <a class="tab" href="./register.html">Daftar</a>
-        <a class="tab" href="./forgot.html">Lupa Password</a>
-      </div>
+
+      <p class="help" style="margin-top:16px;text-align:center;color:#bbb">
+        🔒 Pendaftaran akun dilakukan oleh pengurus Karang Taruna masing-masing unit.<br>
+        Hubungi <b>Ketua Karang Taruna</b> Anda untuk mendapatkan akses.
+      </p>
     </div>
-    <p class="footer-note">v7.2 • Multi-page Auth</p>
+    <p class="footer-note">v7.2 • Akses Anggota Terbatas</p>
   </main>
 
   <script type="module">
     import { login } from "../js/auth.js";
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const eErr = document.getElementById('eErr');
-    const pErr = document.getElementById('pErr');
-    const btn = document.getElementById('btnLogin');
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const btn = document.getElementById("btnLogin");
 
-    function validate(){
-      let ok = true;
-      eErr.style.display = /.+@.+/.test(email.value) ? 'none':'block'; 
-      email.classList.toggle('erron', !/.+@.+/.test(email.value)); 
-      if(!email.value) ok=false;
-      pErr.style.display = password.value? 'none':'block';
-      password.classList.toggle('erron', !password.value);
-      if(!password.value) ok=false;
-      return ok;
-    }
-    email.addEventListener('input', validate);
-    password.addEventListener('input', validate);
-
-    btn.addEventListener('click', async ()=>{
-      if(!validate()) return;
-      try{
-        btn.classList.add('loading'); btn.textContent='Memproses...';
-        await login(email.value.trim(), password.value.trim());
-        location.href = "/index.html";
-      }catch(err){
-        alert(err.message);
-      }finally{ btn.classList.remove('loading'); btn.textContent='Masuk'; }
+    btn.addEventListener("click", async ()=>{
+      const e = email.value.trim();
+      const p = password.value.trim();
+      if(!e || !p) return alert("Isi email dan password terlebih dahulu");
+      try {
+        btn.classList.add("loading");
+        await login(e,p);
+        location.href="/index.html";
+      } catch(err) {
+        alert(err.code + " - " + err.message);
+      } finally {
+        btn.classList.remove("loading");
+      }
     });
   </script>
 
-  <script> if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js'); </script>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js');
+  </script>
 </body>
 </html>
