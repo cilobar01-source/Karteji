@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>💰 Kas & Iuran • Karang Taruna</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header class="header-glass">
+    <div class="header-title">
+      <img id="logoImg" class="logo-glow" src="../assets/icons/kt.svg" alt="KT">
+      <div>
+        <div id="portalName">💰 Kas & Iuran</div>
+        <small class="info-chip">🌤 Cuaca | 🕒 <span id="clock">--:--</span> WIB</small>
+      </div>
+    </div>
+    <a class="info-chip" href="../index.html">⬅️ Dashboard</a>
+  </header>
+  <main class="container">
+    <section class="grid" id="contentArea">
+      <!-- dynamic content -->
+    </section>
+    <p class="footer-note">v6.9 • 💰 Kas & Iuran</p>
+  </main>
+
+  <nav class="nav-float">
+    <a href="../index.html">🏠</a>
+    <a class="active" href="#">⚙️</a>
+  </nav>
+
+  <script>setInterval(()=>{const el=document.getElementById('clock'); if(el) el.textContent=new Date().toLocaleTimeString('id-ID', {hour12:false})},1000);</script>
+  <script type="module" src="../js/firebase.js"></script>
+  <script type="module" src="../js/motion.js"></script>
+  <script type="module" src="../js/ui.js"></script>
+  <script type="module" src="../js/data.js"></script>
+  <script type="module" src="../js/cloudinary.js"></script>
+  <script type="module" src="../js/kas.js"></script>
+</body>
+</html>
