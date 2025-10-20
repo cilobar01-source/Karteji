@@ -1,0 +1,50 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masuk • Karang Taruna</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header class="header-glass">
+    <div class="header-title">
+      <div class="logo-glow"></div>
+      <div>Masuk Portal Karang Taruna</div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:520px">
+    <div class="card-glass">
+      <div class="input-wrap">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="nama@email.com">
+      </div>
+      <div class="input-wrap" style="margin-top:10px">
+        <label>Password</label>
+        <input id="password" type="password" placeholder="••••••••">
+      </div>
+      <div style="display:flex; gap:10px; margin-top:14px">
+        <button id="btnLogin" class="btn-glass">Masuk</button>
+        <a href="#" class="info-chip" onclick="alert('Register dibuat terpisah sesuai kebijakan unit.')">Daftar</a>
+      </div>
+    </div>
+    <p class="footer-note">v6.8 • Transparent Spatial UI • Firebase Auth</p>
+  </main>
+
+  <script type="module">
+    import { login } from "../js/auth.js";
+    document.getElementById('btnLogin').addEventListener('click', async ()=>{
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try{
+        await login(email, password);
+        location.href = "/index.html";
+      }catch(err){
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>
