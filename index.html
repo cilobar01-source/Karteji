@@ -10,15 +10,12 @@
   <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
 </head>
 <body>
-  <!-- ===== HEADER ===== -->
   <header class="header-glass">
     <div class="header-title">
       <img id="logoImg" class="logo-glow" src="./assets/icons/kt.svg" alt="KT">
       <div>
         <div id="portalName">Karang Taruna Cilosari Barat</div>
-        <small class="info-chip">
-          🌤 Cuaca | 🕒 <span id="clock">--:--</span> WIB | 🕌 <span id="shalat">...</span>
-        </small>
+        <small class="info-chip">🌤 Cuaca | 🕒 <span id="clock">--:--</span> WIB | 🕌 <span id="shalat">...</span></small>
       </div>
     </div>
     <label class="info-chip" style="cursor:pointer">
@@ -26,82 +23,65 @@
     </label>
   </header>
 
-  <!-- ===== MAIN DASHBOARD ===== -->
   <main class="container">
     <section class="grid">
-      <a href="./kas.html" class="card-glass span-3 link-card">
-        <p class="card-title">Saldo Kas</p>
+      <div class="card-glass span-3 clickable" onclick="location.href='./pages/kas.html'">
+        <p class="card-title">💰 Kas & Iuran</p>
         <p class="card-value">Rp 0</p>
-      </a>
-
-      <a href="./kegiatan.html" class="card-glass span-3 link-card">
-        <p class="card-title">Kegiatan</p>
+      </div>
+      <div class="card-glass span-3 clickable" onclick="location.href='./pages/kegiatan.html'">
+        <p class="card-title">📅 Kegiatan</p>
         <p class="card-value">0</p>
-      </a>
-
-      <a href="./anggota.html" class="card-glass span-3 link-card">
-        <p class="card-title">Anggota</p>
+      </div>
+      <div class="card-glass span-3 clickable" onclick="location.href='./pages/anggota.html'">
+        <p class="card-title">👥 Anggota</p>
         <p class="card-value">0</p>
-      </a>
-
-      <a href="./forum.html" class="card-glass span-3 link-card">
-        <p class="card-title">Forum & Diskusi</p>
+      </div>
+      <div class="card-glass span-3 clickable" onclick="location.href='./pages/forum.html'">
+        <p class="card-title">💬 Forum</p>
         <p class="card-value">0</p>
-      </a>
-
-      <a href="./umkm.html" class="card-glass span-3 link-card">
-        <p class="card-title">UMKM Warga</p>
-        <p class="card-value">0</p>
-      </a>
-
-      <a href="./academy.html" class="card-glass span-3 link-card">
-        <p class="card-title">Akademi</p>
-        <p class="card-value">0</p>
-      </a>
-
-      <a href="./sertifikat.html" class="card-glass span-3 link-card">
-        <p class="card-title">Sertifikat</p>
-        <p class="card-value">0</p>
-      </a>
-
-      <a href="./laporan.html" class="card-glass span-3 link-card">
-        <p class="card-title">Laporan</p>
-        <p class="card-value">0</p>
-      </a>
-
-      <div class="card-glass span-8">
-        <p class="card-title">Agenda Terdekat</p>
-        <div class="info-chip">Belum ada agenda.</div>
       </div>
 
-      <div class="card-glass span-4">
-        <p class="card-title">Notifikasi</p>
-        <div class="info-chip">Tidak ada notifikasi.</div>
+      <div class="card-glass span-4 clickable" onclick="location.href='./pages/academy.html'">
+        <p class="card-title">🎓 Academy</p>
+        <p class="card-value">Pelatihan & Sertifikat</p>
+      </div>
+      <div class="card-glass span-4 clickable" onclick="location.href='./pages/umkm.html'">
+        <p class="card-title">🏪 UMKM</p>
+        <p class="card-value">Produk Warga</p>
+      </div>
+      <div class="card-glass span-4 clickable" onclick="location.href='./pages/laporan.html'">
+        <p class="card-title">🧾 Laporan</p>
+        <p class="card-value">Cetak & Unduh</p>
+      </div>
+
+      <div class="card-glass span-12 clickable" onclick="location.href='./pages/pengaturan.html'">
+        <p class="card-title">⚙️ Pengaturan Portal</p>
+        <p class="card-value">Kelola Profil, Logo, Tema, dan Akses</p>
       </div>
     </section>
 
-    <p class="footer-note">v7.3 • Connected Dashboard • Firebase + Cloudinary</p>
+    <p class="footer-note">v7.3 • Transparent Spatial UI • Firebase + Cloudinary + Linked Modules</p>
   </main>
 
-  <!-- ===== FLOAT NAVIGATION ===== -->
+  <!-- Floating navigation -->
   <nav class="nav-float">
-    <a href="./index.html" class="active" title="Beranda">🏠</a>
-    <a href="./kegiatan.html" title="Kegiatan">📅</a>
-    <a href="./forum.html" title="Forum">💬</a>
-    <a href="./academy.html" title="Akademi">🎓</a>
-    <a href="./pengaturan.html" title="Pengaturan">⚙️</a>
+    <a class="active" href="./index.html" title="Beranda">🏠</a>
+    <a href="./pages/kegiatan.html" title="Kegiatan">📅</a>
+    <a href="./pages/forum.html" title="Forum">💬</a>
+    <a href="./pages/academy.html" title="Academy">🎓</a>
+    <a href="./pages/pengaturan.html" title="Pengaturan">⚙️</a>
   </nav>
 
-  <!-- ===== MINI SCRIPTS ===== -->
+  <!-- Minimal clock -->
   <script>
-    // JAM REALTIME
     setInterval(()=>{
-      const el = document.getElementById('clock');
-      if(el) el.textContent = new Date().toLocaleTimeString('id-ID', {hour12:false});
-    }, 1000);
+      const el=document.getElementById('clock');
+      if(el) el.textContent=new Date().toLocaleTimeString('id-ID',{hour12:false});
+    },1000);
   </script>
 
-  <!-- ===== MODULAR JS ===== -->
+  <!-- Modular JS -->
   <script type="module" src="./js/firebase.js"></script>
   <script type="module" src="./js/config.js"></script>
   <script type="module" src="./js/guard.js"></script>
@@ -111,7 +91,7 @@
   <script type="module" src="./js/cloudinary.js"></script>
   <script type="module" src="./js/app.js"></script>
 
-  <!-- ===== SPLASH SCREEN ===== -->
+  <!-- Splash -->
   <div id="splash" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(18px);z-index:9999">
     <div style="text-align:center">
       <img src="./assets/icons/kt.svg" width="88" height="88" style="opacity:.95;filter:drop-shadow(0 0 24px rgba(255,255,255,.25))">
@@ -119,22 +99,24 @@
       <div class="info-chip" style="margin-top:12px">Memuat aplikasi…</div>
     </div>
   </div>
-
   <script>
-    window.addEventListener('load', ()=>{
-      setTimeout(()=>{ const s=document.getElementById('splash'); if(s) s.style.display='none'; }, 800);
+    window.addEventListener('load',()=>{
+      setTimeout(()=>{const s=document.getElementById('splash');if(s)s.style.display='none';},800);
     });
-    if ('serviceWorker' in navigator) {
+    if('serviceWorker'in navigator){
       navigator.serviceWorker.register('/service-worker.js').then(()=>console.log('SW ready'));
     }
   </script>
 
-  <!-- ===== AUTH GUARD ===== -->
+  <!-- Guard -->
   <script type="module">
     import { onReady } from "./js/guard.js";
-    onReady(()=>{
-      console.log("Dashboard ready & user authenticated");
-    });
+    onReady(()=>{});
   </script>
+
+  <style>
+    .clickable{cursor:pointer;transition:transform .15s}
+    .clickable:hover{transform:scale(1.03);box-shadow:0 0 20px rgba(255,255,255,.08)}
+  </style>
 </body>
 </html>
