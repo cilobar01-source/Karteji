@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Masuk • Portal Karang Taruna</title>
+  <title>Portal Karang Taruna • Masuk / Daftar</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="manifest" href="../manifest.webmanifest">
   <meta name="theme-color" content="#000000">
@@ -12,52 +12,171 @@
   <header class="header-glass">
     <div class="header-title">
       <img src="../assets/icons/kt.svg" class="logo-glow" style="width:32px;height:32px">
-      <div>Masuk Portal Karang Taruna</div>
+      <div id="titleText">Masuk Portal Karang Taruna</div>
     </div>
   </header>
 
   <main class="container" style="max-width:520px">
-    <div class="card-glass fade-in">
+
+    <!-- LOGIN -->
+    <div class="card-glass fade-in" id="formLogin">
       <div class="input-wrap">
         <label>Email</label>
-        <input id="email" type="email" placeholder="nama@email.com">
+        <input id="loginEmail" type="email" placeholder="nama@email.com">
       </div>
       <div class="input-wrap" style="margin-top:10px">
         <label>Password</label>
-        <input id="password" type="password" placeholder="••••••••">
+        <input id="loginPassword" type="password" placeholder="••••••••">
       </div>
       <button id="btnLogin" class="btn-glass" style="margin-top:14px;width:100%">Masuk</button>
 
-      <div class="switcher" style="margin-top:12px">
-        <a class="tab" href="./forgot.html">Lupa Password?</a>
+      <div class="switcher" style="margin-top:12px;text-align:center">
+        <a href="#" id="toForgot" class="tab">Lupa Password?</a> |
+        <a href="#" id="toRegister" class="tab">Daftar</a>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="card-glass fade-in" id="formRegister" style="display:none">
+      <div class="input-wrap">
+        <label>Nama Lengkap</label>
+        <input id="regNama" type="text" placeholder="Nama Anda">
+      </div>
+      <div class="input-wrap">
+        <label>Email</label>
+        <input id="regEmail" type="email" placeholder="nama@email.com">
+      </div>
+      <div class="input-wrap">
+        <label>Password</label>
+        <input id="regPassword" type="password" placeholder="••••••••">
+      </div>
+      <div class="input-wrap">
+        <label>Daftar Sebagai</label>
+        <select id="regRole">
+          <option value="anggota">Anggota</option>
+          <option value="karangtaruna">Karang Taruna (Super Admin)</option>
+        </select>
       </div>
 
-      <p class="help" style="margin-top:16px;text-align:center;color:#bbb">
-        🔒 Pendaftaran akun dilakukan oleh pengurus Karang Taruna masing-masing unit.<br>
-        Hubungi <b>Ketua Karang Taruna</b> Anda untuk mendapatkan akses.
-      </p>
+      <!-- untuk Karang Taruna -->
+      <div class="input-wrap" id="wrapNamaKatar" style="display:none">
+        <label>Nama Karang Taruna</label>
+        <input id="regNamaKatar" type="text" placeholder="Contoh: Cilosari Barat">
+      </div>
+
+      <!-- untuk Anggota -->
+      <div class="input-wrap" id="wrapIdKatar" style="display:block">
+        <label>ID Karang Taruna</label>
+        <input id="regIdKatar" type="text" placeholder="contoh: karangtaruna_cilosaribarat">
+      </div>
+
+      <button id="btnRegister" class="btn-glass" style="margin-top:14px;width:100%">Daftar</button>
+
+      <div class="switcher" style="margin-top:12px;text-align:center">
+        <a href="#" id="toLogin1" class="tab">Sudah punya akun? Masuk</a>
+      </div>
     </div>
-    <p class="footer-note">v7.2 • Akses Anggota Terbatas</p>
+
+    <!-- FORGOT -->
+    <div class="card-glass fade-in" id="formForgot" style="display:none">
+      <div class="input-wrap">
+        <label>Email</label>
+        <input id="forgotEmail" type="email" placeholder="nama@email.com">
+      </div>
+      <button id="btnForgot" class="btn-glass" style="margin-top:14px;width:100%">Kirim Link Reset</button>
+      <div class="switcher" style="margin-top:12px;text-align:center">
+        <a href="#" id="toLogin2" class="tab">Kembali ke Login</a>
+      </div>
+    </div>
+
+    <p class="footer-note">v7.3 • Portal Auth 3-in-1 • Firebase Modular</p>
   </main>
 
   <script type="module">
-    import { login } from "../js/auth.js";
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const btn = document.getElementById("btnLogin");
+    import { auth } from "../js/firebase.js";
+    import { register, login } from "../js/auth.js";
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
-    btn.addEventListener("click", async ()=>{
-      const e = email.value.trim();
-      const p = password.value.trim();
-      if(!e || !p) return alert("Isi email dan password terlebih dahulu");
+    const fLogin = document.getElementById('formLogin');
+    const fReg = document.getElementById('formRegister');
+    const fForgot = document.getElementById('formForgot');
+    const titleText = document.getElementById('titleText');
+
+    const showForm = (form) => {
+      [fLogin, fReg, fForgot].forEach(f => f.style.display = 'none');
+      form.style.display = 'block';
+      titleText.textContent = form === fLogin ? "Masuk Portal Karang Taruna" :
+                              form === fReg ? "Daftar Akun Baru" :
+                              "Reset Password";
+    };
+
+    // Navigasi antar form
+    document.getElementById('toRegister').onclick = () => showForm(fReg);
+    document.getElementById('toLogin1').onclick = () => showForm(fLogin);
+    document.getElementById('toLogin2').onclick = () => showForm(fLogin);
+    document.getElementById('toForgot').onclick = () => showForm(fForgot);
+
+    // Login
+    document.getElementById('btnLogin').addEventListener('click', async () => {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      if (!email || !pass) return alert('Isi email dan password terlebih dahulu');
       try {
-        btn.classList.add("loading");
-        await login(e,p);
-        location.href="/index.html";
-      } catch(err) {
+        await login(email, pass);
+        location.href = "/index.html";
+      } catch (err) {
         alert(err.code + " - " + err.message);
-      } finally {
-        btn.classList.remove("loading");
+      }
+    });
+
+    // Role switch
+    const regRole = document.getElementById('regRole');
+    const wrapNamaKatar = document.getElementById('wrapNamaKatar');
+    const wrapIdKatar = document.getElementById('wrapIdKatar');
+    regRole.addEventListener('change', () => {
+      if (regRole.value === "karangtaruna") {
+        wrapNamaKatar.style.display = "block";
+        wrapIdKatar.style.display = "none";
+      } else {
+        wrapNamaKatar.style.display = "none";
+        wrapIdKatar.style.display = "block";
+      }
+    });
+
+    // Register
+    document.getElementById('btnRegister').addEventListener('click', async () => {
+      const nama = document.getElementById('regNama').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const pass = document.getElementById('regPassword').value.trim();
+      const role = regRole.value;
+      const namaKatar = document.getElementById('regNamaKatar').value.trim();
+      const idKatar = document.getElementById('regIdKatar').value.trim();
+      if (!nama || !email || !pass) return alert('Lengkapi semua data terlebih dahulu');
+
+      try {
+        if (role === "karangtaruna") {
+          await register({ nama, email, password: pass, role: "super_admin", id_katar: null, nama_katar: namaKatar });
+        } else {
+          if (!idKatar) return alert("Masukkan ID Karang Taruna Anda");
+          await register({ nama, email, password: pass, role: "anggota", id_katar: idKatar });
+        }
+        alert("Pendaftaran berhasil! Silakan login.");
+        showForm(fLogin);
+      } catch (err) {
+        alert(err.code + " - " + err.message);
+      }
+    });
+
+    // Lupa Password
+    document.getElementById('btnForgot').addEventListener('click', async () => {
+      const email = document.getElementById('forgotEmail').value.trim();
+      if (!email) return alert('Masukkan email anda');
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert('Email reset password telah dikirim. Cek kotak masuk Anda.');
+        showForm(fLogin);
+      } catch (err) {
+        alert(err.code + " - " + err.message);
       }
     });
   </script>
